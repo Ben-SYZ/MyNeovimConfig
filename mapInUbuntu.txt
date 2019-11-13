@@ -1,0 +1,2 @@
+sudo vim /usr/share/X11/xkb/keycodes/evdev
+# exchange the num after the <CAPS> and <ESC>

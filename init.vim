@@ -32,6 +32,7 @@ nnoremap S :w<CR>
 nnoremap Q :q<CR>
 nnoremap R :source $MYVIMRC<CR>
 nnoremap <LEADER>rc :e ~/.config/nvim/init.vim<CR>
+nnoremap <LEADER>mrc :e ~/.config/nvim/markdown.vim<CR>
 "no opperation
 "map s <nop>
 nnoremap sl :set splitright<CR>:vsplit<CR>
@@ -48,10 +49,10 @@ nnoremap <LEADER>j <C-w>j
 nnoremap <LEADER>k <C-w>k
 nnoremap <LEADER>l <C-w>l
 "resize the split window
-nnoremap <up> :res +5<CR>
-nnoremap <down> :res -5<CR>
-nnoremap <left> :vertical resize -5<CR>
-nnoremap <right> :vertical resize +5<CR>
+nnoremap <up> :res -5<CR>
+nnoremap <down> :res +5<CR>
+nnoremap <left> :vertical resize +5<CR>
+nnoremap <right> :vertical resize -5<CR>
 "new tab
 nnoremap tn :tabe<CR>
 "exchange in tab
@@ -141,6 +142,32 @@ au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g
 
 
 
+" Compile function
+nnoremap <LEADER>r :call CompileRunGcc()<CR>
+func! CompileRunGcc()
+  exec "w"
+  if &filetype == 'c'
+    exec "!g++ % -o %<"
+    exec "!time ./%<"
+  elseif &filetype == 'cpp'
+    exec "!g++ % -o %<"
+    exec "!time ./%<"
+  elseif &filetype == 'java'
+    exec "!javac %"
+    exec "!time java %<"
+  elseif &filetype == 'sh'
+    :!time bash %
+  elseif &filetype == 'python'
+    silent! exec "!clear"
+    exec "!time python3 %"
+  elseif &filetype == 'html'
+    exec "!firefox % &"
+  elseif &filetype == 'markdown'
+    exec "MarkdownPreview"
+  elseif &filetype == 'vimwiki'
+    exec "MarkdownPreview"
+  endif
+endfunc
 
 
 
@@ -156,7 +183,15 @@ Plug 'connorholyday/vim-snazzy'
 "Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install' }
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
 Plug 'dhruvasagar/vim-table-mode', { 'on': 'TableModeToggle' }
+Plug 'vimwiki/vimwiki'
 
+"Undo tree
+"-----
+Plug 'mbbill/undotree'
+
+"coc
+"-----
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 
 "youcompleteme
@@ -203,8 +238,17 @@ let g:mkdp_highlight_css = ''
 let g:mkdp_port = ''
 let g:mkdp_page_title = '「${name}」'
 
+
 nnoremap <LEADER>mp :MarkdownPreview<CR>
 
+"===
+"===  vimwiki
+"====================
+let g:vimwiki_list = [{
+	\'path': '~/vimwiki/', 
+	\ 'syntax': 'markdown', 
+	\'ext': '.md'
+	\}]
 
 "===
 "===  vim-table-mode
@@ -212,7 +256,43 @@ nnoremap <LEADER>mp :MarkdownPreview<CR>
 
 nnoremap <LEADER>tm :TableModeToggle<CR>
 
+"==
+"==  undotree
+"==============
+nnoremap U :UndotreeToggle<CR>
 
+"==
+"==  coc
+"==============
+let g:coc_global_extensions = ['coc-python',  'coc-html', 'coc-yank', 'coc-lists', 'coc-gitignore' ]
+" use <tab> for trigger completion and navigate to the next complete item
+function! s:check_back_space() abort
+	let col = col('.') - 1
+	return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
+inoremap <silent><expr> <Tab>
+	\ pumvisible() ? "\<C-n>" :
+	\ <SID>check_back_space() ? "\<Tab>" :
+	\ coc#refresh()
+" use <c-space>for trigger completion
+inoremap <silent><expr> <c-space> coc#refresh()
+nnoremap <silent> <space>y  :<C-u>CocList -A --normal yank<cr>
+"==
+"==  system
+"==============
+"set clipboard+=unnamedplus
+"let g:clipboard = {
+"  \   'name': 'myClipboard',
+"  \   'copy': {
+"  \      '+': 'tmux load-buffer -',
+"  \      '*': 'tmux load-buffer -',
+"  \    },
+"  \   'paste': {
+"  \      '+': 'tmux save-buffer -',
+"  \      '*': 'tmux save-buffer -',
+"  \   },
+"  \   'cache_enabled': 1,
+"  \ }
 
 "<operation>_<motion>
 

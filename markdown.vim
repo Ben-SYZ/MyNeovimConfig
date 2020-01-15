@@ -13,7 +13,7 @@ autocmd Filetype markdown inoremap <buffer> ,C `` <++><Esc>F`i
 "picture
 autocmd Filetype markdown inoremap <buffer> ,p ![](<++>) <++><Esc>F[a
 "link
-autocmd Filetype markdown inoremap <buffer> ,i [](<++>) <++><Esc>F[a
+autocmd Filetype markdown inoremap <buffer> ,l [](<++>) <++><Esc>F[a
 "multiple
 autocmd Filetype markdown inoremap <buffer> ,t - [ ] <Enter><++><ESC>kA
 "math
@@ -29,7 +29,7 @@ autocmd Filetype markdown inoremap <buffer> ,3 ###<Space><Enter><++><Esc>kA
 autocmd Filetype markdown inoremap <buffer> ,4 ####<Space><Enter><++><Esc>kA
 autocmd Filetype markdown inoremap <buffer> ,5 #####<Space><Enter><++><Esc>kA
 autocmd Filetype markdown inoremap <buffer> ,6 ######<Space><Enter><++><Esc>kA
-autocmd Filetype markdown inoremap <buffer> ,l --------<Enter>
+"autocmd Filetype markdown inoremap <buffer> ,l --------<Enter>
 
 
 "MATH

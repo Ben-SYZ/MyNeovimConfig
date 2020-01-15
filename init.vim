@@ -2,6 +2,7 @@
 "=== Auto load for the first time
 "
 "Do NOT forget install curl firstly
+"coc for python need 'python3 -m pip install --user --upgrade pynvim'
 if empty(glob('~/.config/nvim/autoload/plug.vim'))
 	silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
 		\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -26,8 +27,10 @@ nnoremap ; :
 "c/C short for ctrl, s/S short for Shift, CR/cr  short for Enter
 nnoremap <C-h> 0
 nnoremap <C-l> $
+nnoremap H 5h
 nnoremap J 5j
 nnoremap K 5k
+nnoremap L 5l
 nnoremap S :w<CR>
 nnoremap Q :q<CR>
 nnoremap R :source $MYVIMRC<CR>
@@ -247,7 +250,7 @@ nnoremap <LEADER>mp :MarkdownPreview<CR>
 let g:vimwiki_list = [{
 	\'path': '~/vimwiki/', 
 	\ 'syntax': 'markdown', 
-	\'ext': '.md'
+	\'ext': '.wiki'
 	\}]
 
 "===

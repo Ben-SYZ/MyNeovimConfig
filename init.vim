@@ -61,9 +61,9 @@ nnoremap tn :tabe<CR>
 "exchange in tab
 nnoremap th :-tabnext<CR>
 nnoremap tl :tabnext<CR>
-"vim a b c change windows
-nnoremap wh :bp<CR>
-nnoremap wl :bn<CR>
+"vim a b c change between buffers
+nnoremap bh :bp<CR>
+nnoremap bl :bn<CR>
 
 "change the vertical split to horizontal, vise versa
 nnoremap sv <C-w>t<C-w>H

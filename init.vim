@@ -20,7 +20,7 @@ let mapleader=" "
 "let g:instant_markdown_autostart = 0
 "Plugin 'suan/vim-instant-Markdown'
 set relativenumber nu
-"""""""""""""""""""""""""""""""""""""'
+"""""""""""""""""""""""""""""""""""""
 "Keyboard map
 nnoremap : ;
 nnoremap ; :
@@ -62,8 +62,8 @@ nnoremap tn :tabe<CR>
 nnoremap th :-tabnext<CR>
 nnoremap tl :tabnext<CR>
 "vim a b c change between buffers
-nnoremap bh :bp<CR>
-nnoremap bl :bn<CR>
+nnoremap <LEADER>bh :bp<CR>
+nnoremap <LEADER>bl :bn<CR>
 
 "change the vertical split to horizontal, vise versa
 nnoremap sv <C-w>t<C-w>H
@@ -200,7 +200,22 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 "youcompleteme
 "-------
 "Plug 'Valloric/YouCompleteMe'
+" cd ~/.config/nvim/plugged/YouCompleteMe
+" ./install.py --clang-completer
 
+
+"surround.vim
+"-------
+Plug 'tpope/vim-surround'
+" iw  is a text object, in word
+" ds{, delete surround {
+" cs'", change surround '"
+"  Old text                  Command           New text ~
+"  hello                   ysWfprint<cr>     print("hello")
+"
+Plug 'junegunn/vim-easy-align'
+" ga
+" v ip ga 
 
 
 call plug#end()
@@ -280,10 +295,28 @@ inoremap <silent><expr> <Tab>
 " use <c-space>for trigger completion
 inoremap <silent><expr> <c-space> coc#refresh()
 nnoremap <silent> <space>y  :<C-u>CocList -A --normal yank<cr>
+
+"==
+"==  vim easy align
+"==============
+" Start interactive EasyAlign in visual mode (e.g. vipga)
+xmap ga <Plug>(EasyAlign)
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
+"try these commands:
+"    vipga=
+"        visual-select inner paragraph
+"        Start EasyAlign command (ga)
+"        Align around =
+"    gaip=
+"        Start EasyAlign command (ga) for inner paragraph
+"        Align around =
+
+
 "==
 "==  system
 "==============
-"set clipboard+=unnamedplus
+set clipboard+=unnamedplus " clipboard for system
 "let g:clipboard = {
 "  \   'name': 'myClipboard',
 "  \   'copy': {

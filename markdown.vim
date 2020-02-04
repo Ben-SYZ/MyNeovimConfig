@@ -9,7 +9,8 @@ autocmd Filetype markdown inoremap <buffer> ,i ** <++><Esc>F*i
 autocmd Filetype markdown inoremap <buffer> ,s ~~~~ <++><Esc>F~hi
 "code
 autocmd Filetype markdown inoremap <buffer> ,c ```<Enter><++><Enter>```<Enter><Enter><++><Esc>4kA
-autocmd Filetype markdown inoremap <buffer> ,C `` <++><Esc>F`i
+autocmd Filetype markdown nnoremap <LEADER>C i```<++><CR><CR>```<Esc>kp?<++><CR>:nohlsearch<CR>c4l
+" autocmd Filetype markdown nnoremap <LEADER>C {i```<++><Esc>}```<CR><Esc>?<++><CR>:nohlsearch<CR>c4l
 autocmd Filetype markdown nnoremap <LEADER>c bi`<Esc>ea`<Esc>
 "picture
 autocmd Filetype markdown inoremap <buffer> ,p ![](<++>) <++><Esc>F[a

@@ -1,0 +1,51 @@
+{
+	"suggest.enablePreselect": true,
+	"suggest.maxPreviewWidth": 100,
+	"suggest.labelMaxLength": 200,
+	"suggest.detailMaxLength": 100,
+	"suggest.maxCompleteItemCount": 50,
+	"suggest.timeout":5000,
+	"suggest.noselect": true,
+//	"languageserver": {
+//		"lua": {
+//			"command": "lua-lsp",
+//			"filetypes": ["lua"]
+//		},
+//		"bash": {
+//			"command": "bash-language-server",
+//			"args": ["start"],
+//			"filetypes": ["sh"],
+//			"ignoredRootPaths": []
+//		},
+//		"ccls": {
+//			"command": "ccls",
+//			"filetypes": ["c", "cpp", "cuda", "objc", "objcpp"],
+//			"rootPatterns": [".ccls-root", "compile_commands.json"],
+//			"initializationOptions": {
+//				 "cache": {
+//					 "directory": ".ccls-cache"
+//				 }
+//			 }
+//		}
+//	}
+	"languageserver": {
+		"ccls": {
+			"command": "ccls",
+			"filetypes": ["c", "cpp", "cuda", "objc", "objcpp"],
+			"rootPatterns": [".ccls-root", "compile_commands.json"],
+			"initializationOptions": {
+				"cache": {
+				"directory": ".ccls-cache"
+				}
+			}
+		}
+	}
+//	"languageserver": {
+//		"ccls" : {
+//		}
+//	}
+
+	
+	
+	
+}

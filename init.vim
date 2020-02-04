@@ -35,7 +35,10 @@ nnoremap S :w<CR>
 nnoremap Q :q<CR>
 nnoremap R :source $MYVIMRC<CR>
 nnoremap <LEADER>rc :e ~/.config/nvim/init.vim<CR>
-nnoremap <LEADER>mrc :e ~/.config/nvim/markdown.vim<CR>
+" Indentation
+nnoremap < <<
+nnoremap > >>
+"nnoremap <LEADER>mrc :e ~/.config/nvim/markdown.vim<CR>
 "no opperation
 "map s <nop>
 nnoremap sl :set splitright<CR>:vsplit<CR>
@@ -56,6 +59,14 @@ nnoremap <up> :res -5<CR>
 nnoremap <down> :res +5<CR>
 nnoremap <left> :vertical resize +5<CR>
 nnoremap <right> :vertical resize -5<CR>
+"change the vertical split to horizontal, vise versa
+nnoremap sv <C-w>t<C-w>H
+nnoremap sh <C-w>t<C-w>K
+"在shell里打开几个文件并且分屏:
+" vim -O file1 file2 ...
+" vim -o file1 file2 ...
+" O: vertical
+" o: horizontal(default)
 "new tab
 nnoremap tn :tabe<CR>
 "exchange in tab
@@ -65,9 +76,6 @@ nnoremap tl :tabnext<CR>
 nnoremap <LEADER>bh :bp<CR>
 nnoremap <LEADER>bl :bn<CR>
 
-"change the vertical split to horizontal, vise versa
-nnoremap sv <C-w>t<C-w>H
-nnoremap sh <C-w>t<C-w>K
 
 "highlight
 "syntax off
@@ -120,7 +128,7 @@ set encoding=utf-8
 "show the blank at the end of the line??
 set list 
 set listchars=tab:▸\ ,trail:▫
-set scrolloff=5
+set scrolloff=10
 "indentation(缩进) behavior
 set tw=0
 set indentexpr=
@@ -179,6 +187,7 @@ call plug#begin('~/.config/nvim/plugged')
 
 Plug 'vim-airline/vim-airline'
 Plug 'connorholyday/vim-snazzy'
+Plug 'dracula/vim'
 
 
 "Markdown
@@ -186,7 +195,7 @@ Plug 'connorholyday/vim-snazzy'
 "Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install' }
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
 Plug 'dhruvasagar/vim-table-mode', { 'on': 'TableModeToggle' }
-Plug 'vimwiki/vimwiki'
+"Plug 'vimwiki/vimwiki'
 
 "Undo tree
 "-----
@@ -221,11 +230,9 @@ Plug 'junegunn/vim-easy-align'
 call plug#end()
 
 
+
 colorscheme snazzy
 let g:SnazzyTransparent = 1
-
-
-
 
 
 "==
@@ -262,11 +269,11 @@ nnoremap <LEADER>mp :MarkdownPreview<CR>
 "===
 "===  vimwiki
 "====================
-let g:vimwiki_list = [{
-	\'path': '~/vimwiki/', 
-	\ 'syntax': 'markdown', 
-	\'ext': '.wiki'
-	\}]
+" let g:vimwiki_list = [{
+" 	\'path': '~/vimwiki/', 
+" 	\ 'syntax': 'markdown', 
+" 	\'ext': '.wiki'
+" 	\}]
 
 "===
 "===  vim-table-mode
@@ -282,19 +289,50 @@ nnoremap U :UndotreeToggle<CR>
 "==
 "==  coc
 "==============
-let g:coc_global_extensions = ['coc-python',  'coc-html', 'coc-yank', 'coc-lists', 'coc-gitignore' ]
-" use <tab> for trigger completion and navigate to the next complete item
+let g:coc_global_extensions = ['coc-json', 'coc-python',  'coc-html', 'coc-yank', 'coc-lists', 'coc-gitignore' ]
+" Use tab for trigger completion with characters ahead and navigate.
+" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
 function! s:check_back_space() abort
 	let col = col('.') - 1
 	return !col || getline('.')[col - 1]  =~ '\s'
 endfunction
 inoremap <silent><expr> <Tab>
-	\ pumvisible() ? "\<C-n>" :
-	\ <SID>check_back_space() ? "\<Tab>" :
-	\ coc#refresh()
-" use <c-space>for trigger completion
-inoremap <silent><expr> <c-space> coc#refresh()
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<Tab>" :
+      \ coc#refresh()
+
+" " Use <Tab> and <S-Tab> to navigate the completion list:
+" inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>" " default on
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+" Use <cr> to confirm completion
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+nmap <silent> en <Plug>(coc-diagnostic-next)
+nmap <silent> eN <Plug>(coc-diagnostic-prev)
+" used in def blah blah
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gr <Plug>(coc-references)
+nmap <silent> rn <Plug>(coc-rename)
+" make error texts have a red color
+highlight CocErrorHighlight ctermfg=Red  guifg=#ff0000
+" highlight in markdown
+let g:markdown_fenced_languages = ['css', 'js=javascript', 'python']
+" clipboard
 nnoremap <silent> <space>y  :<C-u>CocList -A --normal yank<cr>
+" To get correct comment highlighting in jsonc whose extension is json
+autocmd FileType json syntax match Comment +\/\/.\+$+
+
+"" use <tab> for trigger completion and navigate to the next complete item
+"function! s:check_back_space() abort
+"	let col = col('.') - 1
+"	return !col || getline('.')[col - 1]  =~ '\s'
+"endfunction
+"inoremap <silent><expr> <Tab>
+"	\ pumvisible() ? "\<C-n>" :
+"	\ <SID>check_back_space() ? "\<Tab>" :
+"	\ coc#refresh()
+"" use <c-space>for trigger completion
+"inoremap <silent><expr> <c-space> coc#refresh()
+"nnoremap <silent> <space>y  :<C-u>CocList -A --normal yank<cr>
 
 "==
 "==  vim easy align

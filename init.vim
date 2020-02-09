@@ -25,12 +25,47 @@ set relativenumber nu
 nnoremap : ;
 nnoremap ; :
 "c/C short for ctrl, s/S short for Shift, CR/cr  short for Enter
+
+"
+" Direction
+" =================
+" col
+noremap h h
+noremap n j
+noremap e k
+noremap i l
+
+noremap N 5j
+noremap E 5k
+
+" line
+noremap b b
+noremap f e
+noremap B 5b
+noremap F 5e
+
+" insert
+noremap u i
+noremap U I
+
+" undo
+noremap l u
+noremap L u
+
+" add
+noremap a a
+noremap A A
+
+" search
+noremap k n
+noremap K N
+
+" others
+noremap j f
+
+
 nnoremap <C-h> 0
-nnoremap <C-l> $
-nnoremap H 5h
-nnoremap J 5j
-nnoremap K 5k
-nnoremap L 5l
+nnoremap <C-i> $
 nnoremap S :w<CR>
 nnoremap Q :q<CR>
 nnoremap R :source $MYVIMRC<CR>
@@ -42,19 +77,19 @@ nnoremap > >>
 "nnoremap <LEADER>mrc :e ~/.config/nvim/markdown.vim<CR>
 "no opperation
 "map s <nop>
-nnoremap sl :set splitright<CR>:vsplit<CR>
 nnoremap sh :set nosplitright<CR>:vsplit<CR>
-nnoremap sj :set splitbelow<CR>:split<CR>
-nnoremap sk :set nosplitright<CR>:split<CR>
+nnoremap sn :set splitbelow<CR>:split<CR>
+nnoremap se :set nosplitright<CR>:split<CR>
+nnoremap si :set splitright<CR>:vsplit<CR>
 
 "edit a new file
 ":e a.py 
 
 "exchange split window
 nnoremap <LEADER>h <C-w>h
-nnoremap <LEADER>j <C-w>j
-nnoremap <LEADER>k <C-w>k
-nnoremap <LEADER>l <C-w>l
+nnoremap <LEADER>n <C-w>j
+nnoremap <LEADER>e <C-w>k
+nnoremap <LEADER>i <C-w>l
 "resize the split window
 nnoremap <up> :res -5<CR>
 nnoremap <down> :res +5<CR>
@@ -69,13 +104,13 @@ nnoremap sh <C-w>t<C-w>K
 " O: vertical
 " o: horizontal(default)
 "new tab
-nnoremap tn :tabe<CR>
+nnoremap tk :tabe<CR>
 "exchange in tab
 nnoremap th :-tabnext<CR>
-nnoremap tl :tabnext<CR>
+nnoremap ti :tabnext<CR>
 "vim a b c change between buffers
 nnoremap <LEADER>bh :bp<CR>
-nnoremap <LEADER>bl :bn<CR>
+nnoremap <LEADER>bi :bn<CR>
 
 
 "highlight
@@ -307,12 +342,12 @@ inoremap <silent><expr> <Tab>
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 " Use <cr> to confirm completion
 inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-nmap <silent> en <Plug>(coc-diagnostic-next)
-nmap <silent> eN <Plug>(coc-diagnostic-prev)
+nmap <silent> tn <Plug>(coc-diagnostic-next)
+nmap <silent> tN <Plug>(coc-diagnostic-prev)
 " used in def blah blah
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gr <Plug>(coc-references)
-nmap <silent> rn <Plug>(coc-rename)
+nmap <silent> rk <Plug>(coc-rename)
 " make error texts have a red color
 highlight CocErrorHighlight ctermfg=Red  guifg=#ff0000
 " highlight in markdown
@@ -321,6 +356,8 @@ let g:markdown_fenced_languages = ['css', 'js=javascript', 'python']
 nnoremap <silent> <space>y  :<C-u>CocList -A --normal yank<cr>
 " To get correct comment highlighting in jsonc whose extension is json
 autocmd FileType json syntax match Comment +\/\/.\+$+
+
+"==============
 
 "" use <tab> for trigger completion and navigate to the next complete item
 "function! s:check_back_space() abort

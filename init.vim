@@ -35,6 +35,7 @@ nnoremap S :w<CR>
 nnoremap Q :q<CR>
 nnoremap R :source $MYVIMRC<CR>
 nnoremap <LEADER>rc :e ~/.config/nvim/init.vim<CR>
+nnoremap <LEADER>i3 :e ~/.config/i3/config<CR>
 " Indentation
 nnoremap < <<
 nnoremap > >>
@@ -367,6 +368,8 @@ set clipboard+=unnamedplus " clipboard for system
 "  \   },
 "  \   'cache_enabled': 1,
 "  \ }
+
+" gx open link in browser
 
 "<operation>_<motion>
 

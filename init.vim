@@ -45,12 +45,12 @@ noremap B 5b
 noremap F 5e
 
 " insert
-noremap u i
-noremap U I
+noremap l i
+noremap L I
 
 " undo
-noremap l u
-noremap L u
+" noremap l u
+" noremap L u
 
 " add
 noremap a a

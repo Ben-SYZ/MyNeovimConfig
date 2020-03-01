@@ -22,8 +22,8 @@ let mapleader=" "
 set relativenumber nu
 """""""""""""""""""""""""""""""""""""
 "Keyboard map
-nnoremap : ;
-nnoremap ; :
+nnoremap : '
+nnoremap ' :
 "c/C short for ctrl, s/S short for Shift, CR/cr  short for Enter
 
 "
@@ -34,7 +34,6 @@ noremap h h
 noremap n j
 noremap e k
 noremap i l
-
 noremap N 5j
 noremap E 5k
 
@@ -45,8 +44,11 @@ noremap B 5b
 noremap F 5e
 
 " insert
-noremap l i
-noremap L I
+noremap k i
+noremap K I
+
+" copy
+noremap Y y$
 
 " undo
 " noremap l u
@@ -57,19 +59,19 @@ noremap a a
 noremap A A
 
 " search
-noremap k n
-noremap K N
-
-" others
-noremap j f
+noremap m n
+noremap M N
 
 
-nnoremap <C-h> 0
-nnoremap <C-i> $
+tnoremap <Esc> <C-\><C-n>
+
+
+"nnoremap <C-h> 0
+"nnoremap <C-i> $
 nnoremap S :w<CR>
 nnoremap Q :q<CR>
-nnoremap R :source $MYVIMRC<CR>
-nnoremap <LEADER>rc :e ~/.config/nvim/init.vim<CR>
+nnoremap <leader>R :source $MYVIMRC<CR>
+nnoremap <leader>rc :e ~/.config/nvim/init.vim<CR>
 nnoremap <LEADER>i3 :e ~/.config/i3/config<CR>
 " Indentation
 nnoremap < <<
@@ -262,13 +264,53 @@ Plug 'junegunn/vim-easy-align'
 " ga
 " v ip ga 
 
+" Jupyter Interactive
+"-----
+" Make Vim talk to Jupyter kernels
+Plug 'jupyter-vim/jupyter-vim'
+" Plug 'hisaknown/jupyterkernel.vim' "need fix!!!
+" need jupyter_kernel_gateway
 
+" jupytext
+"------
+Plug 'goerz/jupytext.vim'
+" edit ipynb as markdown, need 'jpytertext' or 'notedown'.
+" Both are convert 'ipynb' to 'markdown'
+" old version: ipynb_notedown
+
+" " vimpyter
+" "------
+" Plug 'szymonmaszke/vimpyter'
+" "need 'notedown'
+" edit ipynb as markdown, need 'jpytertext' or 'notedown'
+
+
+" ultisnips
+"-----
+Plug 'SirVer/ultisnips'
+
+" brackets
+"-----
+Plug 'jiangmiao/auto-pairs'
+
+" fcitx
+"-----
+Plug 'vim-scripts/fcitx.vim'
+
+" " nerd tree
+" " -----
+" Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
+" Plug 'Xuyuanp/nerdtree-git-plugin'
+
+"Plug 'vim-scripts/mru.vim'
+
+"Plug 'lvht/mru'
 call plug#end()
 
 
 
-colorscheme snazzy
 let g:SnazzyTransparent = 1
+colorscheme snazzy
 
 
 "==
@@ -338,7 +380,8 @@ inoremap <silent><expr> <Tab>
       \ coc#refresh()
 
 " " Use <Tab> and <S-Tab> to navigate the completion list:
-" inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>" " default on
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+"default on
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 " Use <cr> to confirm completion
 inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
@@ -387,6 +430,60 @@ nmap ga <Plug>(EasyAlign)
 "    gaip=
 "        Start EasyAlign command (ga) for inner paragraph
 "        Align around =
+"
+
+"==
+"==  jupyter-vim
+"==============
+nnoremap <LEADER>jc :JupyterConnect<CR>
+vmap <LEADER>jr <Plug>JupyterRunVisual
+nnoremap <LEADER>jr :JupyterRunFile<CR>
+nmap " V <Plug>JupyterRunVisual
+
+" ===
+" === jupytext
+" ================
+" edit ipynb as markdown
+let g:jupytext_enable = 1
+let g:jupytext_fmt = 'md'
+"jupytext --to=ipynb --from=md --update --output notebook.ipynb notebook.md
+
+"" ===
+"" === vimpyter
+"" ==========
+"autocmd Filetype ipynb nmap <silent><Leader>b :VimpyterInsertPythonBlock<CR>
+"autocmd Filetype ipynb nmap <silent><Leader>j :VimpyterStartJupyter<CR>
+"autocmd Filetype ipynb nmap <silent><Leader>n :VimpyterStartNteract<CR>
+"let g:vimpyter_color=1
+
+
+
+"==
+"==  Ultisnips
+"==============
+let g:UltiSnipsExpandTrigger="<c-n>"
+let g:UltiSnipsJumpForwardTrigger="<c-n>"
+let g:UltiSnipsJumpBackwardTrigger="<c-e>"
+
+let g:UltiSnipsSnippetDirectories = [$HOME.'/.config/nvim/UltiSnips']
+
+" " ===
+" " === Nerdtree
+" " ==========
+" map <C-t> :NERDTreeToggle<CR>
+" let g:NERDTreeIndicatorMapCustom = {
+"     \ "Modified"  : "✹",
+"     \ "Staged"    : "✚",
+"     \ "Untracked" : "✭",
+"     \ "Renamed"   : "➜",
+"     \ "Unmerged"  : "═",
+"     \ "Deleted"   : "✖",
+"     \ "Dirty"     : "✗",
+"     \ "Clean"     : "✔︎",
+"     \ 'Ignored'   : '☒',
+"     \ "Unknown"   : "?"
+"     \ }
+
 
 
 "==
@@ -442,13 +539,6 @@ set clipboard+=unnamedplus " clipboard for system
 "<ctrl> v
 "in block mode, do the motion (i,j) at the select words
 "<shift> i or c etc
-
-
-
-
-
-
-
 
 
 

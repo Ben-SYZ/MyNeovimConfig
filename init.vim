@@ -10,6 +10,8 @@ if empty(glob('~/.config/nvim/autoload/plug.vim'))
 endif
 
 
+inoremap <C-f> <Esc>:silent !~/.config/nvim/screenshot.sh <cfile> <CR>
+
 
 let mapleader=" "
 "colorscheme peachpuff
@@ -71,7 +73,7 @@ tnoremap <Esc> <C-\><C-n>
 nnoremap S :w<CR>
 nnoremap Q :q<CR>
 nnoremap <leader>R :source $MYVIMRC<CR>
-nnoremap <leader>rc :e ~/.config/nvim/init.vim<CR>
+nnoremap <leader>RC :e ~/.config/nvim/init.vim<CR>
 nnoremap <LEADER>i3 :e ~/.config/i3/config<CR>
 " Indentation
 nnoremap < <<
@@ -215,6 +217,8 @@ func! CompileRunGcc()
     exec "MarkdownPreview"
   elseif &filetype == 'vimwiki'
     exec "MarkdownPreview"
+  elseif &filetype == 'tex'
+    exec "LLPStartPreview"
   endif
 endfunc
 
@@ -305,6 +309,14 @@ Plug 'vim-scripts/fcitx.vim'
 "Plug 'vim-scripts/mru.vim'
 
 "Plug 'lvht/mru'
+"
+Plug 'lervag/vimtex'
+Plug 'KeitaNakamura/tex-conceal.vim'
+Plug 'xuhdev/vim-latex-live-preview'
+Plug 'lambdalisue/suda.vim'
+
+
+
 call plug#end()
 
 
@@ -367,7 +379,7 @@ nnoremap U :UndotreeToggle<CR>
 "==
 "==  coc
 "==============
-let g:coc_global_extensions = ['coc-json', 'coc-python',  'coc-html', 'coc-yank', 'coc-lists', 'coc-gitignore' ]
+let g:coc_global_extensions = ['coc-json', 'coc-python',  'coc-html', 'coc-yank', 'coc-lists', 'coc-gitignore', 'coc-texlab' ]
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
 function! s:check_back_space() abort
@@ -461,9 +473,9 @@ let g:jupytext_fmt = 'md'
 "==
 "==  Ultisnips
 "==============
-let g:UltiSnipsExpandTrigger="<c-n>"
-let g:UltiSnipsJumpForwardTrigger="<c-n>"
-let g:UltiSnipsJumpBackwardTrigger="<c-e>"
+let g:UltiSnipsExpandTrigger="<c-k>"
+let g:UltiSnipsJumpForwardTrigger="<c-k>"
+let g:UltiSnipsJumpBackwardTrigger="<c-m>"
 
 let g:UltiSnipsSnippetDirectories = [$HOME.'/.config/nvim/UltiSnips']
 
@@ -483,6 +495,33 @@ let g:UltiSnipsSnippetDirectories = [$HOME.'/.config/nvim/UltiSnips']
 "     \ 'Ignored'   : '☒',
 "     \ "Unknown"   : "?"
 "     \ }
+
+" ===
+" === vimtex
+" ==========
+let g:tex_flavor='latex'
+let g:vimtex_view_method='zathura'
+let g:vimtex_quickfix_mode=0
+
+" ===
+" === tex-conceal(seems no need to use it)
+" ==========
+autocmd Filetype tex set conceallevel=1
+autocmd Filetype tex let g:tex_conceal='abdmg'
+"hi Conceal cterm=underline ctermfg=189 ctermbg=235 gui=underline guifg=#f9f9ff guibg=#192224 guisp=#192224
+autocmd Filetype tex hi Conceal ctermfg=189 ctermbg=235 guifg=#f9f9ff guibg=#192224 guisp=#192224
+
+" ===
+" === vimlivePreview
+" ==========
+let g:livepreview_previewer = 'zathura'
+let g:livepreview_engine = 'xelatex'
+
+" ===
+" === suda.vim
+" ===
+cnoreabbrev sudowrite w suda://%
+cnoreabbrev sw w suda://%
 
 
 

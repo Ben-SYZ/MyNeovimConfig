@@ -1,0 +1,605 @@
+global !p
+#texMathZones = ['mkdMath','texMathZoneY','texMathZoneX']
+texMathZones = ['texMathZone'+x for x in ['A', 'AS', 'B', 'BS', 'C', 'CS', 'D', 'DS', 'E', 'ES', 'F', 'FS', 'G', 'GS', 'H', 'HS', 'I', 'IS', 'J', 'JS', 'K', 'KS', 'L', 'LS', 'DS', 'V', 'W', 'X', 'Y', 'Z']]
+texMathZones.append('mkdMath')
+#echo synstack(line('.'), col('.') - (col('.')>=2 ? 1 : 0))
+#mkdMath, texMathZoneY, texMathZoneX
+#744, 668, 667
+#423 html H4
+
+#  #texMathZones = ['texMathZone'+x for x in ['A', 'AS', 'B', 'BS', 'C', 'CS', 'D', 'DS', 'E', 'ES', 'F', 'FS', 'G', 'GS', 'H', 'HS', 'I', 'IS', 'J', 'JS', 'K', 'KS', 'L', 'LS', 'DS', 'V', 'W', 'X', 'Y', 'Z']]
+texIgnoreMathZones = ['texMathText']
+texMathZoneIds = vim.eval('map('+str(texMathZones)+", 'hlID(v:val)')")
+texIgnoreMathZoneIds = vim.eval('map('+str(texIgnoreMathZones)+", 'hlID(v:val)')")
+ignore = texIgnoreMathZoneIds[0]
+def math():
+	synstackids = vim.eval("synstack(line('.'), col('.') - (col('.')>=2 ? 1 : 0))")
+	try:
+		first = next(i for i in reversed(synstackids) if i in texIgnoreMathZoneIds or i in texMathZoneIds)
+		return first != ignore
+	except StopIteration:
+		return False
+endglobal
+
+context "math()"
+snippet it "italic" wA
+\mathcal{$1}
+endsnippet
+
+priority 100
+snippet ... "ldots" iA
+\ldots
+endsnippet
+
+# The w at the end of the first line means that this snip­pet will ex­pand at word bound­aries
+snippet mk "Math" wA
+$${1}$`!p
+if t[2] and t[2][0] not in [',', '.', '?', '-', ' ']:
+    snip.rv = ' '
+else:
+    snip.rv = ''
+`$2
+endsnippet
+
+snippet dm "Math" wA
+$$
+$0
+$$
+endsnippet
+
+# subscript
+context "math()"
+snippet '([A-Za-z])([\d])' "auto subscript" wrA
+`!p snip.rv = match.group(1)`_`!p snip.rv = match.group(2)`
+endsnippet
+
+context "math()"
+snippet '([A-Za-z])_(\d\d)' "auto subscript2" wrA
+`!p snip.rv = match.group(1)`_{`!p snip.rv = match.group(2)`}
+endsnippet
+
+context "math()"
+snippet '([ab])([ij])' "auto subscript" wrA
+`!p snip.rv = match.group(1)`_`!p snip.rv = match.group(2)`
+endsnippet
+
+context "math()"
+snippet td "subscript" iA
+{$1}_{$2}$0
+endsnippet
+
+context "math()"
+snippet __ "subscript" iA
+_{$1}$0
+endsnippet
+
+# superscript
+context "math()"
+snippet '([A-Za-z0-9])\*' "auto subscript" wr
+`!p snip.rv = match.group(1)`^*
+endsnippet
+context "math()"
+snippet '([A-Za-z0-9])([+-])' "auto subscript" wr
+`!p snip.rv = match.group(1)`^`!p snip.rv = match.group(2)`
+endsnippet
+
+context "math()"
+snippet sr "^2" iA
+^2
+endsnippet
+
+context "math()"
+snippet cb "^3" iA
+^3
+endsnippet
+
+priority 10
+context "math()"
+snippet tp "superscript" iA
+{$1}^{$2}$0
+endsnippet
+
+context "math()"
+snippet ^^ "superscript" iA
+^{$2}$0
+endsnippet
+
+context "math()"
+snippet sq "sqrt" iA
+\sqrt{$1}$0
+endsnippet
+
+# fraction
+context "math()"
+snippet /// "Fraction" iA
+\\frac{$1}{$2}$0
+endsnippet
+
+# //	→	\frac{}{}
+# alphabetic/alphabetic
+
+# 3/	→	\frac{3}{}
+# 4\pi^2/	→	\frac{4\pi^2}{}
+# digits\alphabetic^_/
+
+# (1 + 2 + 3)/	→	\frac{1 + 2 + 3}{}
+# (1+(2+3)/)	→	(1 + \frac{2+3}{})
+# (1 + (2+3))/	→	\frac{1 + (2+3)}{}
+# detect ()by depth, in +, out -, till 0
+context "math()"
+snippet '((\d+)|(\d*)(\\)([A-Za-z]+)((\^|_)(\{\d+\}|\d))*)/' "Fraction" wrA
+\\frac{`!p snip.rv = match.group(1)`}{$1}$0
+endsnippet
+#  
+#  # ^ start of line
+#  # . any except <cr>
+#  
+priority 1000
+context "math()"
+snippet '^.*\)/' "() Fraction" wrA
+`!p
+stripped = match.string[:-1]
+depth = 0
+i = len(stripped) - 1
+while True:
+	if stripped[i] == ')': depth += 1
+	if stripped[i] == '(': depth -= 1
+	if depth == 0: break;
+	i -= 1
+snip.rv = stripped[0:i] + "\\frac{" + stripped[i+1:-1] + "}"
+`{$1}$0
+endsnippet
+
+# seclect, <C-n>, /
+context "math()"
+snippet / "Fraction" i
+\\frac{${VISUAL}}{$1}$0
+endsnippet
+
+#  # box
+#  snippet box "Box"
+#  `!p snip.rv = '┌' + '─' * (len(t[1]) + 2) + '┐'`
+#  │ $1 │
+#  `!p snip.rv = '└' + '─' * (len(t[1]) + 2) + '┘'`
+#  $0
+#  endsnippet
+
+#Postfix
+priority 100
+context "math()"
+snippet hbar "Dirac" iA
+\hbar
+endsnippet
+
+priority 10
+context "math()"
+snippet bra "bra" iA
+⟨$1∣$0
+endsnippet
+#\bra{$1}$0
+priority 10
+context "math()"
+snippet ket "ket" iA
+∣$1⟩$0
+endsnippet
+#\ket{$1}$0
+context "math()"
+snippet bkt "braket" iA
+⟨$1|$2|$3⟩$0
+endsnippet
+context "math()"
+snippet kbt "braket" iA
+|$1⟩⟨$2|$0
+endsnippet
+
+priority 100
+context "math()"
+snippet pket "psiket" iA
+∣\psi⟩
+endsnippet
+priority 100
+context "math()"
+snippet pbra "psibra" iA
+⟨\psi∣
+endsnippet
+
+priority 10
+context "math()"
+snippet "bar" "bar" riA
+\overline{$1}$0
+endsnippet
+
+priority 100
+context "math()"
+snippet "([a-zA-Z])Bar" "bar" riA
+\overline{`!p snip.rv=match.group(1)`}
+endsnippet
+
+priority 10
+context "math()"
+snippet "hat" "hat" riA
+\hat{$1}$0
+endsnippet
+
+priority 100
+context "math()"
+snippet "([a-zA-Z])hat" "hat" riA
+\hat{`!p snip.rv=match.group(1)`}
+endsnippet
+
+priority 10
+context "math()"
+snippet vec "vec" iA
+\vec{$1}
+endsnippet
+
+priority 100
+context "math()"
+snippet "([a-zA-Z])vec" "vec" riA
+\vec{`!p snip.rv=match.group(1)`}
+endsnippet
+
+#snippet "(\\?\w+)(,\.|\.,)" "Vector postfix" rA
+#\vec{`!p snip.rv=match.group(1)`}
+#endsnippet 
+
+priority 100
+context "math()"
+snippet to "to" iA
+ \to 
+endsnippet
+
+priority 100
+context "math()"
+snippet limi "limit" wA
+\lim_{$1 \to \infty}$0
+endsnippet
+priority 100
+snippet "limz" "limit" wA
+\lim_{$1 \to 0}$0
+endsnippet
+
+priority 100
+context "math()"
+snippet sum "sum" wA
+\sum_{${1:n}}^{${2:\infty}}$0
+endsnippet
+priority 1000
+context "math()"
+snippet \sum "sum" wA
+\\sum
+endsnippet
+
+priority 100
+context "math()"
+snippet int "intergate" wA
+\int
+endsnippet
+#  
+context "math()"
+snippet ode "differential" wA
+\frac{${1:dy}}{${2:dx}} $0
+endsnippet
+
+priority 10
+context "math()"
+snippet pde "differential" wA
+\frac{\partial ${1:y}}{ \partial ${2:x}} $0
+endsnippet
+context "math()"
+priority 100
+snippet 2pde "differential" wA
+\frac{\partial^2 ${1:y}}{ \partial ${2:x_i} \partial ${3:x_j}} $0
+endsnippet
+
+priority 100
+context "math()"
+snippet "([a-zA-Z])dot" "dot" rA
+\dot{`!p snip.rv=match.group(1)`}$0
+endsnippet
+
+priority 1000
+context "math()"
+snippet "([a-zA-Z])ddot" "dot" rA
+\dot{`!p snip.rv=match.group(1)`}$0
+endsnippet
+
+priority 1000
+context "math()"
+snippet dot "cdot" iA
+ \cdot 
+endsnippet
+
+priority 100
+context "math()"
+snippet times "times" iA
+ \times 
+endsnippet
+
+priority 1000
+context "math()"
+snippet otimes "otimes" iA
+ \otimes 
+endsnippet
+
+#=====
+context "math()"
+snippet alp "alpha" iA
+\alpha
+endsnippet
+
+context "math()"
+snippet bet "beta" iA
+\beta
+endsnippet
+
+context "math()"
+snippet gam "gamma" iA
+\gamma$0
+endsnippet
+context "math()"
+snippet Gam "Gamma" iA
+\Gamma
+endsnippet
+
+context "math()"
+snippet ome "omega" iA
+\omega
+endsnippet
+context "math()"
+snippet Ome "Omega" iA
+\Omega
+endsnippet
+
+context "math()"
+snippet psi "psi" iA
+\psi
+endsnippet
+context "math()"
+snippet Psi "Psi" iA
+\Psi
+endsnippet
+
+priority 10
+context "math()"
+snippet phi "phi" iA
+\phi
+endsnippet
+context "math()"
+snippet Phi "Phi" iA
+\Phi
+endsnippet
+priority 100
+snippet vphi "varphi" iA
+\varphi
+endsnippet
+
+context "math()"
+snippet eps "epsilon" iA
+\epsilon
+endsnippet
+
+context "math()"
+snippet kap "kappa" iA
+\kappa
+endsnippet
+
+context "math()"
+snippet mu "mu" iA
+\mu
+endsnippet
+
+context "math()"
+snippet lam "lambda" iA
+\lambda
+endsnippet
+
+context "math()"
+snippet sig "sigma" iA
+\sigma
+endsnippet
+
+context "math()"
+snippet del "delta" iA
+\delta
+endsnippet
+
+context "math()"
+snippet Del "Delta" iA
+\Delta
+endsnippet
+
+context "math()"
+snippet nab "nabla" iA
+\nabla
+endsnippet
+
+context "math()"
+snippet rho "rho" iA
+\rho
+endsnippet
+
+priority 10
+context "math()"
+snippet xi "xi" iA
+\xi
+endsnippet
+priority 100
+context "math()"
+snippet \xi "xi" iA
+\\xi
+endsnippet
+
+context "math()"
+snippet Xi "Xi" iA
+\Xi
+endsnippet
+
+context "math()"
+snippet eta "eta" iA
+\eta
+endsnippet
+
+
+
+
+
+context "math()"
+snippet pm "+-" iA
+\pm 
+endsnippet
+
+context "math()"
+snippet mp "-+" iA
+\mp 
+endsnippet
+
+context "math()"
+snippet sin "sine" iA
+\sin
+endsnippet
+context "math()"
+snippet cos "cosine" iA
+\cos
+endsnippet
+context "math()"
+snippet tan "tangent" iA
+\tan
+endsnippet
+#=====
+
+context "math()"
+snippet >= ">=" iA
+\ge 
+endsnippet
+
+context "math()"
+snippet <= "<=" iA
+\le 
+endsnippet
+
+context "math()"
+snippet << "<<" iA
+\ll 
+endsnippet
+
+context "math()"
+snippet >> ">>" iA
+\gg 
+endsnippet
+
+context "math()"
+snippet != "not equal" iA
+\neq 
+endsnippet
+
+context "math()"
+snippet ~ "approximation" iA
+\approx 
+endsnippet
+
+context "math()"
+snippet == "def" iA
+\equiv 
+endsnippet
+
+# ===matrix
+#context "math()"
+#snippet case "cases" wA
+#\left\\{\begin{matrix}
+#$1&, $2\\\\
+#$3&, $4 
+#\end{matrix}\right.
+#endsnippet
+
+context "math()"
+snippet case "cases" wA
+\begin{cases}
+${1:exp} &\text{ if } ${2:x}=$3 \\\\
+${4:exp} &\text{ if } $2=$5 \\\\
+\end{cases}
+endsnippet
+
+priority 100
+context "math()"
+snippet matp "matrix" wA
+\begin{pmatrix}
+$0\\\\
+\end{pmatrix}
+endsnippet
+
+context "math()"
+snippet matb "matrix" wA
+\begin{bmatrix}
+$0\\\\
+\end{bmatrix}
+endsnippet
+
+context "math()"
+snippet matl "matrix determined" wA
+\begin{vmatrix}
+$0\\\\
+\end{vmatrix}
+endsnippet
+
+context "math()"
+snippet align "aligned" wA
+\begin{aligned}
+$0
+\end{aligned}
+endsnippet
+
+priority 1000
+context "math()"
+snippet bgbra "big bracket" wA
+\left\\{\begin{matrix}
+$0\\\\
+\end{matrix}\right.
+endsnippet
+
+#context "math()"
+#snippet "left(\[\]|\(\)|\{\})" "left right" wrA
+#\left`!p snip.rv = match.string[1]` $1\right`!p snip.rv = match.string[-1]`$0
+#endsnippet
+#`!p snip.rv = match.group(1)`\right
+context "math()"
+snippet leftr "left right" wA
+\left($1\right)$0
+endsnippet
+context "math()"
+snippet leftb "left right" wA
+\left[$1\right]$0
+endsnippet
+context "math()"
+snippet leftc "left right" wA
+\left{$1\right}$0
+endsnippet
+context "math()"
+snippet left. "left right" wA
+\left. \right|
+endsnippet
+
+context "math()"
+snippet "\t" "tab" riA
+	&
+endsnippet
+
+#context "math()"
+#snippet "\r" "return" irA
+#\\\\
+#endsnippet
+
+snippet pic "pictures"
+![$1](./figure/$1.png)
+endsnippet
+
+snippet merm "mermaid"
+\`\`\`mermaid
+graph LR
+%%TB
+%%A[长方形] -- 链接 --> B((圆))
+%%A --> C(圆角长方形)
+%%B --> D{菱形}
+%%C --> D
+\`\`\`
+endsnippet

@@ -1,0 +1,30 @@
+map h scrollLeft
+map n scrollDown
+map N scrollPageDown
+map E scrollPageUp
+map e scrollUp
+map i scrollRight
+map k insertMode
+map m nextSearchResult
+map M previousSearchResult
+map ' openCommandBar
+
+setColemakVisualMappings -> {{
+Visual.movements = {
+  l: ['right', 'character'],
+  h: ['left', 'character'],
+  e: ['left', 'line'],
+  n: ['right', 'line'],
+  w: ['right', 'word'],
+  b: ['left', 'word'],
+  0: ['left', 'lineboundary'],
+  $: ['right', 'lineboundary'],
+  G: ['right', 'documentboundary']
+};
+}}
+call setColemakVisualMappings
+
+let mapleader = " "
+map <Leader>/ clearSearchHighlight
+map <Leader>h :tabprevious<CR>
+map <Leader>i :tabnext<CR>

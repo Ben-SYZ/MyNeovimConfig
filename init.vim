@@ -10,7 +10,7 @@ if empty(glob('~/.config/nvim/autoload/plug.vim'))
 endif
 
 
-inoremap <C-f> <Esc>:silent !~/.config/nvim/screenshot.sh <cfile> <CR>
+inoremap <C-f> <Esc>:silent !~/.config/nvim/screenshot.sh <cfile> <CR>o
 
 
 let mapleader=" "
@@ -44,6 +44,7 @@ noremap b b
 noremap f e
 noremap B 5b
 noremap F 5e
+noremap W 5w
 
 " insert
 noremap k i
@@ -68,13 +69,13 @@ noremap M N
 tnoremap <Esc> <C-\><C-n>
 
 
-"nnoremap <C-h> 0
-"nnoremap <C-i> $
+nnoremap <C-a> 0
+nnoremap <C-e> $
 nnoremap S :w<CR>
 nnoremap Q :q<CR>
 nnoremap <leader>R :source $MYVIMRC<CR>
 nnoremap <leader>RC :e ~/.config/nvim/init.vim<CR>
-nnoremap <LEADER>i3 :e ~/.config/i3/config<CR>
+nnoremap <LEADER>I3 :e ~/.config/i3/config<CR>
 " Indentation
 nnoremap < <<
 nnoremap > >>
@@ -113,8 +114,8 @@ nnoremap tk :tabe<CR>
 nnoremap th :-tabnext<CR>
 nnoremap ti :tabnext<CR>
 "vim a b c change between buffers
-nnoremap <LEADER>bh :bp<CR>
-nnoremap <LEADER>bi :bn<CR>
+nnoremap <LEADER>Bh :bp<CR>
+nnoremap <LEADER>Bi :bn<CR>
 
 
 "highlight
@@ -235,7 +236,7 @@ Plug 'dracula/vim'
 "Markdown
 "-----
 "Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install' }
-Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } ,'for': ['ipynb','markdown']}
 Plug 'dhruvasagar/vim-table-mode', { 'on': 'TableModeToggle' }
 "Plug 'vimwiki/vimwiki'
 
@@ -311,10 +312,11 @@ Plug 'vim-scripts/fcitx.vim'
 "Plug 'lvht/mru'
 "
 Plug 'lervag/vimtex'
-Plug 'KeitaNakamura/tex-conceal.vim'
+Plug 'KeitaNakamura/tex-conceal.vim',{'for': ['tex','markdown']}
 Plug 'xuhdev/vim-latex-live-preview'
 Plug 'lambdalisue/suda.vim'
-
+" fold the markdown and conceal math
+Plug 'plasticboy/vim-markdown'
 
 
 call plug#end()
@@ -328,11 +330,10 @@ colorscheme snazzy
 "==
 "==  Markdown
 "==============
-
 let g:mkdp_auto_start = 0
 let g:mkdp_auto_close = 1
 let g:mkdp_refresh_slow = 0
-let g:mkdp_command_for_global = 0
+let g:mkdp_command_for_global = 1
 let g:mkdp_open_to_the_world = 0
 let g:mkdp_open_ip = ''
 let g:mkdp_browser = ''
@@ -352,9 +353,21 @@ let g:mkdp_markdown_css = ''
 let g:mkdp_highlight_css = ''
 let g:mkdp_port = ''
 let g:mkdp_page_title = '「${name}」'
-
-
 nnoremap <LEADER>mp :MarkdownPreview<CR>
+
+"===
+"===  vim-markdown
+"====================
+let g:tex_conceal = ""
+let g:vim_markdown_math=1
+let g:vim_markdown_conceal=1
+let g:vim_markdown_folding_disabled = 1
+let g:vim_markdown_new_list_item_indent = 0
+
+"https://vim.fandom.com/wiki/Creating_your_own_syntax_files
+"syn match MatrixMember '\t'
+"syn keyword Matrix begin{pmatrix} nextgroup=MatrixMember skipwhite
+
 
 "===
 "===  vimwiki
@@ -379,7 +392,7 @@ nnoremap U :UndotreeToggle<CR>
 "==
 "==  coc
 "==============
-let g:coc_global_extensions = ['coc-json', 'coc-python',  'coc-html', 'coc-yank', 'coc-lists', 'coc-gitignore', 'coc-texlab' ]
+let g:coc_global_extensions = ['coc-json', 'coc-python',  'coc-html', 'coc-yank', 'coc-lists', 'coc-gitignore', 'coc-texlab', 'coc-explorer' ]
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
 function! s:check_back_space() abort
@@ -411,6 +424,8 @@ let g:markdown_fenced_languages = ['css', 'js=javascript', 'python']
 nnoremap <silent> <space>y  :<C-u>CocList -A --normal yank<cr>
 " To get correct comment highlighting in jsonc whose extension is json
 autocmd FileType json syntax match Comment +\/\/.\+$+
+
+nnoremap tt :CocCommand explorer<CR>
 
 "==============
 
@@ -504,12 +519,17 @@ let g:vimtex_view_method='zathura'
 let g:vimtex_quickfix_mode=0
 
 " ===
-" === tex-conceal(seems no need to use it)
+" === tex-conceal
 " ==========
 autocmd Filetype tex set conceallevel=1
 autocmd Filetype tex let g:tex_conceal='abdmg'
 "hi Conceal cterm=underline ctermfg=189 ctermbg=235 gui=underline guifg=#f9f9ff guibg=#192224 guisp=#192224
 autocmd Filetype tex hi Conceal ctermfg=189 ctermbg=235 guifg=#f9f9ff guibg=#192224 guisp=#192224
+
+autocmd Filetype markdown set conceallevel=1
+"autocmd Filetype markdown let g:tex_conceal='abdmg'
+autocmd Filetype markdown hi Conceal guibg=none
+"autocmd Filetype markdown hi Conceal ctermfg=189 ctermbg=235 guifg=#f9f9ff guibg=#000000 guisp=#192224
 
 " ===
 " === vimlivePreview
@@ -582,4 +602,4 @@ set clipboard+=unnamedplus " clipboard for system
 
 
 
-source ~/.config/nvim/markdown.vim
+"source ~/.config/nvim/markdown.vim

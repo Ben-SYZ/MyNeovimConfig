@@ -23,22 +23,31 @@ endglobal
 
 context "math()"
 snippet it "italic" wA
-\mathcal{$1}
+\mathcal{$1}$0
 endsnippet
 
+context "math()"
+snippet bb "bold" iA
+\bold{$1}$0
+endsnippet
+
+context "math()"
 priority 100
 snippet ... "ldots" iA
 \ldots
 endsnippet
 
 # The w at the end of the first line means that this snip­pet will ex­pand at word bound­aries
+#snippet mk "Math" wA
+#$${1}$`!p
+#if t[2] and t[2][0] not in [',', '.', '?', '-', ' ']:
+#    snip.rv = ' '
+#else:
+#    snip.rv = ''
+#`$2
+#endsnippet
 snippet mk "Math" wA
-$${1}$`!p
-if t[2] and t[2][0] not in [',', '.', '?', '-', ' ']:
-    snip.rv = ' '
-else:
-    snip.rv = ''
-`$2
+$$1$$0
 endsnippet
 
 snippet dm "Math" wA
@@ -65,7 +74,7 @@ endsnippet
 
 context "math()"
 snippet td "subscript" iA
-{$1}_{$2}$0
+_{$2}$0
 endsnippet
 
 context "math()"
@@ -96,13 +105,24 @@ endsnippet
 priority 10
 context "math()"
 snippet tp "superscript" iA
-{$1}^{$2}$0
+^{$1}$0
 endsnippet
 
 context "math()"
 snippet ^^ "superscript" iA
 ^{$2}$0
 endsnippet
+
+context "math()"
+snippet deg "degree" iA
+^\\circ
+endsnippet
+
+context "math()"
+snippet her "hermitian" iA
+^\\dag
+endsnippet
+
 
 context "math()"
 snippet sq "sqrt" iA
@@ -127,7 +147,7 @@ endsnippet
 # (1 + (2+3))/	→	\frac{1 + (2+3)}{}
 # detect ()by depth, in +, out -, till 0
 context "math()"
-snippet '((\d+)|(\d*)(\\)([A-Za-z]+)((\^|_)(\{\d+\}|\d))*)/' "Fraction" wrA
+snippet '((\d+\.\d+)|(\d+)|(\d*)(\\)([A-Za-z]+)((\^|_)(\{\d+\}|\d))*)/' "Fraction" wrA
 \\frac{`!p snip.rv = match.group(1)`}{$1}$0
 endsnippet
 #  
@@ -167,7 +187,7 @@ endsnippet
 #Postfix
 priority 100
 context "math()"
-snippet hbar "Dirac" iA
+snippet hba "Dirac" iA
 \hbar
 endsnippet
 
@@ -183,8 +203,15 @@ snippet ket "ket" iA
 ∣$1⟩$0
 endsnippet
 #\ket{$1}$0
+#\left|  \right>
+priority 10
 context "math()"
 snippet bkt "braket" iA
+⟨$1⟩$0
+endsnippet
+priority 100
+context "math()"
+snippet bkkt "braket" iA
 ⟨$1|$2|$3⟩$0
 endsnippet
 context "math()"
@@ -239,6 +266,34 @@ snippet "([a-zA-Z])vec" "vec" riA
 \vec{`!p snip.rv=match.group(1)`}
 endsnippet
 
+priority 10
+context "math()"
+snippet "til" "tilde" riA
+\tilde{$1}$0
+endsnippet
+priority 100
+context "math()"
+snippet "([a-zA-Z])til" "tilde" riA
+\tilde{`!p snip.rv=match.group(1)`}
+endsnippet
+priority 101
+context "math()"
+snippet "wtil" "hat" riA
+\widetilde{$1}$0
+endsnippet
+priority 102
+context "math()"
+snippet "([a-zA-Z])wtil" "hat" riA
+\widetilde{`!p snip.rv=match.group(1)`}
+endsnippet
+
+
+priority 10
+context "math()"
+snippet oo "infity" iA
+\infty
+endsnippet
+
 #snippet "(\\?\w+)(,\.|\.,)" "Vector postfix" rA
 #\vec{`!p snip.rv=match.group(1)`}
 #endsnippet 
@@ -275,10 +330,21 @@ context "math()"
 snippet int "intergate" wA
 \int
 endsnippet
+priority 1000
+context "math()"
+snippet \int "intergate" wA
+\\int
+endsnippet
+# to
+priority 1000 
+context "math()"
+snippet into "intergateoo" wA
+int_{-\\infty}^{+\\infty}
+endsnippet
 #  
 context "math()"
 snippet ode "differential" wA
-\frac{${1:dy}}{${2:dx}} $0
+\frac{d${1:y}}{d${2:x}} $0
 endsnippet
 
 priority 10
@@ -287,8 +353,13 @@ snippet pde "differential" wA
 \frac{\partial ${1:y}}{ \partial ${2:x}} $0
 endsnippet
 context "math()"
-priority 100
+priority 1000
 snippet 2pde "differential" wA
+\frac{\partial^2 ${1:y}}{ \partial ${2:x_i}^2} $0
+endsnippet
+context "math()"
+priority 1000
+snippet 22pde "differential" wA
 \frac{\partial^2 ${1:y}}{ \partial ${2:x_i} \partial ${3:x_j}} $0
 endsnippet
 
@@ -303,8 +374,13 @@ context "math()"
 snippet "([a-zA-Z])ddot" "dot" rA
 \dot{`!p snip.rv=match.group(1)`}$0
 endsnippet
-
 priority 1000
+context "math()"
+snippet ddot "ddot" iA
+\ddot{$1}$0
+endsnippet
+
+priority 100
 context "math()"
 snippet dot "cdot" iA
  \cdot 
@@ -312,7 +388,7 @@ endsnippet
 
 priority 100
 context "math()"
-snippet times "times" iA
+snippet ** "times" iA
  \times 
 endsnippet
 
@@ -349,6 +425,15 @@ endsnippet
 context "math()"
 snippet Ome "Omega" iA
 \Omega
+endsnippet
+
+context "math()"
+snippet the "theta" iA
+\theta
+endsnippet
+context "math()"
+snippet The "Theta" iA
+\Theta
 endsnippet
 
 context "math()"
@@ -414,9 +499,15 @@ snippet nab "nabla" iA
 \nabla
 endsnippet
 
+priority 10
 context "math()"
 snippet rho "rho" iA
 \rho
+endsnippet
+priority 100
+context "math()"
+snippet \rho "rho" iA
+\\rho
 endsnippet
 
 priority 10
@@ -430,15 +521,26 @@ snippet \xi "xi" iA
 \\xi
 endsnippet
 
-context "math()"
-snippet Xi "Xi" iA
-\Xi
-endsnippet
+#context "math()"
+#snippet Xi "Xi" iA
+#\Xi
+#endsnippet
 
 context "math()"
 snippet eta "eta" iA
 \eta
 endsnippet
+
+context "math()"
+snippet pi "pi" iA
+\pi
+endsnippet
+
+context "math()"
+snippet Box "d'Alembertian" iA
+\Box
+endsnippet
+
 
 
 
@@ -492,6 +594,10 @@ context "math()"
 snippet != "not equal" iA
 \neq 
 endsnippet
+context "math()"
+snippet => "not equal" iA
+\Rightarrow 
+endsnippet
 
 context "math()"
 snippet ~ "approximation" iA
@@ -503,6 +609,15 @@ snippet == "def" iA
 \equiv 
 endsnippet
 
+context "math()"
+snippet prop "propto" iA
+\propto 
+endsnippet
+
+context "math()"
+snippet perp "perpendicular" iA
+\perp
+endsnippet
 # ===matrix
 #context "math()"
 #snippet case "cases" wA
@@ -543,7 +658,7 @@ $0\\\\
 endsnippet
 
 context "math()"
-snippet align "aligned" wA
+snippet ali "aligned" wA
 \begin{aligned}
 $0
 \end{aligned}
@@ -563,9 +678,17 @@ endsnippet
 #endsnippet
 #`!p snip.rv = match.group(1)`\right
 context "math()"
-snippet leftr "left right" wA
+snippet leftd "left right" wA
+\left|$1\right|$0
+endsnippet
+
+# tp
+priority 1000
+context "math()"
+snippet leftp "left right" wA
 \left($1\right)$0
 endsnippet
+
 context "math()"
 snippet leftb "left right" wA
 \left[$1\right]$0
@@ -578,9 +701,13 @@ context "math()"
 snippet left. "left right" wA
 \left. \right|
 endsnippet
+context "math()"
+snippet lefta "left right" wA
+\left<$1\right>$0
+endsnippet
 
 context "math()"
-snippet "\t" "tab" riA
+snippet "\t" "tab" ri
 	&
 endsnippet
 
@@ -588,12 +715,24 @@ endsnippet
 #snippet "\r" "return" irA
 #\\\\
 #endsnippet
+context "math()"
+snippet tex "text" iA
+\text{}
+endsnippet
+
+context "math()"
+snippet t "tag" i
+\tag{$1}$0
+endsnippet
 
 snippet pic "pictures"
 ![$1](./figure/$1.png)
 endsnippet
+snippet Pic "pictures"
+![20200518_page$1](./figure/20200518_page$1.png)
+endsnippet
 
-snippet merm "mermaid"
+snippet merm "mermaid" b
 \`\`\`mermaid
 graph LR
 %%TB
@@ -603,3 +742,62 @@ graph LR
 %%C --> D
 \`\`\`
 endsnippet
+snippet code "code blocks" b
+
+\`\`\`$1
+$2
+\`\`\`
+
+$0
+endsnippet
+
+snippet lk "link" wA
+[$1]($2) $0
+endsnippet
+
+snippet h1 "head" bA
+# $0
+endsnippet
+snippet h2 "head" bA
+## $0
+endsnippet
+snippet h3 "head" bA
+### $0
+endsnippet
+snippet h4 "head" bA
+#### $0
+endsnippet
+snippet h5 "head" bA
+##### $0
+endsnippet
+snippet h6 "head" bA
+###### $0
+endsnippet
+
+snippet line "line" b
+--- $0
+endsnippet
+snippet tsk "task" bA
+- [ ] $1
+$0
+endsnippet
+
+snippet arrow "arrow" b
+:arrow_forward: 
+endsnippet
+
+snippet comment "comment" b
+<!--
+$1
+-->
+$0
+endsnippet
+
+
+
+#\hat{ttttt}
+#\widehat{tttttt}
+#\overline{tttt}
+#\widetilde{ttttttt}
+
+

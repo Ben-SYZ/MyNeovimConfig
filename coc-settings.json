@@ -8,6 +8,7 @@
 	"suggest.maxCompleteItemCount": 50,
 	"suggest.timeout":5000,
 	"suggest.noselect": true,
+//	"python.jediEnabled": false,
 //	"languageserver": {
 //		"lua": {
 //			"command": "lua-lsp",

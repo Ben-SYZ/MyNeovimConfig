@@ -4,13 +4,20 @@
 "Do NOT forget install curl firstly
 "coc for python need 'python3 -m pip install --user --upgrade pynvim'
 if empty(glob('~/.config/nvim/autoload/plug.vim'))
-	silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
-		\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-	autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+	if empty(glob('/usr/bin/curl'))
+		!echo install curl first
+	else
+		silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
+			\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+		autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+		
+	endif
 endif
 
 
-inoremap <C-f> <Esc>:silent !~/.config/nvim/screenshot.sh <cfile> <CR>o
+
+inoremap <C-f> <Esc>:silent !~/.config/nvim/screenshot.sh <cfile><CR>
+noremap <C-s> <Esc>:silent !python ~/.config/nvim/adb.py<CR>p
 
 
 let mapleader=" "
@@ -26,6 +33,7 @@ set relativenumber nu
 "Keyboard map
 nnoremap : '
 nnoremap ' :
+nnoremap ; "
 "c/C short for ctrl, s/S short for Shift, CR/cr  short for Enter
 
 "
@@ -64,6 +72,8 @@ noremap A A
 " search
 noremap m n
 noremap M N
+noremap t f
+
 
 
 tnoremap <Esc> <C-\><C-n>
@@ -213,17 +223,23 @@ func! CompileRunGcc()
     silent! exec "!clear"
     exec "!time python3 %"
   elseif &filetype == 'html'
-    exec "!firefox % &"
+    exec "!chromium '%' &"
+"  elseif &filetype == 'html'
+"    exec "!firefox % &"
   elseif &filetype == 'markdown'
     exec "MarkdownPreview"
   elseif &filetype == 'vimwiki'
     exec "MarkdownPreview"
+  elseif &filetype == 'mdp'
+    exec "terminal mdp %"
   elseif &filetype == 'tex'
     exec "LLPStartPreview"
   endif
 endfunc
 
+autocmd Filetype markdown nnoremap <leader>C :silent !chromium&<CR>:MarkdownPreview<CR>
 
+au BufRead,BufNewFile *.mdp setfiletype mdp
 
 
 call plug#begin('~/.config/nvim/plugged')
@@ -300,7 +316,7 @@ Plug 'jiangmiao/auto-pairs'
 
 " fcitx
 "-----
-Plug 'vim-scripts/fcitx.vim'
+"Plug 'lilydjwg/fcitx.vim'
 
 " " nerd tree
 " " -----
@@ -318,6 +334,11 @@ Plug 'lambdalisue/suda.vim'
 " fold the markdown and conceal math
 Plug 'plasticboy/vim-markdown'
 
+
+Plug 'puremourning/vimspector', {'do': './install_gadget.py --enable-c --enable-python'}
+
+
+Plug 'svermeulen/vim-subversive'
 
 call plug#end()
 
@@ -352,8 +373,8 @@ let g:mkdp_preview_options = {
 let g:mkdp_markdown_css = ''
 let g:mkdp_highlight_css = ''
 let g:mkdp_port = ''
+"let g:mkdp_port = '8091'
 let g:mkdp_page_title = '「${name}」'
-nnoremap <LEADER>mp :MarkdownPreview<CR>
 
 "===
 "===  vim-markdown
@@ -363,6 +384,7 @@ let g:vim_markdown_math=1
 let g:vim_markdown_conceal=1
 let g:vim_markdown_folding_disabled = 1
 let g:vim_markdown_new_list_item_indent = 0
+let g:vim_markdown_conceal_code_blocks = 0
 
 "https://vim.fandom.com/wiki/Creating_your_own_syntax_files
 "syn match MatrixMember '\t'
@@ -392,7 +414,7 @@ nnoremap U :UndotreeToggle<CR>
 "==
 "==  coc
 "==============
-let g:coc_global_extensions = ['coc-json', 'coc-python',  'coc-html', 'coc-yank', 'coc-lists', 'coc-gitignore', 'coc-texlab', 'coc-explorer' ]
+let g:coc_global_extensions = ['coc-json', 'coc-python',  'coc-html', 'coc-yank', 'coc-lists', 'coc-gitignore', 'coc-texlab', 'coc-explorer'] ",'coc-snippets' ]
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
 function! s:check_back_space() abort
@@ -426,6 +448,21 @@ nnoremap <silent> <space>y  :<C-u>CocList -A --normal yank<cr>
 autocmd FileType json syntax match Comment +\/\/.\+$+
 
 nnoremap tt :CocCommand explorer<CR>
+
+" " --
+" " -- coc-snippets
+" " -------------------
+" " Use <C-l> for trigger snippet expand.
+" imap <C-k> <Plug>(coc-snippets-expand)
+" " Use <C-j> for select text for visual placeholder of snippet.
+" vmap <C-k> <Plug>(coc-snippets-select)
+" " Use <C-j> for jump to next placeholder, it's default of coc.nvim
+" let g:coc_snippet_next = '<c-k>'
+" " Use <C-k> for jump to previous placeholder, it's default of coc.nvim
+" let g:coc_snippet_prev = '<c-k>'
+" " Use <C-j> for both expand and jump (make expand higher priority.)
+" imap <C-k> <Plug>(coc-snippets-expand-jump)
+" let g:UltiSnipsSnippetDirectories=1
 
 "==============
 
@@ -527,7 +564,7 @@ autocmd Filetype tex let g:tex_conceal='abdmg'
 autocmd Filetype tex hi Conceal ctermfg=189 ctermbg=235 guifg=#f9f9ff guibg=#192224 guisp=#192224
 
 autocmd Filetype markdown set conceallevel=1
-"autocmd Filetype markdown let g:tex_conceal='abdmg'
+autocmd Filetype markdown let g:tex_conceal='abdmg'
 autocmd Filetype markdown hi Conceal guibg=none
 "autocmd Filetype markdown hi Conceal ctermfg=189 ctermbg=235 guifg=#f9f9ff guibg=#000000 guisp=#192224
 
@@ -543,6 +580,29 @@ let g:livepreview_engine = 'xelatex'
 cnoreabbrev sudowrite w suda://%
 cnoreabbrev sw w suda://%
 
+" ===
+" === vimspector
+" ==========
+let g:vimspector_enable_mappings = 'HUMAN'
+function! s:read_template_into_buffer(template)
+	" has to be a function to avoid the extra space fzf#run insers otherwise
+	execute '0r ~/.config/nvim/sample_vimspector_json/'.a:template
+endfunction
+command! -bang -nargs=* LoadVimSpectorJsonTemplate call fzf#run({
+			\   'source': 'ls -1 ~/.config/nvim/sample_vimspector_json',
+			\   'down': 20,
+			\   'sink': function('<sid>read_template_into_buffer')
+			\ })
+noremap <leader>vs :tabe .vimspector.json<CR>:LoadVimSpectorJsonTemplate<CR>
+sign define vimspectorBP text=☛ texthl=Normal
+sign define vimspectorBPDisabled text=☞ texthl=Normal
+sign define vimspectorPC text=🔶 texthl=SpellBad
+
+" ===
+" === vim-subversive
+" ===
+nmap s <plug>(SubversiveSubstitute)
+nmap ss <plug>(SubversiveSubstituteLine)
 
 
 "==
@@ -603,3 +663,9 @@ set clipboard+=unnamedplus " clipboard for system
 
 
 "source ~/.config/nvim/markdown.vim
+
+nnoremap <leader><leader> /<++><CR>:nohlsearch<CR>c4l
+autocmd Filetype markdown nnoremap <LEADER>c bi`<Esc>ea`<Esc>
+autocmd Filetype markdown nnoremap <LEADER>m bi$<Esc>ea$<Esc>
+autocmd Filetype markdown nnoremap <LEADER>b bi**<Esc>ea**<Esc>
+"autocmd Filetype markdown nnoremap <LEADER>i bi*<Esc>ea*<Esc>

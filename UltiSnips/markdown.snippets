@@ -1,25 +1,49 @@
 global !p
-#texMathZones = ['mkdMath','texMathZoneY','texMathZoneX']
-texMathZones = ['texMathZone'+x for x in ['A', 'AS', 'B', 'BS', 'C', 'CS', 'D', 'DS', 'E', 'ES', 'F', 'FS', 'G', 'GS', 'H', 'HS', 'I', 'IS', 'J', 'JS', 'K', 'KS', 'L', 'LS', 'DS', 'V', 'W', 'X', 'Y', 'Z']]
-texMathZones.append('mkdMath')
-#echo synstack(line('.'), col('.') - (col('.')>=2 ? 1 : 0))
+#texMathZones = ['mkdMath','texMathZoneY','texMathZoneX', 'texMathZoneZ']
+#vim.command('redir @a | silent exe "syntax list @texMathZones" | redir END')
+#texMathZones = [x.strip() for x in vim.eval('@a').split(',')][1:]
+texMathZones = ['mkdMath', 'texMathZoneV', 'texMathZoneW', 'texMathZoneX', 'texMathZoneY', 'texMathZoneZ', 'texMathZoneA', 'texMathZoneAS', 'texMathZoneB', 'texMathZoneBS', 'texMathZoneC', 'texMathZoneCS', 'texMathZoneD', 'texMathZoneDS']
+
 #mkdMath, texMathZoneY, texMathZoneX
 #744, 668, 667
 #423 html H4
 
-#  #texMathZones = ['texMathZone'+x for x in ['A', 'AS', 'B', 'BS', 'C', 'CS', 'D', 'DS', 'E', 'ES', 'F', 'FS', 'G', 'GS', 'H', 'HS', 'I', 'IS', 'J', 'JS', 'K', 'KS', 'L', 'LS', 'DS', 'V', 'W', 'X', 'Y', 'Z']]
-texIgnoreMathZones = ['texMathText']
+#texIgnoreMathZones = ['texMathText','texMathMatcher', 'texStatement']
+# texIgnoreMathZones is for '\text{}', '\tag{}'part
+texIgnoreMathZones = ['texMathText', 'texStatement']
+
 texMathZoneIds = vim.eval('map('+str(texMathZones)+", 'hlID(v:val)')")
 texIgnoreMathZoneIds = vim.eval('map('+str(texIgnoreMathZones)+", 'hlID(v:val)')")
-ignore = texIgnoreMathZoneIds[0]
+
+#ignore = texIgnoreMathZoneIds[0]
 def math():
 	synstackids = vim.eval("synstack(line('.'), col('.') - (col('.')>=2 ? 1 : 0))")
-	try:
-		first = next(i for i in reversed(synstackids) if i in texIgnoreMathZoneIds or i in texMathZoneIds)
-		return first != ignore
-	except StopIteration:
-		return False
+	#try:
+	#	first = next(i for i in reversed(synstackids) if i in texIgnoreMathZoneIds or i in texMathZoneIds)
+	#	return first != ignore
+	#except StopIteration:
+	#	return False
+	for i in reversed(synstackids):
+		if i in texIgnoreMathZoneIds:
+			return False
+	for i in reversed(synstackids):
+		if i in texMathZoneIds:
+			return True
+	return False
+
+def noarc(matchgroup,snappet):
+	exception = ['arc','\\','var']
+	if not (match in exception):
+		snip.rv = match.group(matchgroup) + snappet
+# seems I can use context for all, to ignore \xxx
+#context "math()"
+#priority 10
+#snippet '([^\\]|^)cos' "cosine" riA
+#`!p noarc(1,'\\cos')`
+#endsnippet
 endglobal
+
+
 
 context "math()"
 snippet it "italic" wA
@@ -58,12 +82,14 @@ endsnippet
 
 # subscript
 context "math()"
-snippet '([A-Za-z])([\d])' "auto subscript" wrA
+#snippet '([A-Za-z])([\d])' "auto subscript" wrA
+snippet '([A-Za-df-z])([\d])' "auto subscript" wrA
 `!p snip.rv = match.group(1)`_`!p snip.rv = match.group(2)`
 endsnippet
 
 context "math()"
-snippet '([A-Za-z])_(\d\d)' "auto subscript2" wrA
+#snippet '([A-Za-z])_(\d\d)' "auto subscript2" wrA
+snippet '([A-Za-df-z])_(\d\d)' "auto subscript" wrA
 `!p snip.rv = match.group(1)`_{`!p snip.rv = match.group(2)`}
 endsnippet
 
@@ -80,6 +106,12 @@ endsnippet
 context "math()"
 snippet __ "subscript" iA
 _{$1}$0
+endsnippet
+
+priority 1
+context "math()"
+snippet at "|_{}" wA
+|_{$1}$0
 endsnippet
 
 # superscript
@@ -111,6 +143,19 @@ endsnippet
 context "math()"
 snippet ^^ "superscript" iA
 ^{$2}$0
+endsnippet
+
+context "math()"
+snippet 'e([\d])' "time 10^" wrA
+\\times 10^`!p snip.rv = match.group(1)`
+endsnippet
+context "math()"
+snippet '10\^(\d\d)' "time 10^{}" wrA
+10^{`!p snip.rv = match.group(1)`}
+endsnippet
+context "math()"
+snippet 'e-(\d)' "time 10^{-1}" wrA
+\\times 10^{-`!p snip.rv = match.group(1)`$1}$0
 endsnippet
 
 context "math()"
@@ -147,7 +192,8 @@ endsnippet
 # (1 + (2+3))/	→	\frac{1 + (2+3)}{}
 # detect ()by depth, in +, out -, till 0
 context "math()"
-snippet '((\d+\.\d+)|(\d+)|(\d*)(\\)([A-Za-z]+)((\^|_)(\{\d+\}|\d))*)/' "Fraction" wrA
+#snippet '((\d+\.\d+)|(\d+)|(\d*)(\\)([A-Za-z]+)((\^|_)(\{\d+\}|\d))*)/' "Fraction" wrA
+snippet '((\d+)|(\d*)(\\)?([A-Za-z]+)((\^|_)(\{\d+\}|\d))*)/' "Fraction" wrA
 \\frac{`!p snip.rv = match.group(1)`}{$1}$0
 endsnippet
 #  
@@ -185,10 +231,27 @@ endsnippet
 #  endsnippet
 
 #Postfix
-priority 100
+#priority 100
+#context "math()"
+#snippet hba "Dirac" iA
+#\hbar
+#endsnippet
+#priority 1000
+#context "math()"
+#snippet \hbar "Dirac" iA
+#hbar 
+#endsnippet
+#
+#priority 100
+#context "math()"
+#snippet hbar "Dirac" iA
+#\hbar
+#endsnippet
+
 context "math()"
-snippet hba "Dirac" iA
-\hbar
+priority 10
+snippet '([^\\]|^)hba' "Dirac hbar" riA
+`!p noarc(1,'\\hbar')`
 endsnippet
 
 priority 10
@@ -230,15 +293,26 @@ snippet pbra "psibra" iA
 ⟨\psi∣
 endsnippet
 
-priority 10
 context "math()"
-snippet "bar" "bar" riA
-\overline{$1}$0
+snippet aa "Ångström" i
+Å
 endsnippet
+
+#priority 10
+#context "math()"
+#snippet "bar" "bar" riA
+#\overline{$1}$0
+#endsnippet
+context "math()"
+priority 10
+snippet '([^\\^h]|^)bar' "bar" riA
+`!p noarc(1,'\\overline')`{$1}$0
+endsnippet
+
 
 priority 100
 context "math()"
-snippet "([a-zA-Z])Bar" "bar" riA
+snippet "([a-gi-zA-GI-Z])Bar" "bar" riA
 \overline{`!p snip.rv=match.group(1)`}
 endsnippet
 
@@ -306,23 +380,40 @@ endsnippet
 
 priority 100
 context "math()"
-snippet limi "limit" wA
+snippet lim "limit" wA
+\lim$0
+endsnippet
+priority 101
+context "math()"
+snippet \lim "limit" wA
+lim $0
+endsnippet
+
+priority 100
+context "math()"
+snippet \limo "limit" wA
 \lim_{$1 \to \infty}$0
 endsnippet
 priority 100
-snippet "limz" "limit" wA
+snippet \limz "limit" wA
 \lim_{$1 \to 0}$0
 endsnippet
 
 priority 100
 context "math()"
 snippet sum "sum" wA
-\sum_{${1:n}}^{${2:\infty}}$0
+\sum$0
 endsnippet
-priority 1000
+priority 101
 context "math()"
 snippet \sum "sum" wA
-\\sum
+sum 
+endsnippet
+
+priority 100
+context "math()"
+snippet \sumo "sum" wA
+\sum_{${1:n}}^{${2:\infty}}$0
 endsnippet
 
 priority 100
@@ -330,16 +421,58 @@ context "math()"
 snippet int "intergate" wA
 \int
 endsnippet
-priority 1000
+# backspace get 'int ', backspace again '\int'
+priority 101
 context "math()"
 snippet \int "intergate" wA
-\\int
+int 
 endsnippet
+priority 10000
+context "math()"
+snippet iint "intergate" wA
+\iint
+endsnippet
+
+#some notation
+priority 10
+context "math()"
+snippet max "max" wA
+\max
+endsnippet
+priority 100
+context "math()"
+snippet \max "max" wA
+max 
+endsnippet
+
+priority 10
+context "math()"
+snippet min "min" wA
+\min
+endsnippet
+priority 100
+context "math()"
+snippet \min "min" wA
+min 
+endsnippet
+
+priority 10
+context "math()"
+snippet exp "exp" wA
+\exp
+endsnippet
+priority 11
+context "math()"
+snippet \exp "exp" wA
+exp 
+endsnippet
+
+
 # to
 priority 1000 
 context "math()"
 snippet into "intergateoo" wA
-int_{-\\infty}^{+\\infty}
+int_{${1:-\\infty}}^{${2:+\\infty}}$0
 endsnippet
 #  
 context "math()"
@@ -353,7 +486,7 @@ snippet pde "differential" wA
 \frac{\partial ${1:y}}{ \partial ${2:x}} $0
 endsnippet
 context "math()"
-priority 1000
+priority 100
 snippet 2pde "differential" wA
 \frac{\partial^2 ${1:y}}{ \partial ${2:x_i}^2} $0
 endsnippet
@@ -382,8 +515,8 @@ endsnippet
 
 priority 100
 context "math()"
-snippet dot "cdot" iA
- \cdot 
+snippet dot "cdot" wA
+\cdot 
 endsnippet
 
 priority 100
@@ -404,9 +537,24 @@ snippet alp "alpha" iA
 \alpha
 endsnippet
 
+#context "math()"
+#snippet bet "beta" iA
+#\beta
+#endsnippet
+#priority 1000
+#context "math()"
+#snippet \beta "beta" iA
+#beta 
+#endsnippet
+#priority 100
+#context "math()"
+#snippet beta "beta" iA
+#\beta
+#endsnippet
 context "math()"
-snippet bet "beta" iA
-\beta
+priority 10
+snippet '([^\\]|^)bet' "beta" riA
+`!p noarc(1,'\\beta')`
 endsnippet
 
 context "math()"
@@ -436,28 +584,114 @@ snippet The "Theta" iA
 \Theta
 endsnippet
 
+#priority 1000
+#context "math()"
+#snippet \Theta "Theta" iA
+#Theta 
+#endsnippet
+#priority 100
+#context "math()"
+#snippet Theta "Theta" iA
+#\Theta
+#endsnippet
+#priority 100
+#context "math()"
+#snippet \theta "theta" iA
+#theta 
+#endsnippet
+#priority 100
+#context "math()"
+#snippet theta "theta" iA
+#\theta
+#endsnippet
+
+#eta
+priority 1000
 context "math()"
-snippet psi "psi" iA
-\psi
+snippet zeta "zeta" iA
+\zeta
 endsnippet
+priority 1000
 context "math()"
-snippet Psi "Psi" iA
-\Psi
+snippet Zeta "zeta" iA
+\Zeta
 endsnippet
 
+#priority 100
+#context "math()"
+#snippet psi "psi" iA
+#\psi
+#endsnippet
+#priority 100
+#context "math()"
+#snippet Psi "Psi" iA
+#\Psi
+#endsnippet
+#priority 1000
+#context "math()"
+#snippet \psi "psi" iA
+#psi 
+#endsnippet
+#priority 1000
+#context "math()"
+#snippet \Psi "Psi" iA
+#Psi 
+#endsnippet
+context "math()"
 priority 10
+snippet '([^\\]|^)([Pp])si' "psi" riA
+`!p noarc(1,'\\' + match.group(2)+'si')`
+endsnippet
+
+
+
+#priority 10
+#context "math()"
+#snippet phi "phi" iA
+#\phi
+#endsnippet
+#priority 100
+#context "math()"
+#snippet \phi "phi" iA
+#phi 
+#endsnippet
+#context "math()"
+#priority 10
+#snippet Phi "Phi" iA
+#\Phi
+#endsnippet
+#context "math()"
+#priority 100
+#snippet \Phi "Phi" iA
+#Phi 
+#endsnippet
 context "math()"
-snippet phi "phi" iA
-\phi
+priority 10
+snippet '([^\\]|^)([Pp])hi' "phi" riA
+`!p noarc(1,'\\' + match.group(2)+'hi')`
 endsnippet
+
+#context "math()"
+#priority 100
+#snippet vphi "varphi" iA
+#\varphi
+#endsnippet
+#context "math()"
+#priority 100
+#snippet varphi "varphi" iA
+#\varphi
+#endsnippet
+#context "math()"
+#priority 1000
+#snippet \varphi "varphi" iA
+#varphi 
+#endsnippet
 context "math()"
-snippet Phi "Phi" iA
-\Phi
+priority 10
+snippet '([^\\]|^)var([Pp])hi' "varphi" riA
+`!p noarc(1,'\\var' + match.group(2)+'hi')`
 endsnippet
-priority 100
-snippet vphi "varphi" iA
-\varphi
-endsnippet
+
 
 context "math()"
 snippet eps "epsilon" iA
@@ -469,9 +703,20 @@ snippet kap "kappa" iA
 \kappa
 endsnippet
 
+#context "math()"
+#priority 100
+#snippet mu "mu" iA
+#\mu
+#endsnippet
+#context "math()"
+#priority 101
+#snippet \mu "mu" iA
+#mu 
+#endsnippet
 context "math()"
-snippet mu "mu" iA
-\mu
+priority 10
+snippet '([^\\]|^)mu' "mu" riA
+`!p noarc(1,'\\mu')`
 endsnippet
 
 context "math()"
@@ -499,26 +744,36 @@ snippet nab "nabla" iA
 \nabla
 endsnippet
 
+#priority 10
+#context "math()"
+#snippet rho "rho" iA
+#\rho
+#endsnippet
+#priority 100
+#context "math()"
+#snippet \rho "rho" iA
+#rho 
+#endsnippet
+context "math()"
 priority 10
-context "math()"
-snippet rho "rho" iA
-\rho
-endsnippet
-priority 100
-context "math()"
-snippet \rho "rho" iA
-\\rho
+snippet '([^\\]|^)rho' "rho" riA
+`!p noarc(1,'\\rho')`
 endsnippet
 
+#priority 10
+#context "math()"
+#snippet xi "xi" iA
+#\xi
+#endsnippet
+#priority 100
+#context "math()"
+#snippet \xi "xi" iA
+#xi 
+#endsnippet
+context "math()"
 priority 10
-context "math()"
-snippet xi "xi" iA
-\xi
-endsnippet
-priority 100
-context "math()"
-snippet \xi "xi" iA
-\\xi
+snippet '([^\\]|^)xi' "xi" riA
+`!p noarc(1,'\\xi')`
 endsnippet
 
 #context "math()"
@@ -526,14 +781,42 @@ endsnippet
 #\Xi
 #endsnippet
 
+#priority 10
+#context "math()"
+#snippet eta "eta" iA
+#\eta
+#endsnippet
+#priority 100
+#context "math()"
+#snippet \eta "eta" iA
+#eta 
+#endsnippet
 context "math()"
-snippet eta "eta" iA
-\eta
+priority 10
+snippet '([^\\]|^)eta' "eta" riA
+`!p noarc(1,'\\eta')`
+endsnippet
+
+#context "math()"
+#priority 100
+#snippet pi "pi" iA
+#\pi
+#endsnippet
+#context "math()"
+#priority 101
+#snippet \pi "pi" iA
+#pi 
+#endsnippet
+context "math()"
+priority 10
+snippet '([^\\]|^)pi' "pi" riA
+`!p noarc(1,'\\pi')`
 endsnippet
 
 context "math()"
-snippet pi "pi" iA
-\pi
+priority 10
+snippet '([^\\]|^)([Cc])hi' "chi" riA
+`!p noarc(1, '\\' + match.group(2) + 'hi')`
 endsnippet
 
 context "math()"
@@ -556,18 +839,113 @@ snippet mp "-+" iA
 \mp 
 endsnippet
 
+#context "math()"
+#priority 10
+#snippet '([^\\]|^)sin' "sine" riA
+#`!p snip.rv = match.group(1)`\\sin
+#endsnippet
 context "math()"
-snippet sin "sine" iA
-\sin
+priority 10
+snippet '([^\\]|^)sin' "sine" riA
+`!p noarc(1,'\\sin')`
+endsnippet
+#context "math()"
+#priority 10
+#snippet '([\s\S])cos' "cosine" riA
+#`!p
+#if match.group(1) != '\\':
+#	snip.rv = match.group(1)+'\\cos'
+#else:
+#	snip.rv = 'cos '
+#`
+#endsnippet
+
+#context "math()"
+#priority 10
+#snippet '([^\\]|^)cos' "cosine" riA
+#`!p snip.rv = match.group(1)`\\cos
+#endsnippet
+context "math()"
+priority 10
+snippet '([^\\]|^)cos' "cosine" riA
+`!p noarc(1,'\\cos')`
 endsnippet
 context "math()"
-snippet cos "cosine" iA
-\cos
+priority 10
+snippet '([^\\]|^)tan' "tangent" riA
+`!p noarc(1,'\\tan')`
+endsnippet
+
+context "math()"
+priority 10
+snippet log "log" iA
+\log
 endsnippet
 context "math()"
-snippet tan "tangent" iA
-\tan
+priority 10
+snippet ln "ln" iA
+\ln
 endsnippet
+
+context "math()"
+priority 100
+snippet asin "arcsine" iA
+\arcsin
+endsnippet
+
+context "math()"
+priority 100
+snippet acos "arccosine" iA
+\arccos
+endsnippet
+context "math()"
+priority 100
+snippet atan "arctangent" iA
+\arctan
+endsnippet
+
+#context "math()"
+#priority 101
+#snippet \arcsin "arcsine" iA
+#arcsin 
+#endsnippet
+#context "math()"
+#priority 101
+#snippet \arccos "arccosine" iA
+#arccos 
+#endsnippet
+#context "math()"
+#priority 101
+#snippet \arctan "arctangent" iA
+#arctan 
+#endsnippet
+#context "math()"
+#priority 100
+#snippet arcsin "arcsine" iA
+#\arcsin 
+#endsnippet
+#context "math()"
+#priority 100
+#snippet arccos "arccosine" iA
+#\arccos 
+#endsnippet
+#context "math()"
+#priority 100
+#snippet arctan "arctangent" iA
+#\arctan 
+#endsnippet
+
+context "math()"
+priority 10
+snippet \log "log" iA
+log 
+endsnippet
+context "math()"
+priority 10
+snippet \ln "ln" iA
+ln 
+endsnippet
+
 #=====
 
 context "math()"
@@ -595,7 +973,11 @@ snippet != "not equal" iA
 \neq 
 endsnippet
 context "math()"
-snippet => "not equal" iA
+snippet => "=>" iA
+\Rightarrow 
+endsnippet
+context "math()"
+snippet =< "<=" iA
 \Rightarrow 
 endsnippet
 
@@ -617,6 +999,12 @@ endsnippet
 context "math()"
 snippet perp "perpendicular" iA
 \perp
+endsnippet
+
+priority 1
+context "math()"
+snippet in "in" i
+\in
 endsnippet
 # ===matrix
 #context "math()"
@@ -660,7 +1048,6 @@ endsnippet
 context "math()"
 snippet ali "aligned" wA
 \begin{aligned}
-$0
 \end{aligned}
 endsnippet
 
@@ -685,7 +1072,7 @@ endsnippet
 # tp
 priority 1000
 context "math()"
-snippet leftp "left right" wA
+snippet leftp "left right" iA
 \left($1\right)$0
 endsnippet
 
@@ -708,7 +1095,7 @@ endsnippet
 
 context "math()"
 snippet "\t" "tab" ri
-	&
+	&=
 endsnippet
 
 #context "math()"
@@ -716,20 +1103,17 @@ endsnippet
 #\\\\
 #endsnippet
 context "math()"
-snippet tex "text" iA
-\text{}
+snippet '([^\\]|^)tex' "text" riA
+`!p noarc(1,'\\text')`{$1}$0
 endsnippet
 
 context "math()"
-snippet t "tag" i
+snippet tag "tag" wA
 \tag{$1}$0
 endsnippet
 
 snippet pic "pictures"
 ![$1](./figure/$1.png)
-endsnippet
-snippet Pic "pictures"
-![20200518_page$1](./figure/20200518_page$1.png)
 endsnippet
 
 snippet merm "mermaid" b
@@ -793,11 +1177,38 @@ $1
 $0
 endsnippet
 
+context "math()"
+priority 10
+snippet '([uU])a' "uparrow" riA
+\\`!p snip.rv=match.group(1)`parrow
+endsnippet
+context "math()"
+priority 10
+snippet '([dD])a' "uparrow" riA
+\\`!p snip.rv=match.group(1)`ownarrow
+endsnippet
+context "math()"
+priority 10
+snippet '([rR])a' "uparrow" ri
+\\`!p snip.rv=match.group(1)`ightarrow
+endsnippet
+context "math()"
+priority 10
+snippet '([ll])a' "uparrow" ri
+\\`!p snip.rv=match.group(1)`eftarrow
+endsnippet
 
 
 #\hat{ttttt}
 #\widehat{tttttt}
 #\overline{tttt}
 #\widetilde{ttttttt}
+
+# Tem
+
+snippet cc "c60 qm" wA
+$C_{60}$
+endsnippet
+
 
 

@@ -10,7 +10,8 @@ texMathZones = ['mkdMath', 'texMathZoneV', 'texMathZoneW', 'texMathZoneX', 'texM
 
 #texIgnoreMathZones = ['texMathText','texMathMatcher', 'texStatement']
 # texIgnoreMathZones is for '\text{}', '\tag{}'part
-texIgnoreMathZones = ['texMathText', 'texStatement']
+#texIgnoreMathZones = ['texMathText', 'texStatement']
+texIgnoreMathZones = ['texMathText']
 
 texMathZoneIds = vim.eval('map('+str(texMathZones)+", 'hlID(v:val)')")
 texIgnoreMathZoneIds = vim.eval('map('+str(texIgnoreMathZones)+", 'hlID(v:val)')")
@@ -31,19 +32,12 @@ def math():
 			return True
 	return False
 
-def noarc(matchgroup,snappet):
-	exception = ['arc','\\','var']
-	if not (match in exception):
-		snip.rv = match.group(matchgroup) + snappet
-# seems I can use context for all, to ignore \xxx
-#context "math()"
-#priority 10
-#snippet '([^\\]|^)cos' "cosine" riA
-#`!p noarc(1,'\\cos')`
-#endsnippet
+def greek(left):
+	return match.group(1) + '\\' + match.group(2) + left
+def nobackslash(snappet):
+	return match.group(1) + '\\' + snappet
+
 endglobal
-
-
 
 context "math()"
 snippet it "italic" wA
@@ -61,15 +55,6 @@ snippet ... "ldots" iA
 \ldots
 endsnippet
 
-# The w at the end of the first line means that this snip­pet will ex­pand at word bound­aries
-#snippet mk "Math" wA
-#$${1}$`!p
-#if t[2] and t[2][0] not in [',', '.', '?', '-', ' ']:
-#    snip.rv = ' '
-#else:
-#    snip.rv = ''
-#`$2
-#endsnippet
 snippet mk "Math" wA
 $$1$$0
 endsnippet
@@ -81,6 +66,7 @@ $$
 endsnippet
 
 # subscript
+#==================
 context "math()"
 #snippet '([A-Za-z])([\d])' "auto subscript" wrA
 snippet '([A-Za-df-z])([\d])' "auto subscript" wrA
@@ -115,6 +101,7 @@ snippet at "|_{}" wA
 endsnippet
 
 # superscript
+#==================
 context "math()"
 snippet '([A-Za-z0-9])\*' "auto subscript" wr
 `!p snip.rv = match.group(1)`^*
@@ -158,41 +145,13 @@ snippet 'e-(\d)' "time 10^{-1}" wrA
 \\times 10^{-`!p snip.rv = match.group(1)`$1}$0
 endsnippet
 
-context "math()"
-snippet deg "degree" iA
-^\\circ
-endsnippet
-
-context "math()"
-snippet her "hermitian" iA
-^\\dag
-endsnippet
-
-
-context "math()"
-snippet sq "sqrt" iA
-\sqrt{$1}$0
-endsnippet
-
 # fraction
 context "math()"
 snippet /// "Fraction" iA
 \\frac{$1}{$2}$0
 endsnippet
 
-# //	→	\frac{}{}
-# alphabetic/alphabetic
-
-# 3/	→	\frac{3}{}
-# 4\pi^2/	→	\frac{4\pi^2}{}
-# digits\alphabetic^_/
-
-# (1 + 2 + 3)/	→	\frac{1 + 2 + 3}{}
-# (1+(2+3)/)	→	(1 + \frac{2+3}{})
-# (1 + (2+3))/	→	\frac{1 + (2+3)}{}
-# detect ()by depth, in +, out -, till 0
 context "math()"
-#snippet '((\d+\.\d+)|(\d+)|(\d*)(\\)([A-Za-z]+)((\^|_)(\{\d+\}|\d))*)/' "Fraction" wrA
 snippet '((\d+)|(\d*)(\\)?([A-Za-z]+)((\^|_)(\{\d+\}|\d))*)/' "Fraction" wrA
 \\frac{`!p snip.rv = match.group(1)`}{$1}$0
 endsnippet
@@ -216,7 +175,6 @@ snip.rv = stripped[0:i] + "\\frac{" + stripped[i+1:-1] + "}"
 `{$1}$0
 endsnippet
 
-# seclect, <C-n>, /
 context "math()"
 snippet / "Fraction" i
 \\frac{${VISUAL}}{$1}$0
@@ -230,28 +188,10 @@ endsnippet
 #  $0
 #  endsnippet
 
-#Postfix
-#priority 100
-#context "math()"
-#snippet hba "Dirac" iA
-#\hbar
-#endsnippet
-#priority 1000
-#context "math()"
-#snippet \hbar "Dirac" iA
-#hbar 
-#endsnippet
-#
-#priority 100
-#context "math()"
-#snippet hbar "Dirac" iA
-#\hbar
-#endsnippet
-
 context "math()"
 priority 10
 snippet '([^\\]|^)hba' "Dirac hbar" riA
-`!p noarc(1,'\\hbar')`
+`!p snip.rv = nobackslash('hbar')`
 endsnippet
 
 priority 10
@@ -259,7 +199,6 @@ context "math()"
 snippet bra "bra" iA
 ⟨$1∣$0
 endsnippet
-#\bra{$1}$0
 priority 10
 context "math()"
 snippet ket "ket" iA
@@ -293,188 +232,132 @@ snippet pbra "psibra" iA
 ⟨\psi∣
 endsnippet
 
+# overline
 context "math()"
 snippet aa "Ångström" i
 Å
 endsnippet
 
-#priority 10
-#context "math()"
-#snippet "bar" "bar" riA
-#\overline{$1}$0
-#endsnippet
 context "math()"
 priority 10
-snippet '([^\\^h]|^)bar' "bar" riA
-`!p noarc(1,'\\overline')`{$1}$0
+snippet '([^\\h]|^)bar' "bar" riA
+\\`!p snip.rv = match.group(1)`overline{$1}$0
 endsnippet
-
 
 priority 100
 context "math()"
-snippet "([a-gi-zA-GI-Z])Bar" "bar" riA
-\overline{`!p snip.rv=match.group(1)`}
+snippet "([a-gi-zA-Z])bar" "bar" riA
+\\overline{`!p snip.rv=match.group(1)`}
 endsnippet
 
 priority 10
 context "math()"
-snippet "hat" "hat" riA
-\hat{$1}$0
+snippet "([^\\]|^)hat" "hat" riA
+\\`!p snip.rv = match.group(1)`hat{$1}$0
 endsnippet
 
 priority 100
 context "math()"
 snippet "([a-zA-Z])hat" "hat" riA
-\hat{`!p snip.rv=match.group(1)`}
+\\hat{`!p snip.rv=match.group(1)`}
 endsnippet
 
 priority 10
 context "math()"
-snippet vec "vec" iA
-\vec{$1}
+snippet '([^\\]|^)vec' "vec" riA
+\\`!p snip.rv = match.group(1)`vec{$1}$0
 endsnippet
 
 priority 100
 context "math()"
 snippet "([a-zA-Z])vec" "vec" riA
-\vec{`!p snip.rv=match.group(1)`}
+\\vec{`!p snip.rv=match.group(1)`}
 endsnippet
 
 priority 10
 context "math()"
-snippet "til" "tilde" riA
-\tilde{$1}$0
+snippet "([^\\|^])til" "tilde" riA
+\\`!p snip.rv = match.group(1)`tilde{$1}$0
 endsnippet
 priority 100
 context "math()"
 snippet "([a-zA-Z])til" "tilde" riA
-\tilde{`!p snip.rv=match.group(1)`}
+\\tilde{`!p snip.rv=match.group(1)`}
 endsnippet
 priority 101
 context "math()"
-snippet "wtil" "hat" riA
-\widetilde{$1}$0
+snippet "wtil" "tilde" riA
+\\widetilde{$1}$0
 endsnippet
 priority 102
 context "math()"
-snippet "([a-zA-Z])wtil" "hat" riA
-\widetilde{`!p snip.rv=match.group(1)`}
+snippet "([a-zA-Z])wtil" "tilde" riA
+\\widetilde{`!p snip.rv=match.group(1)`}
+endsnippet
+
+priority 100
+context "math()"
+snippet "([a-b-d-zA-Z])dot" "dot" rA
+\dot{`!p snip.rv=match.group(1)`}$0
+endsnippet
+
+priority 1000
+context "math()"
+snippet "([a-zA-Z])ddot" "ddot" rA
+\ddot{`!p snip.rv=match.group(1)`}$0
+endsnippet
+priority 1000
+context "math()"
+snippet '([^\\]|^)ddot' "ddot" riA
+\\`!p snip.rv = match.group(1)`ddot{$1}$0
 endsnippet
 
 
+#===== lim sum int
+#=================
 priority 10
 context "math()"
-snippet oo "infity" iA
-\infty
+snippet '([^\\]|^)lim' "limit" rwA
+\\lim$0
 endsnippet
-
-#snippet "(\\?\w+)(,\.|\.,)" "Vector postfix" rA
-#\vec{`!p snip.rv=match.group(1)`}
-#endsnippet 
-
-priority 100
-context "math()"
-snippet to "to" iA
- \to 
-endsnippet
-
-priority 100
-context "math()"
-snippet lim "limit" wA
-\lim$0
-endsnippet
-priority 101
-context "math()"
-snippet \lim "limit" wA
-lim $0
-endsnippet
-
-priority 100
+priority 10
 context "math()"
 snippet \limo "limit" wA
-\lim_{$1 \to \infty}$0
-endsnippet
-priority 100
-snippet \limz "limit" wA
-\lim_{$1 \to 0}$0
+\\lim_{$1 \to ${2:\infty}}$0
 endsnippet
 
-priority 100
+priority 10
 context "math()"
-snippet sum "sum" wA
-\sum$0
+snippet '([^\\]|^)sum' "sum" rwA
+`!p snip.rv = nobackslash('sum')`
 endsnippet
-priority 101
-context "math()"
-snippet \sum "sum" wA
-sum 
-endsnippet
-
-priority 100
+priority 10
 context "math()"
 snippet \sumo "sum" wA
-\sum_{${1:n}}^{${2:\infty}}$0
-endsnippet
-
-priority 100
-context "math()"
-snippet int "intergate" wA
-\int
-endsnippet
-# backspace get 'int ', backspace again '\int'
-priority 101
-context "math()"
-snippet \int "intergate" wA
-int 
-endsnippet
-priority 10000
-context "math()"
-snippet iint "intergate" wA
-\iint
-endsnippet
-
-#some notation
-priority 10
-context "math()"
-snippet max "max" wA
-\max
-endsnippet
-priority 100
-context "math()"
-snippet \max "max" wA
-max 
+\\sum_{${1:n}}^{${2:\infty}}$0
 endsnippet
 
 priority 10
 context "math()"
-snippet min "min" wA
-\min
+snippet '([^\\i]|^)int' "integrate" rwA
+\\int
 endsnippet
-priority 100
-context "math()"
-snippet \min "min" wA
-min 
-endsnippet
-
 priority 10
 context "math()"
-snippet exp "exp" wA
-\exp
+snippet \into "integrateoo" wA
+\\int_{${1:-\\infty}}^{${2:+\\infty}}$0
 endsnippet
-priority 11
+priority 10
 context "math()"
-snippet \exp "exp" wA
-exp 
+snippet '([^\\]|^)iint' "integrate" rwA
+`!p snip.rv = nobackslash('iint')`
+endsnippet
+priority 10
+context "math()"
+snippet \limo "limit" wA
+\\lim_{$1 \to ${2:\infty}}$0
 endsnippet
 
-
-# to
-priority 1000 
-context "math()"
-snippet into "intergateoo" wA
-int_{${1:-\\infty}}^{${2:+\\infty}}$0
-endsnippet
-#  
 context "math()"
 snippet ode "differential" wA
 \frac{d${1:y}}{d${2:x}} $0
@@ -498,25 +381,152 @@ endsnippet
 
 priority 100
 context "math()"
-snippet "([a-zA-Z])dot" "dot" rA
-\dot{`!p snip.rv=match.group(1)`}$0
+snippet dot "cdot" wA
+\cdot 
 endsnippet
 
-priority 1000
+#===== Greek
+#=================
 context "math()"
-snippet "([a-zA-Z])ddot" "dot" rA
-\dot{`!p snip.rv=match.group(1)`}$0
+snippet '([^\\]|^)([Aa])lp' "alpha" riA
+`!p snip.rv = greek('lpha')`
 endsnippet
-priority 1000
 context "math()"
-snippet ddot "ddot" iA
-\ddot{$1}$0
+snippet '([^\\]|^)([Bb])et' "beta" riA
+`!p snip.rv = greek('eta')`
+endsnippet
+context "math()"
+snippet '([^\\]|^)([Gg])am' "gamma" riA
+`!p snip.rv = greek('amma')`
+endsnippet
+context "math()"
+snippet '([^\\]|^)([Dd])el' "delta" riA
+`!p snip.rv = greek('elta')`
+endsnippet
+context "math()"
+snippet '([^\\]|^)([Ee])ps' "epsilon" riA
+`!p snip.rv = greek('psilon')`
+endsnippet
+context "math()"
+snippet '([^\\]|^)([Zz])et' "zeta" riA
+`!p snip.rv = greek('eta')`
+endsnippet
+context "math()"
+snippet '([^\\BbZzh]|^)([Ee])ta' "eta" riA
+`!p snip.rv = greek('ta')`
+endsnippet
+context "math()"
+snippet '([^\\]|^)([Tt])he' "theta" riA
+`!p snip.rv = greek('heta')`
+endsnippet
+context "math()"
+snippet '([^\\]|^)([Ii])ot' "iota" riA
+`!p snip.rv = greek('ota')`
+endsnippet
+context "math()"
+snippet '([^\\]|^)([Kk])ap' "kappa" riA
+`!p snip.rv = greek('appa')`
+endsnippet
+context "math()"
+snippet '([^\\]|^)([Mm])u' "mu" riA
+`!p snip.rv = greek('u')`
+endsnippet
+context "math()"
+snippet '([^\\]|^)([Nn])u' "nu" riA
+`!p snip.rv = greek('u')`
+endsnippet
+context "math()"
+snippet '([^\\]|^)([Xx])i' "xi" riA
+`!p snip.rv = greek('x')`
+endsnippet
+context "math()"
+snippet '([^\\]|^)([Oo])mi' "omicron" riA
+`!p snip.rv = greek('micron')`
+endsnippet
+context "math()"
+snippet '([^\\]|^)([Pp])i' "pi" riA
+`!p snip.rv = greek('i')`
+endsnippet
+context "math()"
+snippet '([^\\]|^)([Rr])ho' "rho" riA
+`!p snip.rv = greek('ho')`
+endsnippet
+context "math()"
+snippet '([^\\]|^)([Ss])ig' "sigma" riA
+`!p snip.rv = greek('igma')`
+endsnippet
+context "math()"
+snippet '([^\\]|^)([Tt])au' "tau" riA
+`!p snip.rv = greek('au')`
+endsnippet
+context "math()"
+snippet '([^\\]|^)([Uu])ps' "upsilon" riA
+`!p snip.rv = greek('psilon')`
+endsnippet
+priority 10
+context "math()"
+snippet '([^\\r]|^)([Pp])hi' "phi" riA
+`!p snip.rv = greek('hi')`
+endsnippet
+context "math()"
+snippet '([^\\]|^)([Cc])hi' "chi" riA
+`!p snip.rv = greek('hi')`
+endsnippet
+context "math()"
+snippet '([^\\]|^)([Pp])si' "psi" riA
+`!p snip.rv = greek('si')`
+endsnippet
+context "math()"
+snippet '([^\\]|^)([Oo])me' "omega" riA
+`!p snip.rv = greek('mega')`
 endsnippet
 
 priority 100
 context "math()"
-snippet dot "cdot" wA
-\cdot 
+snippet 'v([Pp])hi' "varphi" riA
+\\var`!p snip.rv =match.group(1)`hi
+endsnippet
+
+
+# some math notation
+priority 10
+context "math()"
+snippet oo "infity" iA
+\\infty
+endsnippet
+
+priority 10
+context "math()"
+snippet '([^\\]|^)to' "to" riA
+`!p snip.rv = nobackslash('to')`
+endsnippet
+
+priority 10
+context "math()"
+snippet '([^\\]|^)max' "max" rwA
+`!p snip.rv = nobackslash('max')`
+endsnippet
+priority 10
+context "math()"
+snippet '([^\\]|^)min' "min" rwA
+`!p snip.rv = nobackslash('min')`
+endsnippet
+
+priority 10
+context "math()"
+snippet '([^\\]|^)exp' "exp" rwA
+`!p snip.rv = nobackslash('exp')`
+endsnippet
+
+context "math()"
+priority 10
+snippet '([^\\]|^)log' "log" riA
+`!p snip.rv = nobackslash('log')`
+endsnippet
+context "math()"
+priority 10
+snippet '([^\\]|^)log' "ln" riA
+`!p snip.rv = nobackslash('ln')`
 endsnippet
 
 priority 100
@@ -527,372 +537,72 @@ endsnippet
 
 priority 1000
 context "math()"
-snippet otimes "otimes" iA
- \otimes 
-endsnippet
-
-#=====
-context "math()"
-snippet alp "alpha" iA
-\alpha
-endsnippet
-
-#context "math()"
-#snippet bet "beta" iA
-#\beta
-#endsnippet
-#priority 1000
-#context "math()"
-#snippet \beta "beta" iA
-#beta 
-#endsnippet
-#priority 100
-#context "math()"
-#snippet beta "beta" iA
-#\beta
-#endsnippet
-context "math()"
-priority 10
-snippet '([^\\]|^)bet' "beta" riA
-`!p noarc(1,'\\beta')`
+snippet '([^\\]|^)ot' "otimes" riA
+`!p snip.rv = nobackslash('otimes')`
 endsnippet
 
 context "math()"
-snippet gam "gamma" iA
-\gamma$0
-endsnippet
-context "math()"
-snippet Gam "Gamma" iA
-\Gamma
+snippet '([^\\]|^)nab' "nabla" riA
+`!p snip.rv = nobackslash('nabla')`
 endsnippet
 
 context "math()"
-snippet ome "omega" iA
-\omega
-endsnippet
-context "math()"
-snippet Ome "Omega" iA
-\Omega
+snippet '([^\\]|^)Box' "d'Alembertian" riA
+`!p snip.rv = nobackslash('Box')`
 endsnippet
 
 context "math()"
-snippet the "theta" iA
-\theta
-endsnippet
-context "math()"
-snippet The "Theta" iA
-\Theta
+snippet deg "degree" iA
+^\\circ
 endsnippet
 
-#priority 1000
-#context "math()"
-#snippet \Theta "Theta" iA
-#Theta 
-#endsnippet
-#priority 100
-#context "math()"
-#snippet Theta "Theta" iA
-#\Theta
-#endsnippet
-#priority 100
-#context "math()"
-#snippet \theta "theta" iA
-#theta 
-#endsnippet
-#priority 100
-#context "math()"
-#snippet theta "theta" iA
-#\theta
-#endsnippet
-
-#eta
-priority 1000
 context "math()"
-snippet zeta "zeta" iA
-\zeta
-endsnippet
-priority 1000
-context "math()"
-snippet Zeta "zeta" iA
-\Zeta
+snippet her "hermitian" iA
+^\\dag
 endsnippet
 
-#priority 100
-#context "math()"
-#snippet psi "psi" iA
-#\psi
-#endsnippet
-#priority 100
-#context "math()"
-#snippet Psi "Psi" iA
-#\Psi
-#endsnippet
-#priority 1000
-#context "math()"
-#snippet \psi "psi" iA
-#psi 
-#endsnippet
-#priority 1000
-#context "math()"
-#snippet \Psi "Psi" iA
-#Psi 
-#endsnippet
+context "math()"
+snippet '([^\\]|^)sq' "sqrt" riA
+\\`!p snip.rv = match.group(1)`sqrt{$1}$0
+endsnippet
+
+
+
+
+context "math()"
+snippet '([^\\]|^)pm' "+-" riA
+`!p snip.rv = nobackslash('pm')`
+endsnippet
+
+context "math()"
+snippet '([^\\]|^)mp' "+-" riA
+`!p snip.rv = nobackslash('mp')`
+endsnippet
+
+# trigonometric function
+#===========
 context "math()"
 priority 10
-snippet '([^\\]|^)([Pp])si' "psi" riA
-`!p noarc(1,'\\' + match.group(2)+'si')`
-endsnippet
-
-
-
-#priority 10
-#context "math()"
-#snippet phi "phi" iA
-#\phi
-#endsnippet
-#priority 100
-#context "math()"
-#snippet \phi "phi" iA
-#phi 
-#endsnippet
-#context "math()"
-#priority 10
-#snippet Phi "Phi" iA
-#\Phi
-#endsnippet
-#context "math()"
-#priority 100
-#snippet \Phi "Phi" iA
-#Phi 
-#endsnippet
-context "math()"
-priority 10
-snippet '([^\\]|^)([Pp])hi' "phi" riA
-`!p noarc(1,'\\' + match.group(2)+'hi')`
-endsnippet
-
-#context "math()"
-#priority 100
-#snippet vphi "varphi" iA
-#\varphi
-#endsnippet
-#context "math()"
-#priority 100
-#snippet varphi "varphi" iA
-#\varphi
-#endsnippet
-#context "math()"
-#priority 1000
-#snippet \varphi "varphi" iA
-#varphi 
-#endsnippet
-context "math()"
-priority 10
-snippet '([^\\]|^)var([Pp])hi' "varphi" riA
-`!p noarc(1,'\\var' + match.group(2)+'hi')`
-endsnippet
-
-
-context "math()"
-snippet eps "epsilon" iA
-\epsilon
-endsnippet
-
-context "math()"
-snippet kap "kappa" iA
-\kappa
-endsnippet
-
-#context "math()"
-#priority 100
-#snippet mu "mu" iA
-#\mu
-#endsnippet
-#context "math()"
-#priority 101
-#snippet \mu "mu" iA
-#mu 
-#endsnippet
-context "math()"
-priority 10
-snippet '([^\\]|^)mu' "mu" riA
-`!p noarc(1,'\\mu')`
-endsnippet
-
-context "math()"
-snippet lam "lambda" iA
-\lambda
-endsnippet
-
-context "math()"
-snippet sig "sigma" iA
-\sigma
-endsnippet
-
-context "math()"
-snippet del "delta" iA
-\delta
-endsnippet
-
-context "math()"
-snippet Del "Delta" iA
-\Delta
-endsnippet
-
-context "math()"
-snippet nab "nabla" iA
-\nabla
-endsnippet
-
-#priority 10
-#context "math()"
-#snippet rho "rho" iA
-#\rho
-#endsnippet
-#priority 100
-#context "math()"
-#snippet \rho "rho" iA
-#rho 
-#endsnippet
-context "math()"
-priority 10
-snippet '([^\\]|^)rho' "rho" riA
-`!p noarc(1,'\\rho')`
-endsnippet
-
-#priority 10
-#context "math()"
-#snippet xi "xi" iA
-#\xi
-#endsnippet
-#priority 100
-#context "math()"
-#snippet \xi "xi" iA
-#xi 
-#endsnippet
-context "math()"
-priority 10
-snippet '([^\\]|^)xi' "xi" riA
-`!p noarc(1,'\\xi')`
-endsnippet
-
-#context "math()"
-#snippet Xi "Xi" iA
-#\Xi
-#endsnippet
-
-#priority 10
-#context "math()"
-#snippet eta "eta" iA
-#\eta
-#endsnippet
-#priority 100
-#context "math()"
-#snippet \eta "eta" iA
-#eta 
-#endsnippet
-context "math()"
-priority 10
-snippet '([^\\]|^)eta' "eta" riA
-`!p noarc(1,'\\eta')`
-endsnippet
-
-#context "math()"
-#priority 100
-#snippet pi "pi" iA
-#\pi
-#endsnippet
-#context "math()"
-#priority 101
-#snippet \pi "pi" iA
-#pi 
-#endsnippet
-context "math()"
-priority 10
-snippet '([^\\]|^)pi' "pi" riA
-`!p noarc(1,'\\pi')`
-endsnippet
-
-context "math()"
-priority 10
-snippet '([^\\]|^)([Cc])hi' "chi" riA
-`!p noarc(1, '\\' + match.group(2) + 'hi')`
-endsnippet
-
-context "math()"
-snippet Box "d'Alembertian" iA
-\Box
-endsnippet
-
-
-
-
-
-
-context "math()"
-snippet pm "+-" iA
-\pm 
-endsnippet
-
-context "math()"
-snippet mp "-+" iA
-\mp 
-endsnippet
-
-#context "math()"
-#priority 10
-#snippet '([^\\]|^)sin' "sine" riA
-#`!p snip.rv = match.group(1)`\\sin
-#endsnippet
-context "math()"
-priority 10
-snippet '([^\\]|^)sin' "sine" riA
-`!p noarc(1,'\\sin')`
-endsnippet
-#context "math()"
-#priority 10
-#snippet '([\s\S])cos' "cosine" riA
-#`!p
-#if match.group(1) != '\\':
-#	snip.rv = match.group(1)+'\\cos'
-#else:
-#	snip.rv = 'cos '
-#`
-#endsnippet
-
-#context "math()"
-#priority 10
-#snippet '([^\\]|^)cos' "cosine" riA
-#`!p snip.rv = match.group(1)`\\cos
-#endsnippet
-context "math()"
-priority 10
-snippet '([^\\]|^)cos' "cosine" riA
-`!p noarc(1,'\\cos')`
+snippet '([^\\c]|^)cos' "cosine" riA
+`!p snip.rv = nobackslash('cos')`
 endsnippet
 context "math()"
 priority 10
-snippet '([^\\]|^)tan' "tangent" riA
-`!p noarc(1,'\\tan')`
+snippet '([^\\c]|^)sin' "sine" riA
+`!p snip.rv = nobackslash('sin')`
+endsnippet
+context "math()"
+priority 10
+snippet '([^\\c]|^)tan' "tangent" riA
+`!p snip.rv = nobackslash('tan')`
 endsnippet
 
-context "math()"
-priority 10
-snippet log "log" iA
-\log
-endsnippet
-context "math()"
-priority 10
-snippet ln "ln" iA
-\ln
-endsnippet
 
 context "math()"
 priority 100
 snippet asin "arcsine" iA
 \arcsin
 endsnippet
-
 context "math()"
 priority 100
 snippet acos "arccosine" iA
@@ -904,98 +614,40 @@ snippet atan "arctangent" iA
 \arctan
 endsnippet
 
-#context "math()"
-#priority 101
-#snippet \arcsin "arcsine" iA
-#arcsin 
-#endsnippet
-#context "math()"
-#priority 101
-#snippet \arccos "arccosine" iA
-#arccos 
-#endsnippet
-#context "math()"
-#priority 101
-#snippet \arctan "arctangent" iA
-#arctan 
-#endsnippet
-#context "math()"
-#priority 100
-#snippet arcsin "arcsine" iA
-#\arcsin 
-#endsnippet
-#context "math()"
-#priority 100
-#snippet arccos "arccosine" iA
-#\arccos 
-#endsnippet
-#context "math()"
-#priority 100
-#snippet arctan "arctangent" iA
-#\arctan 
-#endsnippet
-
-context "math()"
-priority 10
-snippet \log "log" iA
-log 
-endsnippet
-context "math()"
-priority 10
-snippet \ln "ln" iA
-ln 
-endsnippet
-
-#=====
-
+# comparison
+#===========
 context "math()"
 snippet >= ">=" iA
 \ge 
 endsnippet
-
 context "math()"
 snippet <= "<=" iA
 \le 
 endsnippet
-
 context "math()"
 snippet << "<<" iA
 \ll 
 endsnippet
-
 context "math()"
 snippet >> ">>" iA
 \gg 
 endsnippet
-
 context "math()"
 snippet != "not equal" iA
 \neq 
 endsnippet
 context "math()"
-snippet => "=>" iA
-\Rightarrow 
-endsnippet
-context "math()"
-snippet =< "<=" iA
-\Rightarrow 
-endsnippet
-
-context "math()"
 snippet ~ "approximation" iA
 \approx 
 endsnippet
-
 context "math()"
 snippet == "def" iA
 \equiv 
 endsnippet
-
 context "math()"
 snippet prop "propto" iA
 \propto 
 endsnippet
-
 context "math()"
 snippet perp "perpendicular" iA
 \perp
@@ -1006,15 +658,42 @@ context "math()"
 snippet in "in" i
 \in
 endsnippet
-# ===matrix
-#context "math()"
-#snippet case "cases" wA
-#\left\\{\begin{matrix}
-#$1&, $2\\\\
-#$3&, $4 
-#\end{matrix}\right.
-#endsnippet
 
+
+#===== arrow
+#=================
+context "math()"
+priority 10
+snippet '([uU])a' "uparrow" riA
+\\`!p snip.rv=match.group(1)`parrow
+endsnippet
+context "math()"
+priority 10
+snippet '([dD])a' "uparrow" riA
+\\`!p snip.rv=match.group(1)`ownarrow
+endsnippet
+context "math()"
+priority 10
+snippet '([rR])a' "uparrow" ri
+\\`!p snip.rv=match.group(1)`ightarrow
+endsnippet
+context "math()"
+priority 10
+snippet '([ll])a' "uparrow" ri
+\\`!p snip.rv=match.group(1)`eftarrow
+endsnippet
+context "math()"
+snippet => "=>" iA
+\Rightarrow 
+endsnippet
+context "math()"
+snippet =< "<=" iA
+\Rightarrow 
+endsnippet
+
+
+#===== large notation
+#=================
 context "math()"
 snippet case "cases" wA
 \begin{cases}
@@ -1059,11 +738,9 @@ $0\\\\
 \end{matrix}\right.
 endsnippet
 
-#context "math()"
-#snippet "left(\[\]|\(\)|\{\})" "left right" wrA
-#\left`!p snip.rv = match.string[1]` $1\right`!p snip.rv = match.string[-1]`$0
-#endsnippet
-#`!p snip.rv = match.group(1)`\right
+
+#===== large bracket
+#=================
 context "math()"
 snippet leftd "left right" wA
 \left|$1\right|$0
@@ -1098,18 +775,14 @@ snippet "\t" "tab" ri
 	&=
 endsnippet
 
-#context "math()"
-#snippet "\r" "return" irA
-#\\\\
-#endsnippet
 context "math()"
 snippet '([^\\]|^)tex' "text" riA
-`!p noarc(1,'\\text')`{$1}$0
+\\`!p snip.rv = match.group(1)`text{$1}$0
 endsnippet
 
 context "math()"
-snippet tag "tag" wA
-\tag{$1}$0
+snippet '([^\\]|^)tag' "tag" rwA
+\\`!p snip.rv = match.group(1)`tag{$1}$0
 endsnippet
 
 snippet pic "pictures"
@@ -1126,12 +799,10 @@ graph LR
 %%C --> D
 \`\`\`
 endsnippet
-snippet code "code blocks" b
-
+snippet c "code blocks" b
 \`\`\`$1
 $2
 \`\`\`
-
 $0
 endsnippet
 
@@ -1158,9 +829,6 @@ snippet h6 "head" bA
 ###### $0
 endsnippet
 
-snippet line "line" b
---- $0
-endsnippet
 snippet tsk "task" bA
 - [ ] $1
 $0
@@ -1176,39 +844,3 @@ $1
 -->
 $0
 endsnippet
-
-context "math()"
-priority 10
-snippet '([uU])a' "uparrow" riA
-\\`!p snip.rv=match.group(1)`parrow
-endsnippet
-context "math()"
-priority 10
-snippet '([dD])a' "uparrow" riA
-\\`!p snip.rv=match.group(1)`ownarrow
-endsnippet
-context "math()"
-priority 10
-snippet '([rR])a' "uparrow" ri
-\\`!p snip.rv=match.group(1)`ightarrow
-endsnippet
-context "math()"
-priority 10
-snippet '([ll])a' "uparrow" ri
-\\`!p snip.rv=match.group(1)`eftarrow
-endsnippet
-
-
-#\hat{ttttt}
-#\widehat{tttttt}
-#\overline{tttt}
-#\widetilde{ttttttt}
-
-# Tem
-
-snippet cc "c60 qm" wA
-$C_{60}$
-endsnippet
-
-
-

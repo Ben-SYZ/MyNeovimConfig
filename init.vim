@@ -8,10 +8,44 @@ if empty(glob('~/.config/nvim/autoload/plug.vim'))
 		\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 	autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
+noremap k n
+noremap o :
+noremap i l
+noremap e k
+noremap n j
+noremap d g
+noremap t f
+noremap s d
+noremap r s
+noremap ; p
+noremap y o
+noremap u i
+noremap l u
+noremap j y
+noremap g t
+noremap p r
+noremap f e
+
+noremap K N
+noremap O ;
+noremap I L
+noremap E K
+noremap N J
+noremap D G
+noremap T F
+noremap S D
+noremap R S
+noremap : P
+noremap Y O
+noremap U I
+noremap L U
+noremap J Y
+noremap G T
+noremap P R
+noremap F E
 
 
-
-let mapleader=" "
+"let mapleader=" "
 "colorscheme peachpuff
 "color delek 
 "set autoindent
@@ -22,40 +56,40 @@ let mapleader=" "
 set relativenumber nu
 """""""""""""""""""""""""""""""""""""
 "Keyboard map
-nnoremap : ;
-nnoremap ; :
 "c/C short for ctrl, s/S short for Shift, CR/cr  short for Enter
-nnoremap <C-h> 0
-nnoremap <C-l> $
-nnoremap H 5h
-nnoremap J 5j
-nnoremap K 5k
-nnoremap L 5l
-nnoremap S :w<CR>
+"nnoremap <C-h> 0
+"nnoremap <C-l> $
+
+"nnoremap H 5h
+"nnoremap J 5j
+"nnoremap K 5k
+"nnoremap L 5l
+
+nnoremap R :w<CR>
 nnoremap Q :q<CR>
-nnoremap R :source $MYVIMRC<CR>
-nnoremap <LEADER>rc :e ~/.config/nvim/init.vim<CR>
-nnoremap <LEADER>i3 :e ~/.config/i3/config<CR>
+nnoremap P :source $MYVIMRC<CR>
+nnoremap <space>rc :e ~/.config/nvim/init.vim<CR>
+"nnoremap <space>i3 :e ~/.config/i3/config<CR>
+
 " Indentation
-nnoremap < <<
-nnoremap > >>
-"nnoremap <LEADER>mrc :e ~/.config/nvim/markdown.vim<CR>
+"nnoremap <space>mrc :e ~/.config/nvim/markdown.vim<CR>
 "no opperation
 "map s <nop>
-nnoremap sl :set splitright<CR>:vsplit<CR>
-nnoremap sh :set nosplitright<CR>:vsplit<CR>
-nnoremap sj :set splitbelow<CR>:split<CR>
-nnoremap sk :set nosplitright<CR>:split<CR>
+
+"nnoremap sl :set splitright<CR>:vsplit<CR>
+"nnoremap sh :set nosplitright<CR>:vsplit<CR>
+"nnoremap sj :set splitbelow<CR>:split<CR>
+"nnoremap sk :set nosplitright<CR>:split<CR>
 
 "edit a new file
 ":e a.py 
 
-"exchange split window
-nnoremap <LEADER>h <C-w>h
-nnoremap <LEADER>j <C-w>j
-nnoremap <LEADER>k <C-w>k
-nnoremap <LEADER>l <C-w>l
-"resize the split window
+""exchange split window
+"nnoremap <space>h <C-w>h
+"nnoremap <space>j <C-w>j
+"nnoremap <space>k <C-w>k
+"nnoremap <space>l <C-w>l
+""resize the split window
 nnoremap <up> :res -5<CR>
 nnoremap <down> :res +5<CR>
 nnoremap <left> :vertical resize +5<CR>
@@ -69,13 +103,13 @@ nnoremap sh <C-w>t<C-w>K
 " O: vertical
 " o: horizontal(default)
 "new tab
-nnoremap tn :tabe<CR>
+nnoremap <tab>k :tabe<CR>
 "exchange in tab
-nnoremap th :-tabnext<CR>
-nnoremap tl :tabnext<CR>
+nnoremap <tab>h :-tabnext<CR>
+nnoremap <tab>i :tabnext<CR>
 "vim a b c change between buffers
-nnoremap <LEADER>bh :bp<CR>
-nnoremap <LEADER>bl :bn<CR>
+"nnoremap <space>bh :bp<CR>
+"nnoremap <space>bl :bn<CR>
 
 
 "highlight
@@ -99,7 +133,7 @@ exec "nohlsearch"
 "high light when you typing word
 set incsearch
 "at 1 line leader=" " no highlight
-noremap <LEADER><CR> :nohlsearch<CR>
+noremap <space><CR> :nohlsearch<CR>
 
 "ignore the case
 set ignorecase
@@ -113,8 +147,9 @@ filetype on
 filetype indent on
 filetype plugin on
 filetype plugin indent on
+"set plugin off
 "you can use mouse in vim
-"set mouse=a
+set mouse=a
 set encoding=utf-8
 "some terminal cannot show the color not correctly
 "????????????????
@@ -153,9 +188,8 @@ set autochdir
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 
 
-
 " Compile function
-nnoremap <LEADER>r :call CompileRunGcc()<CR>
+nnoremap <space>r :call CompileRunGcc()<CR>
 func! CompileRunGcc()
   exec "w"
   if &filetype == 'c'
@@ -183,12 +217,12 @@ endfunc
 
 
 
-
 call plug#begin('~/.config/nvim/plugged')
 
 Plug 'vim-airline/vim-airline'
 Plug 'connorholyday/vim-snazzy'
-Plug 'dracula/vim'
+"another theme
+"Plug 'dracula/vim'
 
 
 "Markdown
@@ -197,7 +231,7 @@ Plug 'dracula/vim'
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
 Plug 'dhruvasagar/vim-table-mode', { 'on': 'TableModeToggle' }
 "Plug 'vimwiki/vimwiki'
-
+"
 "Undo tree
 "-----
 Plug 'mbbill/undotree'
@@ -205,7 +239,7 @@ Plug 'mbbill/undotree'
 "coc
 "-----
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-
+ 
 
 "youcompleteme
 "-------
@@ -229,9 +263,9 @@ Plug 'junegunn/vim-easy-align'
 
 
 call plug#end()
-
-
-
+"
+"
+"
 colorscheme snazzy
 let g:SnazzyTransparent = 1
 
@@ -239,7 +273,6 @@ let g:SnazzyTransparent = 1
 "==
 "==  Markdown
 "==============
-
 let g:mkdp_auto_start = 0
 let g:mkdp_auto_close = 1
 let g:mkdp_refresh_slow = 0
@@ -265,8 +298,6 @@ let g:mkdp_port = ''
 let g:mkdp_page_title = '「${name}」'
 
 
-nnoremap <LEADER>mp :MarkdownPreview<CR>
-
 "===
 "===  vimwiki
 "====================
@@ -280,60 +311,89 @@ nnoremap <LEADER>mp :MarkdownPreview<CR>
 "===  vim-table-mode
 "====================
 
-nnoremap <LEADER>tm :TableModeToggle<CR>
+nnoremap <space>tm :TableModeToggle<CR>
 
 "==
 "==  undotree
 "==============
-nnoremap U :UndotreeToggle<CR>
+nnoremap L :UndotreeToggle<CR>
 
-"==
-"==  coc
-"==============
-let g:coc_global_extensions = ['coc-json', 'coc-python',  'coc-html', 'coc-yank', 'coc-lists', 'coc-gitignore' ]
-" Use tab for trigger completion with characters ahead and navigate.
-" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
-function! s:check_back_space() abort
-	let col = col('.') - 1
-	return !col || getline('.')[col - 1]  =~ '\s'
-endfunction
-inoremap <silent><expr> <Tab>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<Tab>" :
-      \ coc#refresh()
-
-" " Use <Tab> and <S-Tab> to navigate the completion list:
-" inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>" " default on
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-" Use <cr> to confirm completion
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-nmap <silent> en <Plug>(coc-diagnostic-next)
-nmap <silent> eN <Plug>(coc-diagnostic-prev)
-" used in def blah blah
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gr <Plug>(coc-references)
-nmap <silent> rn <Plug>(coc-rename)
-" make error texts have a red color
-highlight CocErrorHighlight ctermfg=Red  guifg=#ff0000
-" highlight in markdown
-let g:markdown_fenced_languages = ['css', 'js=javascript', 'python']
-" clipboard
-nnoremap <silent> <space>y  :<C-u>CocList -A --normal yank<cr>
-" To get correct comment highlighting in jsonc whose extension is json
-autocmd FileType json syntax match Comment +\/\/.\+$+
-
-"" use <tab> for trigger completion and navigate to the next complete item
+""==
+""==  coc
+""==============
+"let g:coc_global_extensions = ['coc-json', 'coc-python',  'coc-html', 'coc-yank', 'coc-lists', 'coc-gitignore' ]
+"" Use tab for trigger completion with characters ahead and navigate.
+"" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
 "function! s:check_back_space() abort
 "	let col = col('.') - 1
 "	return !col || getline('.')[col - 1]  =~ '\s'
 "endfunction
 "inoremap <silent><expr> <Tab>
-"	\ pumvisible() ? "\<C-n>" :
-"	\ <SID>check_back_space() ? "\<Tab>" :
-"	\ coc#refresh()
-"" use <c-space>for trigger completion
-"inoremap <silent><expr> <c-space> coc#refresh()
+"      \ pumvisible() ? "\<C-n>" :
+"      \ <SID>check_back_space() ? "\<Tab>" :
+"      \ coc#refresh()
+"
+"" " Use <Tab> and <S-Tab> to navigate the completion list:
+"" inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>" " default on
+"inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+"" Use <cr> to confirm completion
+"inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+"nmap <silent> en <Plug>(coc-diagnostic-next)
+"nmap <silent> eN <Plug>(coc-diagnostic-prev)
+"" used in def blah blah
+"nmap <silent> gd <Plug>(coc-definition)
+"nmap <silent> gr <Plug>(coc-references)
+"nmap <silent> rn <Plug>(coc-rename)
+"" make error texts have a red color
+"highlight CocErrorHighlight ctermfg=Red  guifg=#ff0000
+"" highlight in markdown
+"let g:markdown_fenced_languages = ['css', 'js=javascript', 'python']
+"" clipboard
 "nnoremap <silent> <space>y  :<C-u>CocList -A --normal yank<cr>
+"" To get correct comment highlighting in jsonc whose extension is json
+"autocmd FileType json syntax match Comment +\/\/.\+$+
+"
+""" use <tab> for trigger completion and navigate to the next complete item
+""function! s:check_back_space() abort
+""	let col = col('.') - 1
+""	return !col || getline('.')[col - 1]  =~ '\s'
+""endfunction
+""inoremap <silent><expr> <Tab>
+""	\ pumvisible() ? "\<C-n>" :
+""	\ <SID>check_back_space() ? "\<Tab>" :
+""	\ coc#refresh()
+""" use <c-space>for trigger completion
+""inoremap <silent><expr> <c-space> coc#refresh()
+""nnoremap <silent> <space>y  :<C-u>CocList -A --normal yank<cr>
+
+"= vim-surround
+"==================
+let g:surround_no_mappings=1
+nmap sr  <Plug>Dsurround
+nmap cr  <Plug>Csurround
+nmap cR  <Plug>CSurround
+nmap jr  <Plug>Ysurround
+nmap jR  <Plug>YSurround
+nmap jrr <Plug>Yssurround
+nmap jRr <Plug>YSsurround
+nmap jRR <Plug>YSsurround
+"xmap R   <Plug>VSurround
+map sR  <Plug>VgSurround
+"""tapt""
+"ds
+"cs
+"cS
+"ys
+"yS
+"yss
+"ySs
+"ySS
+"S
+"gS
+
+
+
+
 
 "==
 "==  vim easy align

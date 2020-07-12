@@ -18,6 +18,31 @@ endif
 
 inoremap <C-f> <Esc>:silent !~/.config/nvim/screenshot.sh <cfile><CR>
 noremap <C-s> <Esc>:silent !python ~/.config/nvim/adb.py<CR>p
+nnoremap <C-z> :silent !okular <cfile>&<CR>
+
+nnoremap gf :call Gofile()<CR>
+
+function! Gofile()
+python3 << endPython
+filename = vim.eval('expand("<cfile>")')
+print(filename)
+if filename.endswith('.pdf'):
+    vim.command(':silent !okular ' + filename + '&')
+elif filename.endswith(('mp3','mp4','mkv')):
+    vim.command(':silent !vlc ' + filename + '&')
+elif filename.endswith(('.jpg','png','bmp','jpeg')):
+    vim.command(':silent !feh ' + filename + '&')
+elif filename.endswith(('doc','docx')):
+    vim.command(':silent !wps ' + filename + '&')
+elif filename.endswith(('xls','xlsx')):
+    vim.command(':silent !et ' + filename + '&')
+elif filename.endswith(('ppt','pptx')):
+    vim.command(':silent !wpp ' + filename + '&')
+else:
+    vim.command(':e <cfile>')
+endPython
+endfunction
+
 
 
 let mapleader=" "
@@ -29,6 +54,8 @@ let mapleader=" "
 "let g:instant_markdown_autostart = 0
 "Plugin 'suan/vim-instant-Markdown'
 set relativenumber nu
+" treat all the number as decimal system, seems oct does not work 0x worked
+"set nrformats=
 """""""""""""""""""""""""""""""""""""
 "Keyboard map
 nnoremap : '
@@ -52,7 +79,7 @@ noremap b b
 noremap f e
 noremap B 5b
 noremap F 5e
-noremap W 5w
+"noremap W 5w
 
 " insert
 noremap k i
@@ -72,14 +99,15 @@ noremap A A
 " search
 noremap m n
 noremap M N
-noremap t f
+" noremap t f
 
 
 
 tnoremap <Esc> <C-\><C-n>
 
 
-nnoremap <C-a> 0
+" C-a num++ c-x num--
+"nnoremap <C-a> 0
 nnoremap <C-e> $
 nnoremap S :w<CR>
 nnoremap Q :q<CR>
@@ -87,8 +115,8 @@ nnoremap <leader>R :source $MYVIMRC<CR>
 nnoremap <leader>RC :e ~/.config/nvim/init.vim<CR>
 nnoremap <LEADER>I3 :e ~/.config/i3/config<CR>
 " Indentation
-nnoremap < <<
-nnoremap > >>
+" nnoremap < <<
+" nnoremap > >>
 "nnoremap <LEADER>mrc :e ~/.config/nvim/markdown.vim<CR>
 "no opperation
 "map s <nop>
@@ -202,6 +230,16 @@ set autochdir
 "let the cursor be at the position where you exit
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 
+setlocal spell
+set spelllang=en_us,cjk
+setlocal spellfile=~/.config/coc/extensions/node_modules/coc-explorer/spell/en.utf-8.add
+"if &filetype == 'markdown'
+inoremap <C-l> <c-g>u<Esc>[s1z=`]a<c-g>u
+"endif
+
+func! MyFunc()
+	echo "hello"
+endfunc
 
 
 " Compile function
@@ -234,6 +272,20 @@ func! CompileRunGcc()
     exec "terminal mdp %"
   elseif &filetype == 'tex'
     exec "LLPStartPreview"
+  elseif &filetype == 'vim'
+    exec "source %"
+  endif
+endfunc
+
+nnoremap <LEADER>p :call Pandoc()<CR>
+func! Pandoc()
+	setlocal spell
+	set spelllang=en_us
+	inoremap <C-l> <c-g>u<Esc>[s1z=`]a<c-g>u
+  exec "w"
+  if &filetype == 'markdown'
+    exec "!python /home/ben/Documents/SSP/TermPapers/citation.py"
+    exec "!wps a.docx"
   endif
 endfunc
 
@@ -316,7 +368,7 @@ Plug 'jiangmiao/auto-pairs'
 
 " fcitx
 "-----
-"Plug 'lilydjwg/fcitx.vim'
+Plug 'lilydjwg/fcitx.vim'
 
 " " nerd tree
 " " -----
@@ -328,7 +380,7 @@ Plug 'jiangmiao/auto-pairs'
 "Plug 'lvht/mru'
 "
 Plug 'lervag/vimtex'
-Plug 'KeitaNakamura/tex-conceal.vim',{'for': ['tex','markdown']}
+Plug 'BenSYZ/tex-conceal.vim',{'for': ['tex','markdown']}
 Plug 'xuhdev/vim-latex-live-preview'
 Plug 'lambdalisue/suda.vim'
 " fold the markdown and conceal math
@@ -339,6 +391,8 @@ Plug 'puremourning/vimspector', {'do': './install_gadget.py --enable-c --enable-
 
 
 Plug 'svermeulen/vim-subversive'
+
+
 
 call plug#end()
 
@@ -499,10 +553,11 @@ nmap ga <Plug>(EasyAlign)
 "==
 "==  jupyter-vim
 "==============
-nnoremap <LEADER>jc :JupyterConnect<CR>
-vmap <LEADER>jr <Plug>JupyterRunVisual
-nnoremap <LEADER>jr :JupyterRunFile<CR>
-nmap " V <Plug>JupyterRunVisual
+" Uncomment when need
+" nnoremap <LEADER>jc :JupyterConnect<CR>
+" vmap <LEADER>jr <Plug>JupyterRunVisual
+" nnoremap <LEADER>jr :JupyterRunFile<CR>
+" nmap " V <Plug>JupyterRunVisual
 
 " ===
 " === jupytext
@@ -669,3 +724,11 @@ autocmd Filetype markdown nnoremap <LEADER>c bi`<Esc>ea`<Esc>
 autocmd Filetype markdown nnoremap <LEADER>m bi$<Esc>ea$<Esc>
 autocmd Filetype markdown nnoremap <LEADER>b bi**<Esc>ea**<Esc>
 "autocmd Filetype markdown nnoremap <LEADER>i bi*<Esc>ea*<Esc>
+
+
+function! SynStack()
+  if !exists("*synstack")
+    return
+  endif
+  echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+endfunc

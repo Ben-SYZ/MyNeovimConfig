@@ -18,7 +18,7 @@ endif
 
 inoremap <C-f> <Esc>:silent !~/.config/nvim/screenshot.sh <cfile><CR>
 noremap <C-s> <Esc>:silent !python ~/.config/nvim/adb.py<CR>p
-nnoremap <C-z> :silent !okular <cfile>&<CR>
+"nnoremap <C-z> :silent !okular <cfile>&<CR>
 
 nnoremap gf :call Gofile()<CR>
 
@@ -45,7 +45,7 @@ endfunction
 
 
 
-let mapleader=" "
+"let mapleader=" "
 "colorscheme peachpuff
 "color delek 
 "set autoindent
@@ -60,6 +60,8 @@ set relativenumber nu
 "Keyboard map
 nnoremap : '
 nnoremap ' :
+vnoremap : '
+vnoremap ' :
 nnoremap ; "
 "c/C short for ctrl, s/S short for Shift, CR/cr  short for Enter
 
@@ -82,15 +84,15 @@ noremap F 5e
 "noremap W 5w
 
 " insert
-noremap k i
-noremap K I
+noremap u i
+noremap U I
 
 " copy
 noremap Y y$
 
 " undo
-" noremap l u
-" noremap L u
+noremap l u
+noremap L U
 
 " add
 noremap a a
@@ -99,8 +101,13 @@ noremap A A
 " search
 noremap m n
 noremap M N
-" noremap t f
+noremap t f
+" tag yit useless
+" noremap j t
 
+
+noremap k m
+noremap K M
 
 
 tnoremap <Esc> <C-\><C-n>
@@ -111,13 +118,13 @@ tnoremap <Esc> <C-\><C-n>
 nnoremap <C-e> $
 nnoremap S :w<CR>
 nnoremap Q :q<CR>
-nnoremap <leader>R :source $MYVIMRC<CR>
-nnoremap <leader>RC :e ~/.config/nvim/init.vim<CR>
-nnoremap <LEADER>I3 :e ~/.config/i3/config<CR>
+nnoremap <space>R :source $MYVIMRC<CR>
+nnoremap <space>RC :e ~/.config/nvim/init.vim<CR>
+nnoremap <space>I3 :e ~/.config/i3/config<CR>
 " Indentation
 " nnoremap < <<
 " nnoremap > >>
-"nnoremap <LEADER>mrc :e ~/.config/nvim/markdown.vim<CR>
+"nnoremap <space>mrc :e ~/.config/nvim/markdown.vim<CR>
 "no opperation
 "map s <nop>
 nnoremap sh :set nosplitright<CR>:vsplit<CR>
@@ -129,10 +136,10 @@ nnoremap si :set splitright<CR>:vsplit<CR>
 ":e a.py 
 
 "exchange split window
-nnoremap <LEADER>h <C-w>h
-nnoremap <LEADER>n <C-w>j
-nnoremap <LEADER>e <C-w>k
-nnoremap <LEADER>i <C-w>l
+nnoremap <space>h <C-w>h
+nnoremap <space>n <C-w>j
+nnoremap <space>e <C-w>k
+nnoremap <space>i <C-w>l
 "resize the split window
 nnoremap <up> :res -5<CR>
 nnoremap <down> :res +5<CR>
@@ -147,13 +154,13 @@ nnoremap sh <C-w>t<C-w>K
 " O: vertical
 " o: horizontal(default)
 "new tab
-nnoremap tk :tabe<CR>
+nnoremap <tab>k :tabe<CR>
 "exchange in tab
-nnoremap th :-tabnext<CR>
-nnoremap ti :tabnext<CR>
+nnoremap <tab>h :-tabnext<CR>
+nnoremap <tab>i :tabnext<CR>
 "vim a b c change between buffers
-nnoremap <LEADER>Bh :bp<CR>
-nnoremap <LEADER>Bi :bn<CR>
+nnoremap <space>Bh :bp<CR>
+nnoremap <space>Bi :bn<CR>
 
 
 "highlight
@@ -168,6 +175,7 @@ set wrap
 set showcmd
 
 "in normal mode using tab can help you show the connecting words.
+" like zsh
 set wildmenu
 
 "high light search
@@ -177,7 +185,7 @@ exec "nohlsearch"
 "high light when you typing word
 set incsearch
 "at 1 line leader=" " no highlight
-noremap <LEADER><CR> :nohlsearch<CR>
+noremap <space><CR> :nohlsearch<CR>
 
 "ignore the case
 set ignorecase
@@ -192,7 +200,7 @@ filetype indent on
 filetype plugin on
 filetype plugin indent on
 "you can use mouse in vim
-"set mouse=a
+set mouse=a
 set encoding=utf-8
 "some terminal cannot show the color not correctly
 "????????????????
@@ -243,7 +251,7 @@ endfunc
 
 
 " Compile function
-nnoremap <LEADER>r :call CompileRunGcc()<CR>
+nnoremap <space>r :call CompileRunGcc()<CR>
 func! CompileRunGcc()
   exec "w"
   if &filetype == 'c'
@@ -277,7 +285,7 @@ func! CompileRunGcc()
   endif
 endfunc
 
-nnoremap <LEADER>p :call Pandoc()<CR>
+nnoremap <space>p :call Pandoc()<CR>
 func! Pandoc()
 	setlocal spell
 	set spelllang=en_us
@@ -289,12 +297,14 @@ func! Pandoc()
   endif
 endfunc
 
-autocmd Filetype markdown nnoremap <leader>C :silent !chromium&<CR>:MarkdownPreview<CR>
+autocmd Filetype markdown nnoremap <space>C :silent !chromium&<CR>:MarkdownPreview<CR>
 
 au BufRead,BufNewFile *.mdp setfiletype mdp
 
 
 call plug#begin('~/.config/nvim/plugged')
+
+Plug 'tpope/vim-commentary'
 
 Plug 'vim-airline/vim-airline'
 Plug 'connorholyday/vim-snazzy'
@@ -458,7 +468,7 @@ let g:vim_markdown_conceal_code_blocks = 0
 "===  vim-table-mode
 "====================
 
-nnoremap <LEADER>tm :TableModeToggle<CR>
+nnoremap <space>tm :TableModeToggle<CR>
 
 "==
 "==  undotree
@@ -554,9 +564,9 @@ nmap ga <Plug>(EasyAlign)
 "==  jupyter-vim
 "==============
 " Uncomment when need
-" nnoremap <LEADER>jc :JupyterConnect<CR>
-" vmap <LEADER>jr <Plug>JupyterRunVisual
-" nnoremap <LEADER>jr :JupyterRunFile<CR>
+" nnoremap <space>jc :JupyterConnect<CR>
+" vmap <space>jr <Plug>JupyterRunVisual
+" nnoremap <space>jr :JupyterRunFile<CR>
 " nmap " V <Plug>JupyterRunVisual
 
 " ===
@@ -570,9 +580,9 @@ let g:jupytext_fmt = 'md'
 "" ===
 "" === vimpyter
 "" ==========
-"autocmd Filetype ipynb nmap <silent><Leader>b :VimpyterInsertPythonBlock<CR>
-"autocmd Filetype ipynb nmap <silent><Leader>j :VimpyterStartJupyter<CR>
-"autocmd Filetype ipynb nmap <silent><Leader>n :VimpyterStartNteract<CR>
+"autocmd Filetype ipynb nmap <silent><space>b :VimpyterInsertPythonBlock<CR>
+"autocmd Filetype ipynb nmap <silent><space>j :VimpyterStartJupyter<CR>
+"autocmd Filetype ipynb nmap <silent><space>n :VimpyterStartNteract<CR>
 "let g:vimpyter_color=1
 
 
@@ -648,7 +658,7 @@ command! -bang -nargs=* LoadVimSpectorJsonTemplate call fzf#run({
 			\   'down': 20,
 			\   'sink': function('<sid>read_template_into_buffer')
 			\ })
-noremap <leader>vs :tabe .vimspector.json<CR>:LoadVimSpectorJsonTemplate<CR>
+noremap <space>vs :tabe .vimspector.json<CR>:LoadVimSpectorJsonTemplate<CR>
 sign define vimspectorBP text=☛ texthl=Normal
 sign define vimspectorBPDisabled text=☞ texthl=Normal
 sign define vimspectorPC text=🔶 texthl=SpellBad
@@ -719,11 +729,11 @@ set clipboard+=unnamedplus " clipboard for system
 
 "source ~/.config/nvim/markdown.vim
 
-nnoremap <leader><leader> /<++><CR>:nohlsearch<CR>c4l
-autocmd Filetype markdown nnoremap <LEADER>c bi`<Esc>ea`<Esc>
-autocmd Filetype markdown nnoremap <LEADER>m bi$<Esc>ea$<Esc>
-autocmd Filetype markdown nnoremap <LEADER>b bi**<Esc>ea**<Esc>
-"autocmd Filetype markdown nnoremap <LEADER>i bi*<Esc>ea*<Esc>
+nnoremap <space><space> /<++><CR>:nohlsearch<CR>c4l
+autocmd Filetype markdown nnoremap <space>c bi`<Esc>ea`<Esc>
+autocmd Filetype markdown nnoremap <space>m bi$<Esc>ea$<Esc>
+autocmd Filetype markdown nnoremap <space>b bi**<Esc>ea**<Esc>
+"autocmd Filetype markdown nnoremap <space>i bi*<Esc>ea*<Esc>
 
 
 function! SynStack()

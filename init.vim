@@ -20,28 +20,28 @@ inoremap <C-f> <Esc>:silent !~/.config/nvim/screenshot.sh <cfile><CR>
 noremap <C-s> <Esc>:silent !python ~/.config/nvim/adb.py<CR>p
 "nnoremap <C-z> :silent !okular <cfile>&<CR>
 
-nnoremap gf :call Gofile()<CR>
-
-function! Gofile()
-python3 << endPython
-filename = vim.eval('expand("<cfile>")')
-print(filename)
-if filename.endswith('.pdf'):
-    vim.command(':silent !okular ' + filename + '&')
-elif filename.endswith(('mp3','mp4','mkv')):
-    vim.command(':silent !vlc ' + filename + '&')
-elif filename.endswith(('.jpg','png','bmp','jpeg')):
-    vim.command(':silent !feh ' + filename + '&')
-elif filename.endswith(('doc','docx')):
-    vim.command(':silent !wps ' + filename + '&')
-elif filename.endswith(('xls','xlsx')):
-    vim.command(':silent !et ' + filename + '&')
-elif filename.endswith(('ppt','pptx')):
-    vim.command(':silent !wpp ' + filename + '&')
-else:
-    vim.command(':e <cfile>')
-endPython
-endfunction
+"nnoremap gf :call Gofile()<CR>
+"
+"function! Gofile()
+"python3 << endPython
+"filename = vim.eval('expand("<cfile>")')
+"print(filename)
+"if filename.endswith('.pdf'):
+"    vim.command(':silent !okular ' + filename + '&')
+"elif filename.endswith(('mp3','mp4','mkv')):
+"    vim.command(':silent !vlc ' + filename + '&')
+"elif filename.endswith(('.jpg','png','bmp','jpeg')):
+"    vim.command(':silent !feh ' + filename + '&')
+"elif filename.endswith(('doc','docx')):
+"    vim.command(':silent !wps ' + filename + '&')
+"elif filename.endswith(('xls','xlsx')):
+"    vim.command(':silent !et ' + filename + '&')
+"elif filename.endswith(('ppt','pptx')):
+"    vim.command(':silent !wpp ' + filename + '&')
+"else:
+"    vim.command(':e <cfile>')
+"endPython
+"endfunction
 
 
 
@@ -86,6 +86,9 @@ noremap F 5e
 " insert
 noremap u i
 noremap U I
+" <tab> is <C-i>
+nnoremap <c-u> <c-i>
+nnoremap <c-y> <c-o>
 
 " copy
 noremap Y y$
@@ -147,7 +150,7 @@ nnoremap <left> :vertical resize +5<CR>
 nnoremap <right> :vertical resize -5<CR>
 "change the vertical split to horizontal, vise versa
 nnoremap sv <C-w>t<C-w>H
-nnoremap sh <C-w>t<C-w>K
+nnoremap sV <C-w>t<C-w>K
 "在shell里打开几个文件并且分屏:
 " vim -O file1 file2 ...
 " vim -o file1 file2 ...
@@ -238,12 +241,11 @@ set autochdir
 "let the cursor be at the position where you exit
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 
-setlocal spell
+autocmd FileType markdown setlocal spell
 set spelllang=en_us,cjk
 setlocal spellfile=~/.config/coc/extensions/node_modules/coc-explorer/spell/en.utf-8.add
 "if &filetype == 'markdown'
 inoremap <C-l> <c-g>u<Esc>[s1z=`]a<c-g>u
-"endif
 
 func! MyFunc()
 	echo "hello"
@@ -266,8 +268,9 @@ func! CompileRunGcc()
   elseif &filetype == 'sh'
     :!time bash %
   elseif &filetype == 'python'
-    silent! exec "!clear"
-    exec "!time python3 %"
+    set splitbelow
+    :sp
+    :term python3 %
   elseif &filetype == 'html'
     exec "!chromium '%' &"
 "  elseif &filetype == 'html'
@@ -473,7 +476,7 @@ nnoremap <space>tm :TableModeToggle<CR>
 "==
 "==  undotree
 "==============
-nnoremap U :UndotreeToggle<CR>
+nnoremap L :UndotreeToggle<CR>
 
 "==
 "==  coc
@@ -501,7 +504,7 @@ nmap <silent> tN <Plug>(coc-diagnostic-prev)
 " used in def blah blah
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gr <Plug>(coc-references)
-nmap <silent> rk <Plug>(coc-rename)
+nmap <leader> rk <Plug>(coc-rename)
 " make error texts have a red color
 highlight CocErrorHighlight ctermfg=Red  guifg=#ff0000
 " highlight in markdown
@@ -742,3 +745,9 @@ function! SynStack()
   endif
   echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
 endfunc
+
+" ===
+" === Scripts
+" ==========
+source ~/.config/nvim/scripts/python2to3.vim
+source ~/.config/nvim/scripts/Py4eToMdFunction.vim

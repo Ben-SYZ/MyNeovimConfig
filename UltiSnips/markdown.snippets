@@ -437,7 +437,7 @@ snippet '([^\\]|^)([Nn])u' "nu" riA
 endsnippet
 context "math()"
 snippet '([^\\]|^)([Xx])i' "xi" riA
-`!p snip.rv = greek('x')`
+`!p snip.rv = greek('i')`
 endsnippet
 context "math()"
 snippet '([^\\]|^)([Oo])mi' "omicron" riA
@@ -802,6 +802,18 @@ endsnippet
 snippet c "code blocks" b
 \`\`\`$1
 $2
+\`\`\`
+$0
+endsnippet
+snippet cp "code blocks" b
+\`\`\`python
+$1
+\`\`\`
+$0
+endsnippet
+snippet cx "code blocks of xml" b
+\`\`\`xml
+$1
 \`\`\`
 $0
 endsnippet

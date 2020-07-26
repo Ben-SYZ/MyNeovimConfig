@@ -1,4 +1,52 @@
-snippet main "if main" bA
+snippet main "if main" b
+def main():
+    $0
+
 if __name__ == '__main__':
-    get_mac_address()
+    main()
+endsnippet
+
+snippet d "if main" w
+print('Debug: $1 = %s' % str($1))$0
+endsnippet
+
+snippet ssl "ssl" w
+import ssl
+
+# Ignore SSL certificate errors
+ctx = ssl.create_default_context()
+ctx.check_hostname = False
+ctx.verify_mode = ssl.CERT_NONE
+
+url = '$1'
+html = urllib.request.urlopen(url, context=ctx).read()
+
+$0
+endsnippet
+
+snippet sock "socket" w
+URL = '$0'
+HOST = re.findall(r'http:\/\/(\d+\.\d+\.\d+\.\d):*\d*\/.*',URL)
+PORT = re.findall(r'http:\/\/\d+\.\d+\.\d+\.\d:*(\d*)\/.*',URL)
+FILE = re.findall(r'http:\/\/\d+\.\d+\.\d+\.\d:*\d*\/(.*)',URL)
+print((HOST,PORT,FILE))
+
+if HOST and FILE:
+    HOST = HOST[0]
+    FILE = FILE[0]
+else:
+    return 1
+if PORT:
+    PORT = int(PORT[0])
+else:
+    PORT = 80
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sock.connect((HOST, PORT))
+
+cmd = 'GET '+ FILE +' HTTP/1.1\r\n\r\n'
+cmd = cmd.encode()
+sock.sendall(cmd)
+
+
 endsnippet

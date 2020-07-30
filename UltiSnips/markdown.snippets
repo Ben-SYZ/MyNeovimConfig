@@ -106,10 +106,10 @@ context "math()"
 snippet '([A-Za-z0-9])\*' "auto subscript" wr
 `!p snip.rv = match.group(1)`^*
 endsnippet
-context "math()"
-snippet '([A-Za-z0-9])([+-])' "auto subscript" wr
-`!p snip.rv = match.group(1)`^`!p snip.rv = match.group(2)`
-endsnippet
+#context "math()"
+#snippet '([A-Za-z0-9])([+-])' "auto subscript" wr
+#`!p snip.rv = match.group(1)`^`!p snip.rv = match.group(2)`
+#endsnippet
 
 context "math()"
 snippet sr "^2" iA
@@ -855,4 +855,9 @@ snippet comment "comment" b
 $1
 -->
 $0
+endsnippet
+
+context "math()"
+snippet "Is" "ising model" riA
+\\sum_{${1:i=1}}^{${2:N-1}} \\sigma_{${3:i}}^z \\sigma_{${4:i+1}}^z
 endsnippet

@@ -203,7 +203,8 @@ filetype indent on
 filetype plugin on
 filetype plugin indent on
 "you can use mouse in vim
-set mouse=a
+"set mouse=a
+set mouse=n
 set encoding=utf-8
 "some terminal cannot show the color not correctly
 "????????????????

@@ -7,10 +7,10 @@ if empty(glob('~/.config/nvim/autoload/plug.vim'))
 	if empty(glob('/usr/bin/curl'))
 		!echo install curl first
 	else
+		!echo install python-neovim
 		silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
 			\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 		autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-		
 	endif
 endif
 
@@ -45,6 +45,7 @@ noremap <C-s> <Esc>:silent !python ~/.config/nvim/adb.py<CR>p
 
 
 
+let g:python3_host_prog = '/usr/bin/python3'
 "let mapleader=" "
 "colorscheme peachpuff
 "color delek 
@@ -79,8 +80,8 @@ noremap E 5k
 " line
 noremap b b
 noremap f e
-noremap B 5b
-noremap F 5e
+"noremap B 5b
+noremap F E
 "noremap W 5w
 
 " insert
@@ -102,15 +103,11 @@ noremap a a
 noremap A A
 
 " search
-noremap m n
-noremap M N
+noremap k n
+noremap K N
 noremap t f
-" tag yit useless
-" noremap j t
-
-
-noremap k m
-noremap K M
+" tag yit still worked
+noremap j t
 
 
 tnoremap <Esc> <C-\><C-n>
@@ -197,6 +194,7 @@ set smartcase
 
 "avoid the uncompatibel between vim and vi
 set nocompatible
+
 "most plugin need the following 4 lines, let vim know the filetype
 filetype on
 filetype indent on
@@ -204,7 +202,7 @@ filetype plugin on
 filetype plugin indent on
 "you can use mouse in vim
 "set mouse=a
-set mouse=n
+set mouse=iv
 set encoding=utf-8
 "some terminal cannot show the color not correctly
 "????????????????
@@ -218,7 +216,7 @@ set encoding=utf-8
 
 "show the blank at the end of the line??
 set list 
-set listchars=tab:▸\ ,trail:▫
+set listchars=tab:\|\ ,trail:▫
 set scrolloff=10
 "indentation(缩进) behavior
 set tw=0
@@ -244,7 +242,7 @@ au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g
 
 autocmd FileType markdown setlocal spell
 set spelllang=en_us,cjk
-setlocal spellfile=~/.config/coc/extensions/node_modules/coc-explorer/spell/en.utf-8.add
+setlocal spellfile=~/.config/nvim/spell/en.utf-8.add
 "if &filetype == 'markdown'
 inoremap <C-l> <c-g>u<Esc>[s1z=`]a<c-g>u
 
@@ -258,7 +256,8 @@ nnoremap <space>r :call CompileRunGcc()<CR>
 func! CompileRunGcc()
   exec "w"
   if &filetype == 'c'
-    exec "!g++ % -o %<"
+    "exec "!g++ % -o %<"
+    exec "!gcc % -o %<"
     exec "!time ./%<"
   elseif &filetype == 'cpp'
     exec "!g++ % -o %<"
@@ -271,7 +270,7 @@ func! CompileRunGcc()
   elseif &filetype == 'python'
     set splitbelow
     :sp
-    :term python3 %
+    :term time python3 %
   elseif &filetype == 'html'
     exec "!chromium '%' &"
 "  elseif &filetype == 'html'
@@ -313,12 +312,13 @@ Plug 'tpope/vim-commentary'
 Plug 'vim-airline/vim-airline'
 Plug 'connorholyday/vim-snazzy'
 Plug 'dracula/vim'
+"Plug 'joshdick/onedark.vim'
 
 
 "Markdown
 "-----
-"Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install' }
-Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } ,'for': ['ipynb','markdown']}
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['ipynb', 'markdown']}
+
 Plug 'dhruvasagar/vim-table-mode', { 'on': 'TableModeToggle' }
 "Plug 'vimwiki/vimwiki'
 
@@ -329,6 +329,8 @@ Plug 'mbbill/undotree'
 "coc
 "-----
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+Plug 'neoclide/jsonc.vim'
 
 
 "youcompleteme
@@ -347,6 +349,8 @@ Plug 'tpope/vim-surround'
 "  Old text                  Command           New text ~
 "  hello                   ysWfprint<cr>     print("hello")
 "
+Plug 'gcmt/wildfire.vim'
+
 Plug 'junegunn/vim-easy-align'
 " ga
 " v ip ga 
@@ -357,6 +361,7 @@ Plug 'junegunn/vim-easy-align'
 Plug 'jupyter-vim/jupyter-vim'
 " Plug 'hisaknown/jupyterkernel.vim' "need fix!!!
 " need jupyter_kernel_gateway
+" [jupyter_console need enter to show the result](https://github.com/jupyter/jupyter_console/pull/133)
 
 " jupytext
 "------
@@ -404,8 +409,19 @@ Plug 'plasticboy/vim-markdown'
 Plug 'puremourning/vimspector', {'do': './install_gadget.py --enable-c --enable-python'}
 
 
+" substitute, need to config
 Plug 'svermeulen/vim-subversive'
 
+" Zotero
+Plug 'Shougo/unite.vim'
+Plug 'rafaqz/citation.vim'
+"Plug 'jalvesaq/zotcite'
+
+
+"" tty chinese
+"Plug 'vim-scripts/VimIM'
+
+Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 
 
 call plug#end()
@@ -414,6 +430,8 @@ call plug#end()
 
 let g:SnazzyTransparent = 1
 colorscheme snazzy
+"syntax on
+"colorscheme onedark
 
 
 "==
@@ -482,7 +500,20 @@ nnoremap L :UndotreeToggle<CR>
 "==
 "==  coc
 "==============
-let g:coc_global_extensions = ['coc-json', 'coc-python',  'coc-html', 'coc-yank', 'coc-lists', 'coc-gitignore', 'coc-texlab', 'coc-explorer'] ",'coc-snippets' ]
+" coc-marketplace
+let g:coc_global_extensions = [
+	\'coc-vimlsp',
+	\'coc-json',
+	\'coc-python',
+	\'coc-pyright',
+	\'coc-html',
+	\'coc-yank',
+	\'coc-lists',
+	\'coc-gitignore',
+	\'coc-texlab',
+	\'coc-explorer',
+	\'coc-sh',
+	\'coc-snippets' ]
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
 function! s:check_back_space() abort
@@ -493,6 +524,8 @@ inoremap <silent><expr> <Tab>
       \ pumvisible() ? "\<C-n>" :
       \ <SID>check_back_space() ? "\<Tab>" :
       \ coc#refresh()
+" open all the doc when nothing leader
+inoremap <silent><expr> <c-n> coc#refresh()
 
 " " Use <Tab> and <S-Tab> to navigate the completion list:
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
@@ -500,12 +533,37 @@ inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 " Use <cr> to confirm completion
 inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-nmap <silent> tn <Plug>(coc-diagnostic-next)
-nmap <silent> tN <Plug>(coc-diagnostic-prev)
+nmap <silent> <space>- <Plug>(coc-diagnostic-next)
+nmap <silent> <space>= <Plug>(coc-diagnostic-prev)
 " used in def blah blah
 nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
-nmap <leader> rk <Plug>(coc-rename)
+"" Use K to show documentation in preview window.
+"nmap <silent> <space>H :call <SID>show_documentation()<CR>
+"
+"function! s:show_documentation()
+"  if (index(['vim','help'], &filetype) >= 0)
+"    execute 'h '.expand('<cword>')
+"  else
+"    call CocAction('doHover')
+"  endif
+"endfunction
+
+" no"" Highlight the symbol and its references when holding the cursor.
+" no"autocmd CursorHold * silent call CocActionAsync('highlight')
+"
+
+" coc-json(jsonc.vim)
+" --------
+augroup JsonToJsonc
+    autocmd! FileType json set filetype=jsonc
+augroup END
+
+
+
+" no"nmap <leader>rn <Plug>(coc-rename)
 " make error texts have a red color
 highlight CocErrorHighlight ctermfg=Red  guifg=#ff0000
 " highlight in markdown
@@ -513,7 +571,7 @@ let g:markdown_fenced_languages = ['css', 'js=javascript', 'python']
 " clipboard
 nnoremap <silent> <space>y  :<C-u>CocList -A --normal yank<cr>
 " To get correct comment highlighting in jsonc whose extension is json
-autocmd FileType json syntax match Comment +\/\/.\+$+
+"autocmd FileType json syntax match Comment +\/\/.\+$+
 
 nnoremap tt :CocCommand explorer<CR>
 
@@ -523,14 +581,22 @@ nnoremap tt :CocCommand explorer<CR>
 " " Use <C-l> for trigger snippet expand.
 " imap <C-k> <Plug>(coc-snippets-expand)
 " " Use <C-j> for select text for visual placeholder of snippet.
-" vmap <C-k> <Plug>(coc-snippets-select)
+" "vmap <C-k> <Plug>(coc-snippets-select)
 " " Use <C-j> for jump to next placeholder, it's default of coc.nvim
 " let g:coc_snippet_next = '<c-k>'
 " " Use <C-k> for jump to previous placeholder, it's default of coc.nvim
-" let g:coc_snippet_prev = '<c-k>'
+" let g:coc_snippet_prev = '<c-m>'
 " " Use <C-j> for both expand and jump (make expand higher priority.)
 " imap <C-k> <Plug>(coc-snippets-expand-jump)
 " let g:UltiSnipsSnippetDirectories=1
+" " coc-snippets
+" imap <C-l> <Plug>(coc-snippets-expand)
+" vmap <C-e> <Plug>(coc-snippets-select)
+" let g:coc_snippet_next = '<c-e>'
+" let g:coc_snippet_prev = '<c-n>'
+" imap <C-e> <Plug>(coc-snippets-expand-jump)
+" let g:snips_author = 'Ben'
+" autocmd BufRead,BufNewFile tsconfig.json set filetype=jsonc
 
 "==============
 
@@ -670,14 +736,128 @@ sign define vimspectorPC text=🔶 texthl=SpellBad
 " ===
 " === vim-subversive
 " ===
-nmap s <plug>(SubversiveSubstitute)
-nmap ss <plug>(SubversiveSubstituteLine)
+nmap <space>s <plug>(SubversiveSubstitute)
+nmap <space>ss <plug>(SubversiveSubstituteLine)
+
+" ===
+" === Zotero
+" ==========
+" unite
+" -----------
+"nmap e <Plug>(unite_loop_cursor_up)
+
+autocmd FileType unite call <SID>unite_buffer_mappings()
+function! s:unite_buffer_mappings() " {{{
+  nmap <silent><buffer> n <Plug>(unite_loop_cursor_down)
+  nmap <silent><buffer> e <Plug>(unite_loop_cursor_up)
+  nmap <silent><buffer> u <Plug>(unite_insert_enter)
+  nmap <silent><buffer> U <Plug>(unite_insert_head)
+  "nmap <silent><buffer> i 
+  nmap <silent><buffer> M <Plug>(unite_new_candidate)
 
 
-"==
+  "" use ; to toggle insert mode
+  "nmap <silent><buffer> ; i
+  "inoremap <silent><buffer> ; <Esc>
+
+  "" use <C-c> to close Unite
+  "nmap <silent><buffer> <C-c> <Plug>(unite_exit)
+  "imap <silent><buffer> <C-c> <Plug>(unite_exit)
+
+  "" use <Tab> to run the default action
+  "nmap <silent><buffer> <Tab> <Plug>(unite_do_default_action)
+  "imap <silent><buffer> <Tab> <Plug>(unite_do_default_action)
+
+  "" use <C-a> to show all actions
+  "nmap <silent><buffer> <C-a> <Plug>(unite_choose_action)
+  "imap <silent><buffer> <C-a> <Plug>(unite_choose_action)
+
+  "" use <C-n> and <C-p> to move between lines in normal mode too
+  "noremap <silent><buffer> <C-n> j
+  "noremap <silent><buffer> <C-p> k
+
+  "" use ' to start quick-match mode
+  "nmap <silent><buffer> ' <Plug>(unite_quick_match_default_action)
+  "imap <silent><buffer> ' <Plug>(unite_quick_match_default_action)
+endfunction " }}}
+
+" citation.vim
+" -----------
+"let g:citation_vim_bibtex_file="~/Documents/SSP/TermPapers/ref.bib"
+"let g:citation_vim_mode="bibtex"
+
+let g:citation_vim_mode="zotero" "(default)
+let g:citation_vim_zotero_path="~/Zotero/"
+let g:citation_vim_zotero_version=5
+
+let g:citation_vim_key_format="{author}{date}{title}"
+let g:citation_vim_cache_path='~/.config/nvim/citation'
+let g:citation_vim_outer_prefix="["
+let g:citation_vim_inner_prefix="@"
+let g:citation_vim_suffix="]"
+let g:citation_vim_et_al_limit=2
+" recent additions top 1, bottom 0
+let g:citation_vim_reverse_order=0 
+
+nmap <space>l [unite]
+nnoremap [unite] <nop>
+
+"To insert a citation:
+nnoremap <silent>[unite]c       :<C-u>Unite -buffer-name=citation-start-insert -default-action=append      citation/key<cr>
+"To immediately open a file from a citation under the cursor:
+
+nnoremap <silent>[unite]co :<C-u>Unite -input=<C-R><C-W> -default-action=start -force-immediately citation/file<cr>
+
+"Or open a url from a citation under the cursor:
+nnoremap <silent><space>cu :<C-u>Unite -input=<C-R><C-W> -default-action=start -force-immediately citation/url<cr>
+
+"To browse the file folder from a citation under the cursor:
+nnoremap <silent>[unite]cf :<C-u>Unite -input=<C-R><C-W> -default-action=file -force-immediately citation/file<cr>
+
+"To view all citation information from a citation under the cursor:
+nnoremap <silent>[unite]ci :<C-u>Unite -input=<C-R><C-W> -default-action=preview -force-immediately citation/combined<cr>
+
+"To preview, append, yank any other citation data you want from unite:
+nnoremap <silent>[unite]cp :<C-u>Unite -default-action=yank citation/your_source_here<cr>
+
+"To integrate with zotcli for note editing (assuming you have zotcli installed):
+nnoremap <silent><leader>cn :<C-u>UniteWithCursorWord -default-action=yank -force-immediately citation/title<cr><cr>:!zotcli add-note "<C-R>0"<cr>
+
+
+" ===
+" === vim visual multi
+" ==========
+let g:VM_maps = {}
+let g:VM_custom_motions = {'i': 'l', 'e': 'k', 'n': 'j', 'H': '0', 'I': '$', 'f': 'e'}
+let g:VM_maps['i'] = 'u'
+let g:VM_maps['I'] = 'U'
+let g:VM_maps['Find Under']         = '<C-k>'           " replace C-n
+let g:VM_maps['Find Subword Under'] = '<C-k>'           " replace visual C-n
+let g:VM_maps['Find Next'] = ''
+let g:VM_maps['Find Prev'] = ''
+"let g:VM_maps['Remove Region'] = 'q'
+let g:VM_maps['Skip Region'] = '<c-n>'
+let g:VM_maps["Undo"] = 'l'
+let g:VM_maps["Redo"] = '<C-r>'
+
+
+"" ===
+"" === vimim
+"" ==========
+"let g:vimim_cloud = 'google,sogou,baidu,qq'  
+"let g:vimim_map = 'tab_as_gi'  
+"" :let g:vimim_mode = 'dynamic'  
+"" :let g:vimim_mycloud = 0  
+"" :let g:vimim_plugin = 'C:/var/mobile/vim/vimfiles/plugin'  
+"" :let g:vimim_punctuation = 2  
+"" :let g:vimim_shuangpin = 0  
+"" :let g:vimim_toggle = 'pinyin,google,sogou' 
+
+" ==========
 "==  system
 "==============
 set clipboard+=unnamedplus " clipboard for system
+"vnoremap Y "+y
 "let g:clipboard = {
 "  \   'name': 'myClipboard',
 "  \   'copy': {
@@ -734,9 +914,9 @@ set clipboard+=unnamedplus " clipboard for system
 "source ~/.config/nvim/markdown.vim
 
 nnoremap <space><space> /<++><CR>:nohlsearch<CR>c4l
-autocmd Filetype markdown nnoremap <space>c bi`<Esc>ea`<Esc>
-autocmd Filetype markdown nnoremap <space>m bi$<Esc>ea$<Esc>
-autocmd Filetype markdown nnoremap <space>b bi**<Esc>ea**<Esc>
+autocmd Filetype markdown nnoremap <space>c Bi`<Esc>Ea`<Esc>
+autocmd Filetype markdown nnoremap <space>m Bi$<Esc>Ea$<Esc>
+autocmd Filetype markdown nnoremap <space>b Bi**<Esc>Ea**<Esc>
 "autocmd Filetype markdown nnoremap <space>i bi*<Esc>ea*<Esc>
 
 
@@ -752,3 +932,62 @@ endfunc
 " ==========
 source ~/.config/nvim/scripts/python2to3.vim
 source ~/.config/nvim/scripts/Py4eToMdFunction.vim
+
+" ===
+" === try
+" ==========
+"source ~/.config/nvim/entire.vim
+
+"set backupskip+=*.asc
+"set viminfo=
+"
+"augroup GPG
+"  autocmd!
+"  autocmd BufReadPost  *.asc :%!gpg -q -d
+"  autocmd BufReadPost  *.asc |redraw!
+"  autocmd BufWritePre  *.asc :%!gpg -q -e -a
+"  autocmd BufWritePost *.asc u
+"  autocmd VimLeave     *.asc :!clear
+"augroup END
+" ===
+" === tmp
+" ==========
+
+
+function! HelloPython()
+python3 << endPython
+
+texCodeZones = ['String']
+texCodeZoneIds = vim.eval('map('+str(texCodeZones)+", 'hlID(v:val)')")
+texCodeZoneIds = ['647']
+print(texCodeZoneIds)
+
+vimeval = vim.eval("synstack(line('.'), col('.') - (col('.')>=2 ? 1 : 0))")
+
+for i in vimeval:
+	print(i)#'\t' + vim.synIDattr(i,"name"))
+endPython
+endfunction
+"call HelloPython()
+
+nnoremap <space>d :call RunDunst()<CR>
+func! RunDunst()
+  exec "w"
+  exec "!killall dunst"
+  exec "!dunst&"
+  exec "!notify-send 'It is a string'"
+endfunc
+
+nnoremap <space>a :call Runfeh()<CR>
+func! Runfeh()
+  exec "!feh <cfile> &"
+endfunc
+
+autocmd Filetype markdown nnoremap <space>z i✰<Esc>
+func! Novel()
+	:%s/^.*BookText">//
+	:%s/<br\/><br\/>/\r/g
+	:%s/<div id.*//
+	:wq
+endfunc
+" conda environment

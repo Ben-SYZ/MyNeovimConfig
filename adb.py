@@ -1,12 +1,13 @@
 import time
 import os
-import sys
+#import sys
 import pyperclip
 
 os.system("adb devices")
 
 os.system("scrot -z -s -e 'mv $f ~/Pictures/screenshots/OCR/ocr.png'")
 
+# mnt
 os.system('mv ~/Pictures/screenshots/OCR/ocr.png ~/Documents/mntphone/mnt/Pictures/Screenshots/')
 # alive
 os.system("adb shell input tap 550 550")

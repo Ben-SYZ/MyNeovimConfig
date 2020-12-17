@@ -16,6 +16,7 @@ texIgnoreMathZones = ['texMathText']
 texMathZoneIds = vim.eval('map('+str(texMathZones)+", 'hlID(v:val)')")
 texIgnoreMathZoneIds = vim.eval('map('+str(texIgnoreMathZones)+", 'hlID(v:val)')")
 
+
 #ignore = texIgnoreMathZoneIds[0]
 def math():
 	synstackids = vim.eval("synstack(line('.'), col('.') - (col('.')>=2 ? 1 : 0))")
@@ -31,6 +32,23 @@ def math():
 		if i in texMathZoneIds:
 			return True
 	return False
+
+texCodeZones = ['String']
+texCodeZoneIds = vim.eval('map('+str(texCodeZones)+", 'hlID(v:val)')")
+texCodeZoneIds = ['647']
+def not_code():
+	synstackids = vim.eval("synstack(line('.'), col('.') - (col('.')>=2 ? 1 : 0))")
+	#try:
+	#	first = next(i for i in reversed(synstackids) if i in texIgnoreMathZoneIds or i in texMathZoneIds)
+	#	return first != ignore
+	#except StopIteration:
+	#	return False
+	for i in reversed(synstackids):
+		if i in texCodeZoneIds:
+			return not True
+	return not False
+
+
 
 def greek(left):
 	return match.group(1) + '\\' + match.group(2) + left
@@ -55,10 +73,12 @@ snippet ... "ldots" iA
 \ldots
 endsnippet
 
+context "not_code()"
 snippet mk "Math" wA
 $$1$$0
 endsnippet
 
+context "not_code()"
 snippet dm "Math" wA
 $$
 $0
@@ -96,7 +116,7 @@ endsnippet
 
 priority 1
 context "math()"
-snippet at "|_{}" wA
+snippet '@' "|_{}" rwA
 |_{$1}$0
 endsnippet
 
@@ -179,6 +199,7 @@ context "math()"
 snippet / "Fraction" i
 \\frac{${VISUAL}}{$1}$0
 endsnippet
+# press­ing Tab, typing / and pressing Tab again.
 
 #  # box
 #  snippet box "Box"
@@ -318,7 +339,7 @@ endsnippet
 priority 10
 context "math()"
 snippet '([^\\]|^)lim' "limit" rwA
-\\lim$0
+`!p snip.rv = nobackslash('lim')`
 endsnippet
 priority 10
 context "math()"
@@ -340,7 +361,7 @@ endsnippet
 priority 10
 context "math()"
 snippet '([^\\i]|^)int' "integrate" rwA
-\\int
+`!p snip.rv = nobackslash('int')`
 endsnippet
 priority 10
 context "math()"
@@ -495,7 +516,7 @@ snippet oo "infity" iA
 \\infty
 endsnippet
 
-priority 10
+priority 1
 context "math()"
 snippet '([^\\]|^)to' "to" riA
 `!p snip.rv = nobackslash('to')`
@@ -535,7 +556,7 @@ snippet ** "times" iA
  \times 
 endsnippet
 
-priority 1000
+priority 10
 context "math()"
 snippet '([^\\]|^)ot' "otimes" riA
 `!p snip.rv = nobackslash('otimes')`
@@ -563,7 +584,7 @@ endsnippet
 
 context "math()"
 snippet '([^\\]|^)sq' "sqrt" riA
-\\`!p snip.rv = match.group(1)`sqrt{$1}$0
+`!p snip.rv = match.group(1) + '\\' + 'sqrt'`{$1}$0
 endsnippet
 
 
@@ -612,6 +633,18 @@ context "math()"
 priority 100
 snippet atan "arctangent" iA
 \arctan
+endsnippet
+priority 100
+snippet asec "arcsecant" iA
+\\textrm{arcsec}
+endsnippet
+priority 100
+snippet acsc "arccosecant" iA
+\\textrm{arccsc}
+endsnippet
+priority 100
+snippet acot "arccotangent" iA
+\\textrm{arccot}
 endsnippet
 
 # comparison
@@ -777,12 +810,12 @@ endsnippet
 
 context "math()"
 snippet '([^\\]|^)tex' "text" riA
-\\`!p snip.rv = match.group(1)`text{$1}$0
+`!p snip.rv = match.group(1) + '\\' + 'text'`{$1}$0
 endsnippet
 
 context "math()"
 snippet '([^\\]|^)tag' "tag" rwA
-\\`!p snip.rv = match.group(1)`tag{$1}$0
+`!p snip.rv = match.group(1) + '\\' + 'tag'`{$1}$0
 endsnippet
 
 snippet pic "pictures"

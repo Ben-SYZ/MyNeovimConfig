@@ -237,13 +237,10 @@ if index(g:bundle_group, 'filetypes') >= 0
 	Plug 'vim-python/python-syntax', { 'for': ['python'] }
 endif
 
-if index(g:bundle_group, 'filetypes') >= 0
-endif
-
 "----------------------------------------------------------------------
 " Markdown 相关
 "----------------------------------------------------------------------
-if index(g:bundle_group, 'filetypes') >= 0
+if index(g:bundle_group, 'markdown') >= 0
 
 	" Markdown preview
 	Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['ipynb', 'markdown']}

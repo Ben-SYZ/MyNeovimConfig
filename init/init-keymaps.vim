@@ -52,7 +52,6 @@ noremap Y y$
 
 " undo
 noremap l u
-noremap L U
 
 " add
 noremap a a

@@ -30,8 +30,8 @@ endif
 "----------------------------------------------------------------------
 if !exists('g:bundle_group')
 	let g:bundle_group = ['basic', 'enhanced', 'filetypes']
-	let g:bundle_group += ['markdown', 'jupyter']
-	let g:bundle_group += ['thesis']
+	let g:bundle_group += ['jupyter']
+	let g:bundle_group += ['markdown', 'thesis']
 	let g:bundle_group += ['airline', 'coc', 'ultisnips']
 	let g:bundle_group += ['vimspector']
 	let g:bundle_group += ['leaderf']

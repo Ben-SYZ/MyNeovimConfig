@@ -131,6 +131,10 @@ if index(g:bundle_group, 'basic') >= 0
 	let g:signify_vcs_cmds = {
 			\ 'git': 'git diff --no-color --diff-algorithm=histogram --no-ext-diff -U0 -- %f',
 			\}
+
+	" 使用 vim 查看man pages map, 一些keymap 就可以用了
+	Plug 'vim-utils/vim-man'
+
 endif
 
 

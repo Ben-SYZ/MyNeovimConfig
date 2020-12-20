@@ -1,0 +1,77 @@
+{
+    // vimrc
+    // jupyterlab-vimrc:vimrc
+    // Settings to be applied to codemirror vim mode
+    // *********************************************
+
+    // imap commands
+    // [lhs, rhs] - e.g. "imap": [["ii", "<Esc>"]]
+    "imap": [],
+
+    // inoremap commands
+    // [lhs, rhs]
+    "inoremap": [
+        []
+    ],
+
+    // nmap commands
+    // [lhs, rhs]
+    "nmap": [
+        ['n','j'],
+        ['e','k']
+
+    ],
+
+    // nnoremap commands
+    // [lhs, rhs]
+    "nnoremap": [
+        ['i','l'],
+        ['m','n'],
+        ['k','m'],
+        ['f','e'],
+        ['t','f'],
+        ['l','u'],
+        ['u','i'],
+        
+        ['N','J'],
+        ['E','K'],
+        ['I','L'],
+        ['M','N'],
+        ['K','M'],
+        ['F','E'],
+        ['T','F'],
+        ['L','U'],
+        ['U','I'],
+        ['\'',':']
+    ],
+
+    // vmap commands
+    // [lhs, rhs]
+    "vmap": [
+        
+    ],
+
+    // vnoremap commands
+    // [lhs, rhs]
+    "vnoremap": [
+        ['n','j'],
+        ['e','k'],
+        ['i','l'],
+        ['k','n'],
+        ['f','e'],
+        ['t','f'],
+        ['l','u'],
+        ['u','i'],
+        
+        ['N','J'],
+        ['E','K'],
+        ['I','L'],
+        ['K','N'],
+        ['F','E'],
+        ['T','F'],
+        ['L','U'],
+        ['U','I'],
+        
+        ['\'',':']
+    ]
+}

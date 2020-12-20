@@ -107,7 +107,7 @@ if index(g:bundle_group, 'basic') >= 0
 	Plug 'lilydjwg/fcitx.vim'
 
 	" Git 支持
-	"Plug 'tpope/vim-fugitive'
+	Plug 'tpope/vim-fugitive'
 
 
 	" startify

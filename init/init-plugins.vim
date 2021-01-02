@@ -101,7 +101,7 @@ if index(g:bundle_group, 'basic') >= 0
 	" 使用 ALT+e 会在不同窗口/标签上显示 A/B/C 等编号，然后字母直接跳转
 	Plug 't9md/vim-choosewin'
 	" 使用 ALT+E 来选择窗口
-	nmap <m-f> <Plug>(choosewin)
+	nmap <m-t> <Plug>(choosewin)
 
 	" fcitx
 	Plug 'lilydjwg/fcitx.vim'

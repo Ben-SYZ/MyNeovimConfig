@@ -11,7 +11,7 @@ texMathZones = ['mkdMath', 'texMathZoneV', 'texMathZoneW', 'texMathZoneX', 'texM
 #texIgnoreMathZones = ['texMathText','texMathMatcher', 'texStatement']
 # texIgnoreMathZones is for '\text{}', '\tag{}'part
 #texIgnoreMathZones = ['texMathText', 'texStatement']
-texIgnoreMathZones = ['texMathText']
+texIgnoreMathZones = ['texMathText','texMathSymbol']
 
 texMathZoneIds = vim.eval('map('+str(texMathZones)+", 'hlID(v:val)')")
 texIgnoreMathZoneIds = vim.eval('map('+str(texIgnoreMathZones)+", 'hlID(v:val)')")
@@ -449,6 +449,10 @@ snippet '([^\\]|^)([Kk])ap' "kappa" riA
 `!p snip.rv = greek('appa')`
 endsnippet
 context "math()"
+snippet '([^\\]|^)([Ll])am' "lambda" riA
+`!p snip.rv = greek('ambda')`
+endsnippet
+context "math()"
 snippet '([^\\]|^)([Mm])u' "mu" riA
 `!p snip.rv = greek('u')`
 endsnippet
@@ -702,17 +706,17 @@ snippet '([uU])a' "uparrow" riA
 endsnippet
 context "math()"
 priority 10
-snippet '([dD])a' "uparrow" riA
+snippet '([dD])a' "downarrow" riA
 \\`!p snip.rv=match.group(1)`ownarrow
 endsnippet
 context "math()"
 priority 10
-snippet '([rR])a' "uparrow" ri
+snippet '([rR])a' "rightarrow" ri
 \\`!p snip.rv=match.group(1)`ightarrow
 endsnippet
 context "math()"
 priority 10
-snippet '([ll])a' "uparrow" ri
+snippet '([ll])a' "leftarrow" ri
 \\`!p snip.rv=match.group(1)`eftarrow
 endsnippet
 context "math()"

@@ -32,7 +32,8 @@ if !exists('g:bundle_group')
 	let g:bundle_group = ['basic', 'enhanced', 'filetypes']
 	let g:bundle_group += ['jupyter']
 	let g:bundle_group += ['markdown', 'thesis']
-	let g:bundle_group += ['airline', 'coc', 'ultisnips']
+	let g:bundle_group += ['airline', 'coc']
+	let g:bundle_group += ['ultisnips']
 	let g:bundle_group += ['vimspector']
 	let g:bundle_group += ['leaderf']
 endif
@@ -210,21 +211,34 @@ if index(g:bundle_group, 'enhanced') >= 0
 	" ===
 	" === vim visual multi
 	" ==========
-	Plug 'mg979/vim-visual-multi', {'branch': 'master'}
-	let g:VM_maps = {}
-	let g:VM_custom_motions = {'i': 'l', 'e': 'k', 'n': 'j', 'H': '0', 'I': '$', 'f': 'e'}
-	let g:VM_maps['i'] = 'u'
-	let g:VM_maps['I'] = 'U'
-	let g:VM_maps['Find Under']         = '<C-n>'           " replace C-n
-	let g:VM_maps['Find Subword Under'] = '<C-N>'           " replace visual C-n
-	let g:VM_maps['Find Next'] = ''
-	let g:VM_maps['Find Prev'] = ''
-	"let g:VM_maps['Remove Region'] = 'q'
-	let g:VM_maps['Skip Region'] = '<c-n>'
-	let g:VM_maps["Undo"] = 'l'
-	let g:VM_maps["Redo"] = '<C-r>'
-endif
+	"Plug 'mg979/vim-visual-multi', {'branch': 'master'}
+	"let g:VM_maps = {}
+	"let g:VM_custom_motions = {'i': 'l', 'e': 'k', 'n': 'j', 'H': '0', 'I': '$', 'f': 'e'}
+	"let g:VM_maps['i'] = 'u'
+	"let g:VM_maps['I'] = 'U'
+	"let g:VM_maps['Find Under']         = '<C-n>'           " replace C-n
+	"let g:VM_maps['Find Subword Under'] = '<C-N>'           " replace visual C-n
+	"let g:VM_maps['Find Next'] = ''
+	"let g:VM_maps['Find Prev'] = ''
+	""let g:VM_maps['Remove Region'] = 'q'
+	"let g:VM_maps['Skip Region'] = '<c-n>'
+	"let g:VM_maps["Undo"] = 'l'
+	"let g:VM_maps["Redo"] = '<C-r>'
 
+	Plug 'terryma/vim-multiple-cursors'
+	let g:multi_cursor_use_default_mapping=0
+
+	" Default mapping
+	let g:multi_cursor_start_word_key      = '<C-n>'
+	let g:multi_cursor_select_all_word_key = '<A-n>'
+	let g:multi_cursor_start_key           = 'g<C-n>'
+	let g:multi_cursor_select_all_key      = 'g<A-n>'
+	let g:multi_cursor_next_key            = '<C-n>'
+	let g:multi_cursor_prev_key            = '<C-p>'
+	let g:multi_cursor_skip_key            = '<C-x>'
+	let g:multi_cursor_quit_key            = '<Esc>'
+
+endif
 
 "----------------------------------------------------------------------
 " 文件类型扩展
@@ -259,7 +273,8 @@ if index(g:bundle_group, 'markdown') >= 0
 	let g:mkdp_open_ip = ''
 	let g:mkdp_browser = ''
 	let g:mkdp_echo_preview_url = 0
-	let g:mkdp_browserfunc = ''
+	"let g:mkdp_browserfunc = ''
+	let g:mkdp_browserfunc = 'g:Open_browser'
 	let g:mkdp_preview_options = {
 		\ 'mkit': {},
 		\ 'katex': {},
@@ -276,7 +291,13 @@ if index(g:bundle_group, 'markdown') >= 0
 	"let g:mkdp_port = '8091'
 	let g:mkdp_page_title = '「${name}」'
 
-	autocmd Filetype markdown nnoremap <space>C :silent !chromium&<CR>:MarkdownPreview<CR>
+	function! g:Open_browser(url)
+		silent exe '!firefox ' . a:url . "&"
+		"silent exe '!chromium --app=' . a:url
+		"silent exec "chromium --app=" . a:url . " &"
+	endfunction
+
+	"autocmd Filetype markdown nnoremap <space>C :silent !chromium&<CR>:MarkdownPreview<CR>
 
 	"===
 	"===  vim-table-mode
@@ -318,7 +339,6 @@ if index(g:bundle_group, 'coc') >= 0
 	let g:coc_global_extensions = [
 		\'coc-vimlsp',
 		\'coc-json',
-		\'coc-python',
 		\'coc-pyright',
 		\'coc-html',
 		\'coc-sh',
@@ -326,8 +346,7 @@ if index(g:bundle_group, 'coc') >= 0
 		\'coc-lists',
 		\'coc-gitignore',
 		\'coc-texlab',
-		\'coc-explorer',
-		\'coc-snippets' ]
+		\'coc-explorer' ]
 	function! s:check_back_space() abort
 		let col = col('.') - 1
 		return !col || getline('.')[col - 1]  =~ '\s'
@@ -371,13 +390,33 @@ if index(g:bundle_group, 'coc') >= 0
 
 	nnoremap tt :CocCommand explorer<CR>
 
-	"==
-	"== echodoc：
-	"============
-	"搭配 coc 在底部显示函数参数
-	Plug 'Shougo/echodoc.vim'
-	set noshowmode
-	let g:echodoc#enable_at_startup = 1
+	""==
+	""== echodoc：
+	""============
+	""搭配 coc 在底部显示函数参数
+	"Plug 'Shougo/echodoc.vim'
+	"set noshowmode
+	"let g:echodoc#enable_at_startup = 1
+
+	"" coc-snippets
+	"" --------------------
+	""" Use <C-l> for trigger snippet expand.
+	""imap <C-k> <Plug>(coc-snippets-expand)
+
+	""" Use <C-j> for select text for visual placeholder of snippet.
+	""vmap <C-k> <Plug>(coc-snippets-select)
+
+	"" Use <C-j> for jump to next placeholder, it's default of coc.nvim
+	"let g:coc_snippet_next = '<c-k>'
+
+	"" Use <C-k> for jump to previous placeholder, it's default of coc.nvim
+	"let g:coc_snippet_prev = '<c-m>'
+
+	"" Use <C-j> for both expand and jump (make expand higher priority.)
+	"imap <C-k> <Plug>(coc-snippets-expand-jump)
+
+	"" Use <leader>x for convert visual selected code to snippet
+	""xmap <leader>x  <Plug>(coc-convert-snippet)
 
 endif
 
@@ -394,7 +433,7 @@ if index(g:bundle_group, 'ultisnips') >= 0
 endif
 
 
-if index(g:bundle_group, 'ultisnips') >= 0
+if index(g:bundle_group, 'vimspector') >= 0
 	" ===
 	" === vimspector
 	" ==========
@@ -521,7 +560,9 @@ if index(g:bundle_group, 'thesis') >= 0
 	let g:citation_vim_zotero_path="~/Zotero/"
 	let g:citation_vim_zotero_version=5
 
-	let g:citation_vim_key_format="{author}{date}{title}"
+	" after change remove ~/.config/nvim/citation/*
+	let g:citation_vim_key_format="{author}_{title}_{date}"
+	"let g:citation_vim_key_format=""
 	let g:citation_vim_cache_path='~/.config/nvim/citation'
 	let g:citation_vim_outer_prefix="["
 	let g:citation_vim_inner_prefix="@"

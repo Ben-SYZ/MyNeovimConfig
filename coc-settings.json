@@ -37,12 +37,12 @@
 		"value": "\uf89f",
 		"variable": "\ue71b"
 	},
+//	"snippets.priority": 10,
 //	"snippets.ultisnips.directories":[
 //		//"UltiSnips"
 //		"$HOME/.config/nvim/UltiSnips/"
 //	],
-	"python.linting.pylintPath": "/usr/bin/pylint",
-//	"python.jediEnabled": false,
+//	"python.linting.pylintPath": "/usr/bin/pylint",
 //	"languageserver": {
 //		"lua": {
 //			"command": "lua-lsp",

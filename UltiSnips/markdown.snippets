@@ -1,65 +1,21 @@
 global !p
-#texMathZones = ['mkdMath','texMathZoneY','texMathZoneX', 'texMathZoneZ']
-#vim.command('redir @a | silent exe "syntax list @texMathZones" | redir END')
-#texMathZones = [x.strip() for x in vim.eval('@a').split(',')][1:]
-texMathZones = ['mkdMath', 'texMathZoneV', 'texMathZoneW', 'texMathZoneX', 'texMathZoneY', 'texMathZoneZ', 'texMathZoneA', 'texMathZoneAS', 'texMathZoneB', 'texMathZoneBS', 'texMathZoneC', 'texMathZoneCS', 'texMathZoneD', 'texMathZoneDS']
-
-#mkdMath, texMathZoneY, texMathZoneX
-#744, 668, 667
-#423 html H4
-
-#texIgnoreMathZones = ['texMathText','texMathMatcher', 'texStatement']
-# texIgnoreMathZones is for '\text{}', '\tag{}'part
-#texIgnoreMathZones = ['texMathText', 'texStatement']
-texIgnoreMathZones = ['texMathText','texMathSymbol','texMathCmd']
-
-texMathZoneIds = vim.eval('map('+str(texMathZones)+", 'hlID(v:val)')")
-texIgnoreMathZoneIds = vim.eval('map('+str(texIgnoreMathZones)+", 'hlID(v:val)')")
+#texMathZones = ['mkdMath', 'texMathZoneV', 'texMathZoneW', 'texMathZoneX','texMathZoneXX', 'texMathZoneY', 'texMathZoneZ', 'texMathZoneA', 'texMathZoneAS', 'texMathZoneB', 'texMathZoneBS', 'texMathZoneC', 'texMathZoneCS', 'texMathZoneD', 'texMathZoneDS']
+#
+#texIgnoreMathZones = ['texMathText','texMathSymbol','texMathCmd']
+#
+#texMathZoneIds = vim.eval('map('+str(texMathZones)+", 'hlID(v:val)')")
+#texIgnoreMathZoneIds = vim.eval('map('+str(texIgnoreMathZones)+", 'hlID(v:val)')")
 
 
 #ignore = texIgnoreMathZoneIds[0]
-def math():
-	synstackids = vim.eval("synstack(line('.'), col('.') - (col('.')>=2 ? 1 : 0))")
-	#try:
-	#	first = next(i for i in reversed(synstackids) if i in texIgnoreMathZoneIds or i in texMathZoneIds)
-	#	return first != ignore
-	#except StopIteration:
-	#	return False
-	for i in reversed(synstackids):
-		if i in texIgnoreMathZoneIds:
-			return False
-	for i in reversed(synstackids):
-		if i in texMathZoneIds:
-			return True
-	return False
-def math_backslash():
-# math() will not expand texMathSymbol, while math_backslash() expand it
-	texIgnoreMathZones = ['texMathText']
-	texIgnoreMathZoneIds = vim.eval('map('+str(texIgnoreMathZones)+", 'hlID(v:val)')")
-	synstackids = vim.eval("synstack(line('.'), col('.') - (col('.')>=2 ? 1 : 0))")
-	for i in reversed(synstackids):
-		if i in texIgnoreMathZoneIds:
-			return False
-	for i in reversed(synstackids):
-		if i in texMathZoneIds:
-			return True
-	return False
-
-
-texCodeZones = ['String']
-texCodeZoneIds = vim.eval('map('+str(texCodeZones)+", 'hlID(v:val)')")
-texCodeZoneIds = ['647']
 def not_code():
-	synstackids = vim.eval("synstack(line('.'), col('.') - (col('.')>=2 ? 1 : 0))")
-	#try:
-	#	first = next(i for i in reversed(synstackids) if i in texIgnoreMathZoneIds or i in texMathZoneIds)
-	#	return first != ignore
-	#except StopIteration:
-	#	return False
-	for i in reversed(synstackids):
-		if i in texCodeZoneIds:
-			return not True
-	return not False
+	return vim.eval("vimtex#syntax#in('mkdSnippet*')") == '0' and vim.eval("vimtex#syntax#in('mkdCode')") == '0'
+
+def math():
+	return not_code() and vim.eval('vimtex#syntax#in_mathzone()') == '1'
+def not_mathCmd():
+	return math() and vim.eval("vimtex#syntax#in('texMathCmd')") == '0'
+
 endglobal
 
 context "math()"
@@ -70,6 +26,11 @@ endsnippet
 context "math()"
 snippet bb "bold" iA
 \\bold{$1}$0
+endsnippet
+
+context "math()"
+snippet norm "noitalic" iA
+\\mathrm{$1}$0
 endsnippet
 
 context "math()"
@@ -136,33 +97,37 @@ endsnippet
 #`!p snip.rv = match.group(1)`^`!p snip.rv = match.group(2)`
 #endsnippet
 
-context "math_backslash()"
+#context "not_mathCmd()"
+context "math()"
 snippet sr "^2" iA
 ^2
 endsnippet
 
-context "math_backslash()"
+#context "not_mathCmd()"
+context "math()"
 snippet cb "^3" iA
 ^3
 endsnippet
 
 priority 10
-context "math_backslash()"
+#context "not_mathCmd()"
+context "math()"
 snippet tp "superscript" iA
 ^{$1}$0
 endsnippet
 
-context "math_backslash()"
+#context "not_mathCmd()"
+context "math()"
 snippet ^^ "superscript" iA
 ^{$2}$0
 endsnippet
 
 context "math()"
-snippet 'e([\d])' "time 10^" wrA
+snippet 'e([-\d])' "time 10^" wrA
 \\times 10^`!p snip.rv = match.group(1)`
 endsnippet
 context "math()"
-snippet '10\^(\d\d)' "time 10^{}" wrA
+snippet '10\^([-\d]\d)' "time 10^{}" wrA
 10^{`!p snip.rv = match.group(1)`}
 endsnippet
 context "math()"
@@ -267,7 +232,7 @@ endsnippet
 context "math()"
 priority 10
 snippet '([^\\h]|^)bar' "bar" riA
-\\`!p snip.rv = match.group(1)`overline{$1}$0
+`!p snip.rv = match.group(1)`\\overline{$1}$0
 endsnippet
 
 priority 100
@@ -279,7 +244,7 @@ endsnippet
 priority 10
 context "math()"
 snippet "([^\\]|^)hat" "hat" riA
-\\`!p snip.rv = match.group(1)`hat{$1}$0
+`!p snip.rv = match.group(1)`\\hat{$1}$0
 endsnippet
 
 priority 100
@@ -291,12 +256,12 @@ endsnippet
 priority 10
 context "math()"
 snippet '([^\\]|^)vec' "vec" riA
-\\`!p snip.rv = match.group(1)`vec{$1}$0
+`!p snip.rv = match.group(1)`\\vec{$1}$0
 endsnippet
 
 priority 100
 context "math()"
-snippet "([a-zA-Z])vec" "vec" riA
+snippet "([a-zA-Z0-9])vec" "vec" riA
 \\vec{`!p snip.rv=match.group(1)`}
 endsnippet
 
@@ -347,7 +312,8 @@ snippet 'lim' "limit" rwA
 \\lim
 endsnippet
 priority 10
-context "math_backslash()"
+#context "not_mathCmd()"
+context "math()"
 snippet \limo "limit" wA
 \\lim_{$1 \to ${2:\infty}}$0
 endsnippet
@@ -357,7 +323,8 @@ snippet sum "sum" wA
 \\sum
 endsnippet
 priority 10
-context "math_backslash()"
+#context "not_mathCmd()"
+context "math()"
 snippet \sumo "sum" wA
 \\sum_{${1:n}}^{${2:\infty}}$0
 endsnippet
@@ -368,7 +335,8 @@ snippet int "integrate" wA
 \\int
 endsnippet
 priority 10
-context "math_backslash()"
+#context "not_mathCmd()"
+context "math()"
 snippet \into "integrateoo" wA
 \\int_{${1:-\\infty}}^{${2:+\\infty}}$0
 endsnippet
@@ -378,7 +346,7 @@ snippet iint "integrate" wA
 \\iint
 endsnippet
 priority 10
-context "math_backslash()"
+context "not_mathCmd()"
 snippet \limo "limit" wA
 \\lim_{$1 \to ${2:\infty}}$0
 endsnippet
@@ -461,15 +429,15 @@ snippet '([lL])am' "lambda" riA
 endsnippet
 context "math()"
 snippet '([mM])u' "mu" riA
-`!p snip.rv = '\\' + match.group(1)+'u''`
+`!p snip.rv = '\\' + match.group(1)+'u'`
 endsnippet
 context "math()"
 snippet '([nN])u' "nu" riA
-`!p snip.rv = '\\' + match.group(1)+'u''`
+`!p snip.rv = '\\' + match.group(1)+'u'`
 endsnippet
 context "math()"
 snippet '([xX])i' "xi" riA
-`!p snip.rv = '\\' + match.group(1)+'i''`
+`!p snip.rv = '\\' + match.group(1)+'i'`
 endsnippet
 context "math()"
 snippet '([oO])mi' "omicron" riA
@@ -477,7 +445,7 @@ snippet '([oO])mi' "omicron" riA
 endsnippet
 context "math()"
 snippet '([pP])i' "pi" riA
-`!p snip.rv = '\\' + match.group(1)+'i''`
+`!p snip.rv = '\\' + match.group(1)+'i'`
 endsnippet
 context "math()"
 snippet '([rR])ho' "rho" riA
@@ -587,6 +555,7 @@ snippet deg "degree" iA
 ^\\circ
 endsnippet
 
+#context "not_mathCmd()"
 context "math()"
 snippet her "hermitian" iA
 ^\\dag

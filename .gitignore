@@ -5,4 +5,4 @@ sample_vimspector_json/.ccls-cache/
 .ccls-cache/
 .nvimlog
 citation/
-spell/*.spl
+spell/*

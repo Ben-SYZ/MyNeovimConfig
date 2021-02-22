@@ -134,7 +134,15 @@ if index(g:bundle_group, 'basic') >= 0
 			\}
 
 	" 使用 vim 查看man pages map, 一些keymap 就可以用了
-	Plug 'vim-utils/vim-man'
+	" Buffer 是文件在内存中的缓存数据，一个 Buffer 总是也只能是对应一个文件，unmap需要 filetype
+	" Buffer 负责保存数据，Window 负责展示数据(split)，Tab 为 Window 提供排版布局，Buffer 和 Tab 对 Window 总是一对多的关系。如果把 Vim 想象成一个机房的话，Buffer 就是主机，Window 是显示器，而 Tab 是一个个显示器架子。只不过这个机房里面的显示器可以随意连接到别的主机上面，一个主机可以被多个显示器连接。
+	" https://blog.csdn.net/jy692405180/article/details/79775125
+	"Plug 'vim-utils/vim-man'
+	"Plug 'paretje/nvim-man'
+	"上面两个插件和 export MANPAGER='nvim +Man!' 貌似有冲突
+	autocmd FileType man unmap <silent> <buffer> k
+	autocmd FileType man unmap <silent> <buffer> K
+	autocmd FileType man nnoremap <silent> <buffer> <c-K>           :call man#get_page_from_cword('horizontal', v:count)<CR>
 
 endif
 

@@ -47,6 +47,10 @@ noremap U I
 nnoremap <c-u> <c-i>
 nnoremap <c-y> <c-o>
 
+" page up
+nnoremap <c-l> <c-u>
+nnoremap <c-s> <c-d>
+
 " copy
 noremap Y y$
 
@@ -77,10 +81,10 @@ nnoremap Q :q<CR>
 nnoremap <space>R :source $MYVIMRC<CR>
 
 "map s <nop>
-nnoremap sh :set nosplitright<CR>:vsplit<CR>
-nnoremap sn :set splitbelow<CR>:split<CR>
-nnoremap se :set nosplitright<CR>:split<CR>
-nnoremap si :set splitright<CR>:vsplit<CR>
+nnoremap <space>sh :set nosplitright<CR>:vsplit<CR>
+nnoremap <space>sn :set splitbelow<CR>:split<CR>
+nnoremap <space>se :set nosplitright<CR>:split<CR>
+nnoremap <space>si :set splitright<CR>:vsplit<CR>
 "exchange split window
 nnoremap <space>h <C-w>h
 nnoremap <space>n <C-w>j
@@ -88,10 +92,10 @@ nnoremap <space>e <C-w>k
 nnoremap <space>i <C-w>l
 
 "resize the split window
-nnoremap <up> :res -5<CR>
-nnoremap <down> :res +5<CR>
-nnoremap <left> :vertical resize +5<CR>
-nnoremap <right> :vertical resize -5<CR>
+nnoremap <c-up> :res -5<CR>
+nnoremap <c-down> :res +5<CR>
+nnoremap <c-left> :vertical resize +5<CR>
+nnoremap <c-right> :vertical resize -5<CR>
 "change the vertical split to horizontal, vise versa
 nnoremap sv <C-w>t<C-w>H
 nnoremap sV <C-w>t<C-w>K

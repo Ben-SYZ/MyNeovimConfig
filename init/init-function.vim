@@ -14,6 +14,8 @@ func! CompileRunGcc()
     exec "!time java %<"
   elseif &filetype == 'sh'
     :!time bash %
+  elseif &filetype == 'zsh'
+    :!time zsh %
   elseif &filetype == 'python'
     set splitbelow
     :sp
@@ -82,7 +84,7 @@ endfunc
 " === other
 " ==========
 inoremap <C-f> <Esc>:silent !~/.config/nvim/screenshot.sh <cfile><CR>
-noremap <C-s> <Esc>:silent !python ~/.config/nvim/adb.py<CR>p
+"noremap <C-s> <Esc>:silent !python ~/.config/nvim/adb.py<CR>p
 
 
 nnoremap <space>RC :e ~/.config/nvim/init.vim<CR>

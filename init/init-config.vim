@@ -197,5 +197,3 @@ set spelllang=en_us,cjk
 setlocal spellfile=~/.config/nvim/spell/en.utf-8.add
 "if &filetype == 'markdown'
 inoremap <C-l> <c-g>u<Esc>[s1z=`]a<c-g>u
-
-let g:python3_host_prog = '/usr/bin/python'

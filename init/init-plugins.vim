@@ -32,7 +32,7 @@ if !exists('g:bundle_group')
 	let g:bundle_group = ['basic', 'enhanced', 'filetypes']
 	let g:bundle_group += ['jupyter']
 	let g:bundle_group += ['markdown', 'thesis']
-	let g:bundle_group += ['airline', 'coc']
+	let g:bundle_group += ['airline', 'coc', 'html']
 	let g:bundle_group += ['ultisnips']
 	let g:bundle_group += ['vimspector']
 	let g:bundle_group += ['leaderf']
@@ -142,7 +142,8 @@ if index(g:bundle_group, 'basic') >= 0
 	"上面两个插件和 export MANPAGER='nvim +Man!' 貌似有冲突
 	autocmd FileType man unmap <silent> <buffer> k
 	autocmd FileType man unmap <silent> <buffer> K
-	autocmd FileType man nnoremap <silent> <buffer> <c-K>           :call man#get_page_from_cword('horizontal', v:count)<CR>
+	"autocmd FileType man nnoremap <silent> <buffer> <c-K>           :call man#get_page_from_cword('horizontal', v:count)<CR>
+	autocmd FileType man nnoremap <silent> <buffer> <c-K> :Man<CR>
 
 endif
 
@@ -152,11 +153,11 @@ endif
 "----------------------------------------------------------------------
 if index(g:bundle_group, 'enhanced') >= 0
 
-	" 用 v 选中一个区域后，ALT_+/- 按分隔符扩大/缩小选区
-	Plug 'terryma/vim-expand-region'
-	" ALT_+/- 用于按分隔符扩大缩小 v 选区
-	map <m-=> <Plug>(expand_region_expand)
-	map <m--> <Plug>(expand_region_shrink)
+	"" 用 v 选中一个区域后，ALT_+/- 按分隔符扩大/缩小选区
+	"Plug 'terryma/vim-expand-region'
+	"" ALT_+/- 用于按分隔符扩大缩小 v 选区
+	"map <m-=> <Plug>(expand_region_expand)
+	"map <m--> <Plug>(expand_region_shrink)
 	Plug 'gcmt/wildfire.vim'
 
 	" 快速文件搜索
@@ -428,6 +429,15 @@ if index(g:bundle_group, 'coc') >= 0
 
 endif
 
+if index(g:bundle_group, 'html') >= 0
+	"autocmd Filetype html Plug 'mattn/emmet-vim'
+	Plug 'mattn/emmet-vim'
+	" only enable in html and css html:5
+	let g:user_emmet_install_global = 0
+	autocmd FileType html,css EmmetInstall
+endif
+
+
 if index(g:bundle_group, 'ultisnips') >= 0
 	"==
 	"==  Ultisnips
@@ -438,6 +448,12 @@ if index(g:bundle_group, 'ultisnips') >= 0
 	let g:UltiSnipsJumpBackwardTrigger="<c-m>"
 
 	let g:UltiSnipsSnippetDirectories = [$HOME.'/.config/nvim/UltiSnips']
+
+	let g:loaded_python_provider = 1
+	let g:python_host_skip_check=1
+	let g:python_host_prog = '/usr/bin/python'
+	let g:python3_host_skip_check=1
+	let g:python3_host_prog = '/usr/bin/python3'
 endif
 
 
@@ -500,6 +516,7 @@ if index(g:bundle_group, 'thesis') >= 0
 	Plug 'BenSYZ/tex-conceal.vim',{'for': ['tex','markdown']}
 	autocmd Filetype tex set conceallevel=1
 	autocmd Filetype tex let g:tex_conceal='abdmg'
+	autocmd Filetype tex hi Conceal guibg=#282a36
 	"hi Conceal cterm=underline ctermfg=189 ctermbg=235 gui=underline guifg=#f9f9ff guibg=#192224 guisp=#192224
 	"autocmd Filetype tex hi Conceal ctermfg=189 ctermbg=235 guifg=#f9f9ff guibg=#192224 guisp=#192224
 	autocmd Filetype markdown set conceallevel=1
@@ -507,7 +524,20 @@ if index(g:bundle_group, 'thesis') >= 0
 	autocmd Filetype markdown hi Conceal guibg=#282a36
 	"autocmd Filetype tex hi clear Conceal
 	"autocmd Filetype markdown hi Conceal ctermfg=189 ctermbg=235 guifg=#f9f9ff guibg=#000000 guisp=#192224
+	" ===
+	" === tex-fold
+	" ==========
+	Plug 'matze/vim-tex-fold',{'for': 'tex'}
 	
+	" ===
+	" === inkscape
+	" ==========
+	" https://github.com/gillescastel/inkscape-figures
+	inoremap <C-f> <Esc>: silent exec '.!inkscape-figures create "'.getline('.').'" "'.b:vimtex.root.'/figures/"'<CR><CR>:w<CR>
+	nnoremap <C-f> : silent exec '!inkscape-figures edit "'.b:vimtex.root.'/figures/" > /dev/null 2>&1 &'<CR><CR>:redraw!<CR>
+	
+	
+
 	" ===
 	" === vim-latex-live-Preview
 	" ==========
@@ -567,17 +597,28 @@ if index(g:bundle_group, 'thesis') >= 0
 	let g:citation_vim_mode="zotero" "(default)
 	let g:citation_vim_zotero_path="~/Zotero/"
 	let g:citation_vim_zotero_version=5
+	"let g:citation_vim_collection = ["Thesis", "ref_from Wang Yu"]
+	"let g:citation_vim_collection = "gaussian"
+	let g:citation_vim_collection = "creative common"
+
+	"let g:citation_vim_bibtex_file="/path/to/your/bib/file/library.bib"
+	"let g:citation_vim_mode="bibtex"
 
 	" after change remove ~/.config/nvim/citation/*
 	let g:citation_vim_key_format="{author}_{title}_{date}"
 	"let g:citation_vim_key_format=""
 	let g:citation_vim_cache_path='~/.config/nvim/citation'
-	let g:citation_vim_outer_prefix="["
-	let g:citation_vim_inner_prefix="@"
-	let g:citation_vim_suffix="]"
 	let g:citation_vim_et_al_limit=2
 	" recent additions top 1, bottom 0
 	let g:citation_vim_reverse_order=0 
+
+	autocmd FileType markdown let g:citation_vim_outer_prefix="["
+	autocmd FileType markdown let g:citation_vim_inner_prefix="@"
+	autocmd FileType markdown let g:citation_vim_suffix="]"
+
+	autocmd FileType tex let g:citation_vim_outer_prefix="\\cite{"
+	autocmd FileType tex let g:citation_vim_inner_prefix=""
+	autocmd FileType tex let g:citation_vim_suffix="}"
 
 	nmap <space>l [unite]
 	nnoremap [unite] <nop>

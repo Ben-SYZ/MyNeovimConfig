@@ -92,10 +92,10 @@ nnoremap <space>e <C-w>k
 nnoremap <space>i <C-w>l
 
 "resize the split window
-nnoremap <c-up> :res -5<CR>
-nnoremap <c-down> :res +5<CR>
-nnoremap <c-left> :vertical resize +5<CR>
-nnoremap <c-right> :vertical resize -5<CR>
+nnoremap <c-down> :res -5<CR>
+nnoremap <c-up> :res +5<CR>
+nnoremap <c-right> :vertical resize +5<CR>
+nnoremap <c-left> :vertical resize -5<CR>
 "change the vertical split to horizontal, vise versa
 nnoremap sv <C-w>t<C-w>H
 nnoremap sV <C-w>t<C-w>K
@@ -105,10 +105,10 @@ nnoremap sV <C-w>t<C-w>K
 " O: vertical
 " o: horizontal(default)
 "new tab
-nnoremap <tab>k :tabe<CR>
+nnoremap <a-k> :tabe<CR>
 "exchange in tab
-nnoremap <tab>h :-tabnext<CR>
-nnoremap <tab>i :tabnext<CR>
+nnoremap <a-h> :-tabnext<CR>
+nnoremap <a-i> :tabnext<CR>
 "----------------------------------------------------------------------
 " <leader>+数字键 切换tab
 "----------------------------------------------------------------------
@@ -146,8 +146,3 @@ inoremap <silent><m-7> <ESC>:tabn 7<cr>
 inoremap <silent><m-8> <ESC>:tabn 8<cr>
 inoremap <silent><m-9> <ESC>:tabn 9<cr>
 inoremap <silent><m-0> <ESC>:tabn 10<cr>
-
-
-"vim a b c change between buffers
-nnoremap <space>Bh :bp<CR>
-nnoremap <space>Bi :bn<CR>

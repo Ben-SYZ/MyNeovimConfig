@@ -1,0 +1,37 @@
+map n scrollDown
+map N nextTab
+map e scrollUp
+map E previousTab
+map k performFind
+map K performBackwardsFind
+map u enterInsertMode
+map i scrollRight
+map I goForward
+map zI scrollToRight
+map gu focusInput
+map yy copyCurrentUrl decoded
+
+# for visual/caret mode
+# https://github.com/gdh1995/vimium-c/issues/215
+mapkey <n:v> j
+mapkey <e:v> k
+mapkey <i:v> l
+mapkey <K:v> N
+mapkey <k:v> n
+
+
+# or
+mapkey n j
+mapkey N J
+mapkey e k
+mapkey E K
+mapkey k n
+mapkey K N
+mapkey u i
+mapkey U I
+mapkey j e
+mapkey J E
+mapkey i l
+mapkey I L
+#disable ignore keyboard layout
+

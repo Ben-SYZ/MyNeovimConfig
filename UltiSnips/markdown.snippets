@@ -9,7 +9,7 @@ global !p
 
 #ignore = texIgnoreMathZoneIds[0]
 def not_code():
-	return vim.eval("vimtex#syntax#in('mkdSnippet*')") == '0' and vim.eval("vimtex#syntax#in('mkdCode')") == '0'
+	return vim.eval("vimtex#syntax#in('mkdSnippet*')") == '0' and vim.eval("vimtex#syntax#in('mkdCode')") == '0' # and vim.eval("vimtex#syntax#in('MathSymbol')") == '0'
 
 def math():
 	return not_code() and vim.eval('vimtex#syntax#in_mathzone()') == '1'
@@ -795,7 +795,7 @@ snippet '([^\\]|^)tag' "tag" rwA
 endsnippet
 
 snippet pic "pictures"
-![$1](./figure/$1.png)
+![$1](./figures/$1.png)
 endsnippet
 
 snippet merm "mermaid" b

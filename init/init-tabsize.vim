@@ -13,17 +13,26 @@
 " 默认缩进模式（可以后期覆盖）
 "----------------------------------------------------------------------
 
-" 设置缩进宽度（按一下tab进多少sw=8,ts=4,就会有两个tab）
-set sw=4
+"set nosmarttab "neovim default on"
+"
+"" 设置缩进宽度 :normal >>
+"set sw=8
+"
+"" 设置 TAB 宽度(多少个空格符号转成一个tab符)为了和其他编辑器保持一致
+""set ts=4
+"set tabstop=8
+"
+"" 禁止展开 tab (noexpandtab)(不把tab变成空格，虽然空格数到了ts但按tab键仍然显示空格)
+"set expandtab
+"
+"" 如果后面设置了 expandtab 那么展开 tab 为多少字符
+""（按一下tab bs(insert mode)进多少
+"" sts=4, ts=8, 按两下tab 才会变成一个tab符
+"set softtabstop=4
 
-" 设置 TAB 宽度
-set ts=4
-
-" 禁止展开 tab (noexpandtab)
-set noet
-
-" 如果后面设置了 expandtab 那么展开 tab 为多少字符
-set softtabstop=4
+set smarttab
+set shiftwidth=2
+set noexpandtab
 
 
 augroup PythonTab

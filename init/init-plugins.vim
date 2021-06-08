@@ -141,7 +141,7 @@ if index(g:bundle_group, 'basic') >= 0
 	"Plug 'paretje/nvim-man'
 	"上面两个插件和 export MANPAGER='nvim +Man!' 貌似有冲突
 	autocmd FileType man unmap <silent> <buffer> k
-	autocmd FileType man unmap <silent> <buffer> K
+	"autocmd FileType man unmap <silent> <buffer> K
 	"autocmd FileType man nnoremap <silent> <buffer> <c-K>           :call man#get_page_from_cword('horizontal', v:count)<CR>
 	autocmd FileType man nnoremap <silent> <buffer> <c-K> :Man<CR>
 
@@ -534,6 +534,7 @@ if index(g:bundle_group, 'thesis') >= 0
 	" ==========
 	" https://github.com/gillescastel/inkscape-figures
 	inoremap <C-f> <Esc>: silent exec '.!inkscape-figures create "'.getline('.').'" "'.b:vimtex.root.'/figures/"'<CR><CR>:w<CR>
+	"inoremap <C-f> <Esc>: silent exec '.!echo inkscape-figures create "'.getline('.').'" "'.b:vimtex.root.'/figures/" > /tmp/test'<CR><CR>:w<CR>
 	nnoremap <C-f> : silent exec '!inkscape-figures edit "'.b:vimtex.root.'/figures/" > /dev/null 2>&1 &'<CR><CR>:redraw!<CR>
 	
 	
@@ -543,7 +544,7 @@ if index(g:bundle_group, 'thesis') >= 0
 	" ==========
 	Plug 'xuhdev/vim-latex-live-preview'
 	let g:livepreview_previewer = 'zathura'
-	let g:livepreview_engine = 'xelatex'
+	let g:livepreview_engine = 'pdflatex'
 	" ===
 	" === Zotero
 	" ==========

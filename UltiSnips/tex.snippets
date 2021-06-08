@@ -46,6 +46,16 @@ snippet beg "begin{} / end{}" bA
 \\end{$1}
 endsnippet
 
+snippet sec "section" iA
+\\section{${1:section}}
+$0
+endsnippet
+
+snippet subs "section" iA
+\\subsection{${1:section}}
+$0
+endsnippet
+
 snippet table "Table environment" b
 \begin{table}[${1:htpb}]
 	\centering
@@ -857,9 +867,9 @@ endsnippet
 snippet pic "pictures"
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=0.25\textwidth]{./figures/file.png}
+	\includegraphics[width=0.25\textwidth]{./figures/${1:file}.png}
 	\caption{a nice plot}
-	\label{fig:{$2:figurename}
+	\label{fig:{$2:figurename}}
 \end{figure}
 
 %\ref{fig:figurename},

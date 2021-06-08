@@ -31,7 +31,8 @@
 "set softtabstop=4
 
 set smarttab
-set shiftwidth=2
+set shiftwidth=4
+au FileType html set shiftwidth=2
 set noexpandtab
 
 

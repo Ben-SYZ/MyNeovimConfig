@@ -7,14 +7,19 @@ os.system("adb devices")
 
 os.system("scrot -z -s -e 'mv $f ~/Pictures/screenshots/OCR/ocr.png'")
 
+
+# resize
+os.system('convert -resize 100% ~/Pictures/screenshots/OCR/ocr.png ~/Pictures/screenshots/OCR/ocr_resized.png')
+
 # mnt
-os.system('mv ~/Pictures/screenshots/OCR/ocr.png ~/Documents/mntphone/mnt/Pictures/Screenshots/')
+#os.system('mv ~/Pictures/screenshots/OCR/ocr.png ~/Documents/mntphone/mnt/Pictures/Screenshots/')
+os.system('adb push ~/Pictures/screenshots/OCR/ocr_resized.png /storage/sdcard0/Pictures/Screenshots/ocr.png')
 # alive
 os.system("adb shell input tap 550 550")
 # selec 1
 os.system("adb shell input tap 100 100")
 # select screenshot
-os.system("adb shell input tap 550 550")
+os.system("adb shell input tap 440 1448")
 # select 1st photo
 os.system("adb shell input tap 100 400")
 # click the √

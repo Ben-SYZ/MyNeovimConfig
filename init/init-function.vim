@@ -16,13 +16,15 @@ func! CompileRunGcc()
     exec "!javac %"
     exec "!time java %<"
   elseif &filetype == 'sh'
-    :!time bash %
+    :!time sh %
   elseif &filetype == 'zsh'
     :!time zsh %
   elseif &filetype == 'python'
     set splitbelow
     :sp
     :term time python3 %
+  elseif &filetype == 'lua'
+    :!time lua %
   elseif &filetype == 'html'
     exec "!chromium '%' &"
 "  elseif &filetype == 'html'
@@ -34,6 +36,7 @@ func! CompileRunGcc()
   elseif &filetype == 'mdp'
     exec "terminal mdp %"
   elseif &filetype == 'tex'
+    "vim-latex-live-Preview
     exec "LLPStartPreview"
   elseif &filetype == 'vim'
     exec "source %"
@@ -90,6 +93,10 @@ nnoremap <c-c> :call ChineseAboveCount()<cr>
 inoremap <c-c> :call ChineseAboveCount()<cr>
 "https://www.zhihu.com/question/54118781/answer/137982087
 
+function! SequentialNumber()
+  :'<,'>s/^/\=line('.')-1 /
+endfunction
+
 
 " ===
 " === example
@@ -128,8 +135,8 @@ endfunc
 " ===
 " === other
 " ==========
-"inoremap <C-f> <Esc>:silent !~/.config/nvim/screenshot.sh <cfile><CR>
-"noremap <C-s> <Esc>:silent !python ~/.config/nvim/adb.py<CR>p
+"inoremap <C-f> <Esc>:silent !~/.config/nvim/scripts/screenshot.sh <cfile><CR>
+"noremap <C-s> <Esc>:silent !~/.config/nvim/scripts/adb.sh<CR>p
 
 
 nnoremap <space>RC :e ~/.config/nvim/init.vim<CR>

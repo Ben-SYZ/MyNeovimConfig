@@ -262,6 +262,10 @@ if index(g:bundle_group, 'filetypes') >= 0
 
 	" python 语法文件增强
 	Plug 'vim-python/python-syntax', { 'for': ['python'] }
+
+	" 中文格式规范
+	Plug 'hotoo/pangu.vim', { 'for': ['markdown', 'plain'] }
+	autocmd BufWritePre *.markdown,*.md,*.text,*.txt,*.wiki,*.cnx call PanGuSpacing()
 endif
 
 "----------------------------------------------------------------------
@@ -604,6 +608,8 @@ if index(g:bundle_group, 'thesis') >= 0
 
 	"let g:citation_vim_bibtex_file="/path/to/your/bib/file/library.bib"
 	"let g:citation_vim_mode="bibtex"
+	
+	" Set mode befor open tex, or won't work
 
 	" after change remove ~/.config/nvim/citation/*
 	let g:citation_vim_key_format="{author}_{title}_{date}"

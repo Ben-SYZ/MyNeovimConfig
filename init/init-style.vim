@@ -46,11 +46,15 @@ set splitright
 "----------------------------------------------------------------------
 " 颜色主题：色彩文件位于 colors 目录中
 "----------------------------------------------------------------------
-let g:SnazzyTransparent = 1
-colorscheme snazzy
+" for mac terminal
+"if (!(&term == "xterm-256color"))
+"    colorscheme snazzy
+"    let g:SnazzyTransparent = 1
+"else
+"    " 设置黑色背景
+"    set background=dark
+"endif
 
-" 设置黑色背景
-set background=dark
 
 " 允许 256 色
 set t_Co=256

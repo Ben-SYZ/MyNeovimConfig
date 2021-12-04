@@ -1,182 +1,173 @@
 {
-	"coc.preferences.extensionUpdateCheck": "daily",
-	"suggest.autoTrigger": "always",
-	"suggest.triggerAfterInsertEnter": true,
-	"suggest.maxPreviewWidth": 100,
-	"suggest.labelMaxLength": 200,
-	"suggest.detailMaxLength": 100,
-	"suggest.maxCompleteItemCount": 50,
-	"suggest.timeout":5000,
-	"suggest.enablePreselect": false,
-	"suggest.noselect": true,
+    "html.enable": true, 
+    "html.filetypes": ["html", "handlebars", "htmldjango"],
+    "html.format.enable": true,
 
-	"suggest.completionItemKindLabels": {
-		"class": "\uf0e8",
-		"color": "\ue22b",
-		"constant": "\uf8fe",
-		"default": "\uf29c",
-		"enum": "\uf435",
-		"enumMember": "\uf02b",
-		"event": "\ufacd",
-		"field": "\uf93d",
-		"file": "\uf723",
-		"folder": "\uf115",
-		"function": "\u0192",
-		"interface": "\uf417",
-		"keyword": "\uf1de",
-		"method": "\uf6a6",
-		"module": "\uf40d",
-		"operator": "\uf915",
-		"property": "\ue624",
-		"reference": "\ufa46",
-		"snippet": "\ue60b",
-		"struct": "\ufb44",
-		"text": "\ue612",
-		"typeParameter": "\uf728",
-		"unit": "\uf475",
-		"value": "\uf89f",
-		"variable": "\ue71b"
+    "coc.preferences.extensionUpdateCheck": "daily",
+    "suggest.autoTrigger": "always",
+    "suggest.triggerAfterInsertEnter": true,
+    "suggest.maxPreviewWidth": 100,
+    "suggest.labelMaxLength": 200,
+    "suggest.detailMaxLength": 100,
+    "suggest.maxCompleteItemCount": 50,
+    "suggest.timeout":5000,
+    "suggest.enablePreselect": false,
+    "suggest.noselect": true,
+
+    "suggest.completionItemKindLabels": {
+	"class": "\uf0e8",
+	"color": "\ue22b",
+	"constant": "\uf8fe",
+	"default": "\uf29c",
+	"enum": "\uf435",
+	"enumMember": "\uf02b",
+	"event": "\ufacd",
+	"field": "\uf93d",
+	"file": "\uf723",
+	"folder": "\uf115",
+	"function": "\u0192",
+	"interface": "\uf417",
+	"keyword": "\uf1de",
+	"method": "\uf6a6",
+	"module": "\uf40d",
+	"operator": "\uf915",
+	"property": "\ue624",
+	"reference": "\ufa46",
+	"snippet": "\ue60b",
+	"struct": "\ufb44",
+	"text": "\ue612",
+	"typeParameter": "\uf728",
+	"unit": "\uf475",
+	"value": "\uf89f",
+	"variable": "\ue71b"
+    },
+//    "snippets.priority": 10,
+//    "snippets.ultisnips.directories":[
+//	//"UltiSnips"
+//	"$HOME/.config/nvim/UltiSnips/"
+//    ],
+//    "python.linting.pylintPath": "pylint",
+    "languageserver": {
+	"bash": {
+	    "command": "bash-language-server",
+	    "args": ["start"],
+	    "filetypes": ["sh"],
+	    "ignoredRootPaths": []
 	},
-//	"snippets.priority": 10,
-//	"snippets.ultisnips.directories":[
-//		//"UltiSnips"
-//		"$HOME/.config/nvim/UltiSnips/"
-//	],
-//	"python.linting.pylintPath": "/usr/bin/pylint",
-//	"languageserver": {
-//		"lua": {
-//			"command": "lua-lsp",
-//			"filetypes": ["lua"]
-//		},
-//		"bash": {
-//			"command": "bash-language-server",
-//			"args": ["start"],
-//			"filetypes": ["sh"],
-//			"ignoredRootPaths": []
-//		},
-//		"ccls": {
-//			"command": "ccls",
-//			"filetypes": ["c", "cpp", "cuda", "objc", "objcpp"],
-//			"rootPatterns": [".ccls-root", "compile_commands.json"],
-//			"initializationOptions": {
-//				 "cache": {
-//					 "directory": ".ccls-cache"
-//				 }
-//			 }
-//		}
-//	}
-	"languageserver": {
-		"bash": {
-			"command": "bash-language-server",
-			"args": ["start"],
-			"filetypes": ["sh"],
-			"ignoredRootPaths": []
+	"ccls": {
+	    "command": "ccls",
+	    "filetypes": ["c", "cpp", "cuda", "objc", "objcpp"],
+	    //Unlike VSCode vim doesn't have workspace support. The solution is resolve workspace folders from opened files.
+	    "rootPatterns": [".ccls-root", "compile_commands.json"],
+	    "initializationOptions": {
+		"cache": {
+		    "directory": ".ccls-cache"
 		},
-		"ccls": {
-			"command": "ccls",
-			"filetypes": ["c", "cpp", "cuda", "objc", "objcpp"],
-			"rootPatterns": [".ccls-root", "compile_commands.json"],
-			"initializationOptions": {
-				"cache": {
-				"directory": ".ccls-cache"
-				}
-			}
+		"clang": {
+		    // from clang -v -fsyntax-only -x c++ /dev/null
+		    "extraArgs": [
+			"-isystem/usr/lib"
+		    ]
 		}
+	    }
 	},
-//	"languageserver": {
-//		"ccls" : {
-//		}
-//	}
+	"lua": {
+	    "command": "lua-lsp",
+	    "filetypes": ["lua"]
+	}//,
+	//	"html": {
+	    //	    "enable": true,
+	    //	    "filetypes": [ "html", "handlebars", "django", "htmldjango" ],
+	    //	    "format.enable": true
+	    //	}
+    },
+    "pyright.analisys.typeshedPath": ["/Users/zhilin/Library/Python/3.9/lib/python/site-packages"],
 
-// coc-settings.json
+    // coc-settings.json
+    "explorer.keyMappings.global": {
+	//"i": "unmap", // cancel default mapkey
 
-	"explorer.keyMappings.global": {
-		//"i": "unmap", // cancel default mapkey
+	"e": "nodePrev",
+	"n": "nodeNext",
+	"gk": "expandablePrev",
+	"gj": "expandableNext",
 
-		"e": "nodePrev",
-		"n": "nodeNext",
-		"gk": "expandablePrev",
-		"gj": "expandableNext",
+	"*": "toggleSelection",
+	"<tab>": "actionMenu",
 
-		"*": "toggleSelection",
-		"<tab>": "actionMenu",
+	"H": "collapse",
+	"l": ["expandable?", "expand", "open"],
+	"J": ["toggleSelection", "nodeNext"],
+	"K": ["toggleSelection", "nodePrev"],
+	"gl": "expandRecursive",
+	"gh": "collapseRecursive",
+	"o": "expandOrCollapse",
+	"<cr>": ["expandable?", "cd", "open"],
+	"i": "open",
+	"s": "open:split",
+	"S": "open:split:plain",
+	"I": "open:vsplit",
+	"t": "open:tab",
+	"h": "gotoParent",
+	"gp": "preview:labeling",
 
-		"H": "collapse",
-		"l": ["expandable?", "expand", "open"],
-		"J": ["toggleSelection", "nodeNext"],
-		"K": ["toggleSelection", "nodePrev"],
-		"gl": "expandRecursive",
-		"gh": "collapseRecursive",
-		"o": "expandOrCollapse",
-		"<cr>": ["expandable?", "cd", "open"],
-		"i": "open",
-		"s": "open:split",
-		"S": "open:split:plain",
-		"I": "open:vsplit",
-		"t": "open:tab",
-		"h": "gotoParent",
-		"gp": "preview:labeling",
+	"y": "copyFilepath",
+	"Y": "copyFilename",
+	"c": "copyFile",
+	"x": "cutFile",
+	"p": "pasteFile",
+	"d": "delete",
+	"D": "deleteForever",
 
-		"y": "copyFilepath",
-		"Y": "copyFilename",
-		"c": "copyFile",
-		"x": "cutFile",
-		"p": "pasteFile",
-		"d": "delete",
-		"D": "deleteForever",
+	"a": "addFile",
+	"A": "addDirectory",
+	"r": "rename",
 
-		"a": "addFile",
-		"A": "addDirectory",
-		"r": "rename",
+	".": "toggleHidden",
+	"R": "refresh",
 
-		".": "toggleHidden",
-		"R": "refresh",
+	"?": "help",
+	"q": "quit",
+	"<esc>": "esc",
+	"X": "systemExecute",
+	"gd": "listDrive",
 
-		"?": "help",
-		"q": "quit",
-		"<esc>": "esc",
-		"X": "systemExecute",
-		"gd": "listDrive",
+	"f": "search",
+	"F": "searchRecursive",
 
-		"f": "search",
-		"F": "searchRecursive",
+	"gf": "gotoSource:file",
+	"gb": "gotoSource:buffer",
 
-		"gf": "gotoSource:file",
-		"gb": "gotoSource:buffer",
+	"[[": "sourcePrev",
+	    "]]": "sourceNext",
 
-		"[[": "sourcePrev",
-		"]]": "sourceNext",
-
-		"[d": "diagnosticPrev",
+	    "[d": "diagnosticPrev",
 		"]d": "diagnosticNext",
 
 		"[c": "gitPrev",
-		"]c": "gitNext",
-		"<<": "gitStage",
-		">>": "gitUnstage"
-  },
-	"gitignore.enable": {
-	  "type": "boolean",
-	  "default": true,
-	  "description": "Is enable gitignore"
+		    "]c": "gitNext",
+		    "<<": "gitStage",
+		    ">>": "gitUnstage"
+    },
+    "gitignore.enable": {
+	"type": "boolean",
+	"default": true,
+	"description": "Is enable gitignore"
+    },
+    "gitignore.templates.patch": {
+	"type": "object",
+	"default": {},
+	"additionalProperties": {
+	    "type": "string"
 	},
-	"gitignore.templates.patch": {
-	  "type": "object",
-	  "default": {},
-	  "additionalProperties": {
-		"type": "string"
-	  },
-	  "description": "gitignore patch for exists templates (key and value format)"
+	"description": "gitignore patch for exists templates (key and value format)"
+    },
+    "gitignore.templates.replace": {
+	"type": "object",
+	"default": {},
+	"additionalProperties": {
+	    "type": "string"
 	},
-	"gitignore.templates.replace": {
-	  "type": "object",
-	  "default": {},
-	  "additionalProperties": {
-		"type": "string"
-	  },
-	  "description": "gitignore completely replace the exists templates (key and value format)"
-	}
-	
-	
-	
+	"description": "gitignore completely replace the exists templates (key and value format)"
+    }
 }

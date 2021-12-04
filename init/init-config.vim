@@ -185,6 +185,7 @@ augroup InitFileTypesGroup
 	au BufNewFile,BufRead *.asc setlocal filetype=asciidoc
 	au BufNewFile,BufRead *.vl setlocal filetype=verilog
 	au BufRead,BufNewFile *.mdp setfiletype mdp
+	au BufNewFile,BufRead *.wiki setf Wikipedia 
 
 augroup END
 

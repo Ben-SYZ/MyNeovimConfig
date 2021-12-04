@@ -18,6 +18,27 @@ def not_mathCmd():
 
 endglobal
 
+snippet meta "hugo meta data" b
+---
+title: "${1:`!p snip.rv = snip.fn.split('.')[0]`}"
+date: `date -u +%Y-%m-%dT%H:%M:%S+08:00`
+lastMod: `date -u +%Y-%m-%dT%H:%M:%S+08:00`
+code: true
+mermaid: false
+draft: false
+author: "Ben"
+description: "${2:`!p snip.rv = snip.fn.split('.')[0]`}"
+tag: ["${3:`!p snip.rv = snip.fn.split('.')[0]`}"]
+---
+
+$0
+endsnippet
+
+
+snippet lastMod "hugo meta data lastMod" b
+lastMod: `date -u +%Y-%m-%dT%H:%M:%S+08:00`
+endsnippet
+
 context "math()"
 snippet it "italic" wA
 \\mathcal{$1}$0
@@ -51,6 +72,11 @@ $0
 $$
 endsnippet
 
+context "not_code()"
+snippet fx "Math" wA
+$f(x)$$0
+endsnippet
+
 # subscript
 #==================
 context "math()"
@@ -72,7 +98,7 @@ endsnippet
 
 context "math()"
 snippet td "subscript" iA
-_{$2}$0
+_{$1}$0
 endsnippet
 
 context "math()"
@@ -119,7 +145,7 @@ endsnippet
 #context "not_mathCmd()"
 context "math()"
 snippet ^^ "superscript" iA
-^{$2}$0
+^{$1}$0
 endsnippet
 
 context "math()"
@@ -346,6 +372,11 @@ snippet iint "integrate" wA
 \\iint
 endsnippet
 priority 10
+context "math()"
+snippet oint "integrate" wA
+\\oint
+endsnippet
+priority 10
 context "not_mathCmd()"
 snippet \limo "limit" wA
 \\lim_{$1 \to ${2:\infty}}$0
@@ -375,6 +406,11 @@ endsnippet
 priority 100
 context "math()"
 snippet dot "cdot" wA
+\\dot{$1}$0
+endsnippet
+priority 101
+context "math()"
+snippet cdot "cdot" wA
 \\cdot 
 endsnippet
 
@@ -533,6 +569,12 @@ context "math()"
 snippet ** "times" iA
  \\times 
 endsnippet
+priority 100
+context "math()"
+snippet times "times" wA
+\\times 
+endsnippet
+
 
 priority 10
 context "math()"
@@ -699,6 +741,10 @@ context "math()"
 snippet =< "<=" iA
 \\Rightarrow 
 endsnippet
+context "math()"
+snippet =<> "<=>" iA
+\\Leftrightarrow 
+endsnippet
 
 
 #===== large notation
@@ -794,8 +840,17 @@ snippet '([^\\]|^)tag' "tag" rwA
 `!p snip.rv = match.group(1) + '\\' + 'tag'`{$1}$0
 endsnippet
 
+#![$1](./`!p snip.rv = snip.fn.split('.')[0]`/figures/$1.png)
 snippet pic "pictures"
 ![$1](./figures/$1.png)
+endsnippet
+snippet img "pictures"
+<img src="$1" alt="$1" width=500 > $0
+endsnippet
+
+
+snippet pics "pictures"
+![$1](./figures/$1.svg)
 endsnippet
 
 snippet merm "mermaid" b

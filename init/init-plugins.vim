@@ -76,7 +76,7 @@ if index(g:bundle_group, 'basic') >= 0
 	cnoreabbrev sw w suda://%
 
 	" 展示开始画面，显示最近编辑过的文件
-	Plug 'mhinz/vim-startify'
+	"Plug 'mhinz/vim-startify'
 
 	" theme
 	" 一次性安装一大堆 colorscheme
@@ -104,8 +104,16 @@ if index(g:bundle_group, 'basic') >= 0
 	" 使用 ALT+E 来选择窗口
 	nmap <m-t> <Plug>(choosewin)
 
-	" fcitx
-	Plug 'lilydjwg/fcitx.vim'
+	if has('macunix')
+	    Plug 'BenSYZ/Mac-input.vim'
+	    let g:input_en='com.apple.keylayout.Colemak'
+	    let g:input_zh='com.apple.inputmethod.SCIM.ITABC'
+	    "so $HOME/.config/nvim/plugged/mac-input.vim/plugin/mac-input.vim
+	    "Plug 'brglng/vim-im-select'
+	elseif has('unix')
+	    Plug 'lilydjwg/fcitx.vim'
+	endif
+
 
 	" Git 支持
 	Plug 'tpope/vim-fugitive'
@@ -114,8 +122,8 @@ if index(g:bundle_group, 'basic') >= 0
 	" startify
 	" ----------
 	" 默认不显示 startify
-	let g:startify_disable_at_vimenter = 1
-	let g:startify_session_dir = '~/.vim/session'
+	"let g:startify_disable_at_vimenter = 1
+	"let g:startify_session_dir = '~/.vim/session'
 
 
 	" vim-signify
@@ -247,6 +255,10 @@ if index(g:bundle_group, 'enhanced') >= 0
 	let g:multi_cursor_skip_key            = '<C-x>'
 	let g:multi_cursor_quit_key            = '<Esc>'
 
+	" Auto format Chinese and English
+	Plug 'hotoo/pangu.vim'
+	"autocmd BufWritePre *.markdown,*.md,*.text,*.txt,*.wiki,*.cnx call PanGuSpacing()
+
 endif
 
 "----------------------------------------------------------------------
@@ -262,10 +274,7 @@ if index(g:bundle_group, 'filetypes') >= 0
 
 	" python 语法文件增强
 	Plug 'vim-python/python-syntax', { 'for': ['python'] }
-
-	" 中文格式规范
-	Plug 'hotoo/pangu.vim', { 'for': ['markdown', 'plain'] }
-	autocmd BufWritePre *.markdown,*.md,*.text,*.txt,*.wiki,*.cnx call PanGuSpacing()
+	Plug 'vim-scripts/mediawiki.vim', { 'for': ['wikipedia'] }
 endif
 
 "----------------------------------------------------------------------
@@ -286,8 +295,11 @@ if index(g:bundle_group, 'markdown') >= 0
 	let g:mkdp_open_ip = ''
 	let g:mkdp_browser = ''
 	let g:mkdp_echo_preview_url = 0
-	"let g:mkdp_browserfunc = ''
-	let g:mkdp_browserfunc = 'g:Open_browser'
+	if has('macunix')
+	    let g:mkdp_browserfunc = ''
+	elseif has('unix')
+	    let g:mkdp_browserfunc = 'g:Open_browser'
+	endif
 	let g:mkdp_preview_options = {
 		\ 'mkit': {},
 		\ 'katex': {},
@@ -438,7 +450,7 @@ if index(g:bundle_group, 'html') >= 0
 	Plug 'mattn/emmet-vim'
 	" only enable in html and css html:5
 	let g:user_emmet_install_global = 0
-	autocmd FileType html,css EmmetInstall
+	autocmd FileType html,css,markdown EmmetInstall
 endif
 
 
@@ -455,9 +467,13 @@ if index(g:bundle_group, 'ultisnips') >= 0
 
 	let g:loaded_python_provider = 1
 	let g:python_host_skip_check=1
-	let g:python_host_prog = '/usr/bin/python'
 	let g:python3_host_skip_check=1
-	let g:python3_host_prog = '/usr/bin/python3'
+	if has('macunix')
+	    let g:python3_host_prog = '/usr/local/bin/python3'
+	elseif has('unix')
+	    let g:python_host_prog = '/usr/bin/python'
+	    let g:python3_host_prog = '/usr/bin/python3'
+	endif
 endif
 
 
@@ -537,11 +553,13 @@ if index(g:bundle_group, 'thesis') >= 0
 	" === inkscape
 	" ==========
 	" https://github.com/gillescastel/inkscape-figures
-	inoremap <C-f> <Esc>: silent exec '.!inkscape-figures create "'.getline('.').'" "'.b:vimtex.root.'/figures/"'<CR><CR>:w<CR>
+	
+	"inoremap <C-f> <Esc>: silent exec '.!inkscape-figures create "'.getline('.').'" "'.b:vimtex.root.'/figures/"'<CR><CR>:w<CR>
+	autocmd Filetype tex inoremap <C-f> <Esc>: silent exec '.!inkscape-figures create "'.getline('.').'" "'.b:vimtex.root.'/figures/"'<CR><CR>:w<CR>
 	"inoremap <C-f> <Esc>: silent exec '.!echo inkscape-figures create "'.getline('.').'" "'.b:vimtex.root.'/figures/" > /tmp/test'<CR><CR>:w<CR>
-	nnoremap <C-f> : silent exec '!inkscape-figures edit "'.b:vimtex.root.'/figures/" > /dev/null 2>&1 &'<CR><CR>:redraw!<CR>
-	
-	
+	autocmd Filetype tex nnoremap <C-f> : silent exec '!inkscape-figures edit "'.b:vimtex.root.'/figures/" > /dev/null 2>&1 &'<CR><CR>:redraw!<CR>
+	"autocmd Filetype markdown inoremap <C-f> <Esc>: silent exec '.!~/.config/nvim/scripts/my_inkscape.sh ' . getline('.')<CR><CR>:w<CR>
+	"autocmd Filetype markdown nnoremap <C-f> : silent exec '!inkscape <cfile> > /dev/null 2>&1 &'<CR><CR>:redraw!<CR>
 
 	" ===
 	" === vim-latex-live-Preview
@@ -608,8 +626,6 @@ if index(g:bundle_group, 'thesis') >= 0
 
 	"let g:citation_vim_bibtex_file="/path/to/your/bib/file/library.bib"
 	"let g:citation_vim_mode="bibtex"
-	
-	" Set mode befor open tex, or won't work
 
 	" after change remove ~/.config/nvim/citation/*
 	let g:citation_vim_key_format="{author}_{title}_{date}"

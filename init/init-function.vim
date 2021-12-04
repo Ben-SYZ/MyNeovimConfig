@@ -4,11 +4,9 @@ func! CompileRunGcc()
   exec "w"
   if &filetype == 'c'
     "exec "!g++ % -o %<"
-    exec "!gcc % -o %<"
-    exec "!time ./%<"
+    exec "!gcc % -o %< && time ./%<"
   elseif &filetype == 'cpp'
-    exec "!g++ % -o %<"
-    exec "!time ./%<"
+    exec "!g++ % -o %< && time ./%<"
   elseif &filetype == 'rust'
     exec "!rustc % -o %<"
     exec "!time ./%<"
@@ -26,7 +24,11 @@ func! CompileRunGcc()
   elseif &filetype == 'lua'
     :!time lua %
   elseif &filetype == 'html'
-    exec "!chromium '%' &"
+    if(has('macunix'))
+      exec "!open '%' &"
+    elseif(has('unix'))
+      exec "firefox '%' &"
+  endif
 "  elseif &filetype == 'html'
 "    exec "!firefox % &"
   elseif &filetype == 'markdown'
@@ -130,6 +132,25 @@ function! SynStack()
   endif
   echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
 endfunc
+
+function! InkscapeForMarkdown() range
+	let save = @z
+	silent exec 'normal! "zya<'
+	let text = @z
+	let @z = save
+
+	"https://stackoverflow.com/questions/12204192/using-multiple-delimiters-in-awk
+	let svg_file = matchstr(text, '<img src=\([''"]\)\zs.\{-}\ze\1')
+	if empty(svg_file) 
+	   throw "no url recognized into ``".text."''"
+	endif
+	:echo svg_file
+	:silent exec '!~/.config/nvim/scripts/my_inkscape.sh ' . svg_file
+endfunc
+
+autocmd Filetype markdown inoremap <C-f> <Esc>: silent exec '.!~/.config/nvim/scripts/my_inkscape.sh '. bufname() .' '. getline('.')<CR><CR>:w<CR>
+autocmd Filetype markdown nnoremap <C-f> : call InkscapeForMarkdown()<CR><CR>
+"":w<CR>
 
 
 " ===

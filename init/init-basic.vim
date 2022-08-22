@@ -152,14 +152,20 @@ if has('folding')
 
 	" 默认打开所有缩进
 	"set foldlevel=99
+	let g:markdown_folding=1
+	let g:vim_markdown_folding_level = 6
 endif
 
 
 "----------------------------------------------------------------------
 " 文件搜索和补全时忽略下面扩展名
 "----------------------------------------------------------------------
-set suffixes=.bak,~,.o,.h,.info,.swp,.obj,.pyc,.pyo,.egg-info,.class
+" set of file name suffixes that will be given a lower priority when it comes to matching wildcards
+set suffixes+=.bak,~,.o,.h,.info,.swp,.obj,.pyc,.pyo,.egg-info,.class
+set suffixes+=.old,,
 
+" ignore these files when completing names and in Ex
+"set wildignore=.svn,CVS,.git,*.o,*.a,*.class,*.mo,*.la,*.so,*.obj,*.swp,*.jpg,*.png,*.xpm,*.gif,*.pdf,*.bak,*.beam
 set wildignore=*.o,*.obj,*~,*.exe,*.a,*.pdb,*.lib "stuff to ignore when tab completing
 set wildignore+=*.so,*.dll,*.swp,*.egg,*.jar,*.class,*.pyc,*.pyo,*.bin,*.dex
 set wildignore+=*.zip,*.7z,*.rar,*.gz,*.tar,*.gzip,*.bz2,*.tgz,*.xz    " MacOSX/Linux

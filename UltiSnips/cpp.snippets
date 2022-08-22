@@ -1,11 +1,24 @@
-snippet temp "tepmlate" iA
 #include <iostream>
-using namespace std;
+#using namespace std;
+#int main(){
+#    $0
+#    return 0;
+#}
+snippet temp "tepmlate" i
+#include <iostream>
+#include <thread>
 int main(){
-    $0
+    
     return 0;
 }
 endsnippet
-snippet sep "learn cpp seperate sub section" iA
+snippet sep "learn cpp seperate sub section" i
 cout << "\n===== Scientific Number =====\n";
+endsnippet
+
+snippet f "function" i
+(){
+    $0
+    ${1:return 0;}
+}
 endsnippet

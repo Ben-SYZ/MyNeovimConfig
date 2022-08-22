@@ -56,6 +56,8 @@ else
     set background=dark
 endif
 
+    let g:SnazzyTransparent = 1
+    colorscheme snazzy
 
 " 允许 256 色
 set t_Co=256

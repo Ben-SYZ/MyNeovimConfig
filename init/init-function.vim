@@ -4,9 +4,16 @@ func! CompileRunGcc()
   exec "w"
   if &filetype == 'c'
     "exec "!g++ % -o %<"
-    exec "!gcc % -o %< && time ./%<"
+    "exec "!gcc -lpthread % -o '%<' && time ./'%<'"
+    set splitbelow
+    :sp
+    ":term gcc -lpthread '%' -o '%<' && time ./'%<'
+    :term [ -e Makefile ] && make || gcc -lpthread '%' -o '%<' && time ./'%<'
   elseif &filetype == 'cpp'
-    exec "!g++ % -o %< && time ./%<"
+    "exec "!g++ -lpthread '%' -o '%<' && time ./'%<'"
+    set splitbelow
+    :sp
+    :term g++ -lpthread '%' -o '%<' && time ./'%<'
   elseif &filetype == 'rust'
     exec "!rustc % -o %<"
     exec "!time ./%<"
@@ -156,7 +163,7 @@ autocmd Filetype markdown nnoremap <C-f> : call InkscapeForMarkdown()<CR><CR>
 " ===
 " === other
 " ==========
-"inoremap <C-f> <Esc>:silent !~/.config/nvim/scripts/screenshot.sh <cfile><CR>
+inoremap <C-S-f> <Esc>:silent !~/.config/nvim/scripts/screenshot.sh <cfile><CR>
 "noremap <C-s> <Esc>:silent !~/.config/nvim/scripts/adb.sh<CR>p
 
 

@@ -152,6 +152,8 @@ if index(g:bundle_group, 'basic') >= 0
 	"autocmd FileType man unmap <silent> <buffer> K
 	"autocmd FileType man nnoremap <silent> <buffer> <c-K>           :call man#get_page_from_cword('horizontal', v:count)<CR>
 	autocmd FileType man nnoremap <silent> <buffer> <c-K> :Man<CR>
+	autocmd FileType man nnoremap <silent> <buffer> <cr> :Man<CR>
+	autocmd FileType man nnoremap <silent> <buffer> M :Man<CR>
 
 endif
 
@@ -181,7 +183,8 @@ if index(g:bundle_group, 'enhanced') >= 0
 	Plug 'dyng/ctrlsf.vim'
 
 	" 配对括号和引号自动补全
-	Plug 'Raimondi/delimitMate'
+	"Plug 'Raimondi/delimitMate'
+	Plug 'jiangmiao/auto-pairs'
 
 	"surround.vim
 	"-------
@@ -361,6 +364,7 @@ if index(g:bundle_group, 'coc') >= 0
 	Plug 'neoclide/coc.nvim', {'branch': 'release'}
 	Plug 'neoclide/jsonc.vim'
 
+	"\'coc-clangd',
 	let g:coc_global_extensions = [
 		\'coc-vimlsp',
 		\'coc-json',
@@ -376,24 +380,60 @@ if index(g:bundle_group, 'coc') >= 0
 		let col = col('.') - 1
 		return !col || getline('.')[col - 1]  =~ '\s'
 	endfunction
-	inoremap <silent><expr> <Tab>
-		  \ pumvisible() ? "\<C-n>" :
-		  \ <SID>check_back_space() ? "\<Tab>" :
-		  \ coc#refresh()
+
 	" open all the doc when nothing leader
 	inoremap <silent><expr> <c-n> coc#refresh()
 
 	" Use <Tab> and <S-Tab> to navigate the completion list:
-	inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-	inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-	" Use <cr> to confirm completion
-	inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+	inoremap <silent><expr> <TAB>
+		\ coc#pum#visible() ? coc#pum#next(1):
+		\ CheckBackspace() ? "\<Tab>" :
+		\ coc#refresh()
+	inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+	"inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+	" Make <CR> to accept selected completion item or notify coc.nvim to format
+	" <C-g>u breaks current undo, please make your own choice.
+	inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+	                            \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+	function! CheckBackspace() abort
+		let col = col('.') - 1
+		return !col || getline('.')[col - 1]  =~# '\s'
+	endfunction
+
+	" Use <c-space> to trigger completion.
+	if has('nvim')
+		inoremap <silent><expr> <c-space> coc#refresh()
+	else
+		inoremap <silent><expr> <c-@> coc#refresh()
+	endif
 
 	" clipboard
 	nnoremap <silent> <space>y  :<C-u>CocList -A --normal yank<cr>
+
+	" Use M for show documentation in preview window
+	nnoremap <silent> M :call <SID>show_documentation()<CR>
+	function! s:show_documentation()
+	    if (index(['vim','help'], &filetype) >= 0)
+		execute 'h '.expand('<cword>')
+	    elseif (coc#rpc#ready())
+		call CocActionAsync('doHover')
+	    else
+		execute '!' . &keywordprg . " " . expand('<cword>')
+	    endif
+	endfunction
+
+	" Highlight the symbol and its references when holding the cursor.
+	autocmd CursorHold * silent call CocActionAsync('highlight')
+	autocmd CursorHoldI * silent call CocActionAsync('highlight')
+	" need  "coc.preferences.currentFunctionSymbolAutoUpdate": true,
+	set updatetime=500
+
+	" Symbol renaming.
+	nmap <leader>rn <Plug>(coc-rename)
+
 	" diagnose
-	nmap <silent> <space>- <Plug>(coc-diagnostic-next)
-	nmap <silent> <space>= <Plug>(coc-diagnostic-prev)
+	nmap <silent> <space>- <Plug>(coc-diagnostic-prev)
+	nmap <silent> <space>= <Plug>(coc-diagnostic-next)
 	" used in def blah blah
 	nmap <silent> gd <Plug>(coc-definition)
 	nmap <silent> gy <Plug>(coc-type-definition)
@@ -442,6 +482,14 @@ if index(g:bundle_group, 'coc') >= 0
 
 	"" Use <leader>x for convert visual selected code to snippet
 	""xmap <leader>x  <Plug>(coc-convert-snippet)
+	" vim have gh go header
+	"Plug 'Yohannfra/Vim-Goto-Header'
+	"let g:goto_header_open_in_new_tab = 1
+	"let g:goto_header_includes_dirs = [".", "/usr/include", "..", "~"]
+	"" [ "DIR2", "DIR3.", "DIR4"]
+	""let g:goto_header_use_shorter_path = 1
+	"let g:goto_header_associate_cpp_h = 1
+	"nnoremap gh :GotoHeader <CR>
 
 endif
 

@@ -33,7 +33,7 @@
 set smarttab
 set shiftwidth=4
 au FileType html set shiftwidth=2
-set noexpandtab
+set expandtab
 
 
 augroup PythonTab

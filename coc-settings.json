@@ -1,4 +1,6 @@
 {
+    "coc.preferences.currentFunctionSymbolAutoUpdate": true,
+
     "html.enable": true, 
     "html.filetypes": ["html", "handlebars", "htmldjango"],
     "html.format.enable": true,
@@ -66,11 +68,17 @@
 		"clang": {
 		    // from clang -v -fsyntax-only -x c++ /dev/null
 		    "extraArgs": [
-			"-isystem/usr/lib"
+			//"-isystem/usr/lib",
+			//"-std=c++17"
 		    ]
 		}
 	    }
 	},
+	//"coc-clangd": {
+	//    "command": "clangd",
+	//    "rootPatterns": ["compile_flags.txt", "compile_commands.json"],
+	//    "filetypes": ["c", "cc", "cpp", "c++", "objc", "objcpp"]
+	//},
 	"lua": {
 	    "command": "lua-lsp",
 	    "filetypes": ["lua"]
@@ -81,7 +89,7 @@
 	    //	    "format.enable": true
 	    //	}
     },
-    "pyright.analisys.typeshedPath": ["/Users/zhilin/Library/Python/3.9/lib/python/site-packages"],
+    "pyright.analisys.typeshedPath": ["/usr/lib64/python3.10/site-packages"],
 
     // coc-settings.json
     "explorer.keyMappings.global": {

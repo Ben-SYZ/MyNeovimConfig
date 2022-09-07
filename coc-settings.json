@@ -1,4 +1,5 @@
 {
+    //"project.rootPatterns":[".git"],
     "coc.preferences.currentFunctionSymbolAutoUpdate": true,
 
     "html.enable": true, 

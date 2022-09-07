@@ -365,6 +365,7 @@ if index(g:bundle_group, 'coc') >= 0
 	Plug 'neoclide/jsonc.vim'
 
 	"\'coc-clangd',
+        "\'coc-project',
 	let g:coc_global_extensions = [
 		\'coc-vimlsp',
 		\'coc-json',
@@ -376,10 +377,6 @@ if index(g:bundle_group, 'coc') >= 0
 		\'coc-gitignore',
 		\'coc-texlab',
 		\'coc-explorer' ]
-	function! s:check_back_space() abort
-		let col = col('.') - 1
-		return !col || getline('.')[col - 1]  =~ '\s'
-	endfunction
 
 	" open all the doc when nothing leader
 	inoremap <silent><expr> <c-n> coc#refresh()

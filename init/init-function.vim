@@ -15,8 +15,7 @@ func! CompileRunGcc()
     :sp
     :term g++ -lpthread '%' -o '%<' && time ./'%<'
   elseif &filetype == 'rust'
-    exec "!rustc % -o %<"
-    exec "!time ./%<"
+    exec "!time cargo run"
   elseif &filetype == 'java'
     exec "!javac %"
     exec "!time java %<"

@@ -367,6 +367,7 @@ if index(g:bundle_group, 'coc') >= 0
 	"\'coc-clangd',
         "\'coc-project',
 	let g:coc_global_extensions = [
+		\'coc-rust-analyzer',
 		\'coc-vimlsp',
 		\'coc-json',
 		\'coc-pyright',

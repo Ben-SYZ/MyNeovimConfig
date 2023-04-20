@@ -262,6 +262,17 @@ if index(g:bundle_group, 'enhanced') >= 0
 	Plug 'hotoo/pangu.vim'
 	"autocmd BufWritePre *.markdown,*.md,*.text,*.txt,*.wiki,*.cnx call PanGuSpacing()
 
+	" Increase number
+        " 1     1
+        " 1  -> 2
+        " 1     3
+        Plug 'vim-scripts/VisIncr'
+        " quick start:
+        " 1. select;
+        " 2. press `:I` return(colon and I)
+        " or 2. `:I #` # is the increment
+        " :help visincr
+
 endif
 
 "----------------------------------------------------------------------
@@ -287,6 +298,7 @@ if index(g:bundle_group, 'markdown') >= 0
 
 	" Markdown preview
 	Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['ipynb', 'markdown']}
+        " manual call mkdp#util#install()
 	"==
 	"==  Markdown preview
 	"==============

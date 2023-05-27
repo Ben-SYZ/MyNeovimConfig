@@ -90,7 +90,10 @@
 	    //	    "format.enable": true
 	    //	}
     },
-    "pyright.analisys.typeshedPath": ["/usr/lib64/python3.10/site-packages"],
+    // pyright
+    //"python.venvPath": "~/.venv",
+
+    //pyright
 
     // coc-settings.json
     "explorer.keyMappings.global": {

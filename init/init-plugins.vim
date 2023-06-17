@@ -266,6 +266,7 @@ if index(g:bundle_group, 'enhanced') >= 0
         " 1     1
         " 1  -> 2
         " 1     3
+        " ++
         Plug 'vim-scripts/VisIncr'
         " quick start:
         " 1. select;

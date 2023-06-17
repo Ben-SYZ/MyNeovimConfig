@@ -52,5 +52,12 @@ cmd = 'GET '+ FILE +' HTTP/1.1\r\n\r\n'
 cmd = cmd.encode()
 sock.sendall(cmd)
 
-
 endsnippet
+
+snippet cls "new class" bA
+class $1($2):
+    def __init__(self${3}):
+        ${4:pass}
+    $0
+endsnippet
+

@@ -2,7 +2,10 @@
 nnoremap <space>r :call CompileRunGcc()<CR>
 func! CompileRunGcc()
   exec "w"
-  if &filetype == 'c'
+
+  if &filetype == 'make'
+    :!time make -f %
+  elseif &filetype == 'c'
     "exec "!g++ % -o %<"
     "exec "!gcc -lpthread % -o '%<' && time ./'%<'"
     set splitbelow

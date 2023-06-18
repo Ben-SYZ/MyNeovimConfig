@@ -333,6 +333,8 @@ if index(g:bundle_group, 'markdown') >= 0
 	let g:mkdp_page_title = '「${name}」'
 
 	function! g:Open_browser(url)
+		"show url
+		"exe '!echo ' . a:url . "&"
 		silent exe '!firefox ' . a:url . "&"
 		"silent exe '!chromium --app=' . a:url
 		"silent exec "chromium --app=" . a:url . " &"
@@ -593,6 +595,7 @@ if index(g:bundle_group, 'thesis') >= 0
 	let g:vim_markdown_folding_disabled = 1
 	let g:vim_markdown_new_list_item_indent = 0
 	let g:vim_markdown_conceal_code_blocks = 0
+	let g:vim_markdown_no_default_key_mappings = 1 " gx not work
 	""https://vim.fandom.com/wiki/Creating_your_own_syntax_files
 	"syn match MatrixMember '\t'
 	"syn keyword Matrix begin{pmatrix} nextgroup=MatrixMember skipwhite

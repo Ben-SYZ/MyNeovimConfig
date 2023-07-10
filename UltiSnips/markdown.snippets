@@ -16,11 +16,18 @@ def math():
 def not_mathCmd():
 	return math() and vim.eval("vimtex#syntax#in('texMathCmd')") == '0'
 
+from pathlib import Path
+def get_title():
+    fn=snip.basename
+    if fn == "index":
+        return Path.cwd().name
+    return fn
 endglobal
+
 
 snippet meta "hugo meta data" b
 ---
-title: "${1:`!p snip.rv = snip.fn.split('.')[0]`}"
+title: "${1:`!p snip.rv = get_title()`}"
 date: `date -u +%Y-%m-%dT%H:%M:%S+08:00`
 lastMod: `date -u +%Y-%m-%dT%H:%M:%S+08:00`
 code: true
@@ -30,8 +37,8 @@ draft: false
 author: "Ben"
 geometry: margin=2cm
 CJKmainfont: "Noto Sans CJK SC"
-description: "${2:`!p snip.rv = snip.fn.split('.')[0]`}"
-tags: ["${3:`!p snip.rv = snip.fn.split('.')[0]`}"]
+description: "${2:`!p snip.rv = get_title()`}"
+tags: ["${3:`!p snip.rv = get_title()`}"]
 ---
 
 $0

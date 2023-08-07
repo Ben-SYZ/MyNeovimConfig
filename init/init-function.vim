@@ -16,7 +16,7 @@ func! CompileRunGcc()
     "exec "!g++ -lpthread '%' -o '%<' && time ./'%<'"
     set splitbelow
     :sp
-    :term g++ -lpthread '%' -o '%<' && time ./'%<'
+    :term [ -e Makefile ] && make || g++ -lpthread '%' -o '%<' && time ./'%<'
   elseif &filetype == 'rust'
     exec "!time cargo run"
   elseif &filetype == 'java'

@@ -41,11 +41,11 @@
         "variable": "\ue71b"
     },
     "languageserver": {
-        "bash": {
-            "command": "bash-language-server",
-            "args": ["start"],
-            "filetypes": ["sh"],
-        },
+        //"bash": {
+        //    "command": "bash-language-server",
+        //    "args": ["start"],
+        //    "filetypes": ["sh"],
+        //},
         "ccls": {
             "command": "ccls",
             "filetypes": ["c", "cpp", "cuda", "objc", "objcpp"],

@@ -72,8 +72,7 @@ if index(g:bundle_group, 'basic') >= 0
 	" === suda.vim
 	" ============
 	Plug 'lambdalisue/suda.vim'
-	cnoreabbrev sudowrite w suda://%
-	cnoreabbrev sw w suda://%
+	cnoreabbrev sw SudaWrite
 
 	" 展示开始画面，显示最近编辑过的文件
 	"Plug 'mhinz/vim-startify'

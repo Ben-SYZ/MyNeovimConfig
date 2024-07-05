@@ -186,7 +186,8 @@ augroup InitFileTypesGroup
 	au BufNewFile,BufRead *.vl setlocal filetype=verilog
 	au BufRead,BufNewFile *.mdp setfiletype mdp
 	au BufNewFile,BufRead *.wiki setf Wikipedia 
-
+	autocmd BufNewFile,BufRead postinst set filetype=sh
+	autocmd BufNewFile,BufRead postrm set filetype=sh
 augroup END
 
 

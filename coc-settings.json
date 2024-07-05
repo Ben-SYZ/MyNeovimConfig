@@ -50,10 +50,11 @@
             "command": "ccls",
             "filetypes": ["c", "cpp", "cuda", "objc", "objcpp"],
             //Unlike VSCode vim doesn't have workspace support. The solution is resolve workspace folders from opened files.
+            //"args": ["--log-file=/tmp/ccls.log", "-v", "3"],
             "rootPatterns": [".ccls", "compile_commands.json", ".vim/", ".git/", ".hg/"],
             "initializationOptions": {
                 "cache": {
-                    "directory": "/tmp/ccls"
+                    "directory": "${env:HOME}/.cache/ccls"
                 }
             }
         },

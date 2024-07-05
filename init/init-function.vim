@@ -187,8 +187,3 @@ autocmd Filetype markdown nnoremap <space>b Bi**<Esc>Ea**<Esc>
 autocmd Filetype markdown nnoremap <space>z i✰<Esc>
 "autocmd Filetype tex,markdown inoremap .<space> .<CR>
 "
-func! NormalTab()
-    :set shiftwidth=8
-    :set noexpandtab
-endfunc
-nnoremap <space><tab> :call NormalTab()<CR>

@@ -32,8 +32,22 @@
 
 set smarttab
 set shiftwidth=4
-au FileType html set shiftwidth=2
 set expandtab
+au FileType html set shiftwidth=2
+au FileType dts,c,cpp set shiftwidth=8 | set noexpandtab | set tabstop=8
+au FileType sh,gitcommit set shiftwidth=4 | set expandtab
+
+func! Toggle_tab_style()
+    if &shiftwidth == 8
+        set shiftwidth=4
+        set expandtab
+    else
+        set shiftwidth=8
+        set noexpandtab
+    endif
+endfunc
+nnoremap <space><tab> :call Toggle_tab_style()<CR>
+vnoremap <space><tab> :call Toggle_tab_style()<CR>gv=gv
 
 
 augroup PythonTab

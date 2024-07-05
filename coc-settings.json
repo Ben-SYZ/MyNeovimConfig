@@ -67,6 +67,8 @@
     //"python.venvPath": "~/.venv",
 
     //pyright
+    "pyright.inlayHints.variableTypes": false,
+    "pyright.inlayHints.parameterTypes": false,
 
     // coc-settings.json
     "explorer.keyMappings.global": {

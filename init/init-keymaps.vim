@@ -33,6 +33,9 @@ noremap i l
 noremap N 5j
 noremap E 5k
 
+noremap H 0
+noremap I $
+
 " line
 noremap b b
 noremap f e

@@ -1,10 +1,31 @@
 snippet main "main" i
 #include <stdio.h>
 int main(){
-    $0
-    return 0;
+	$0
+	return 0;
 }
 endsnippet
+
 snippet printfd "printf int" i
 printf("${1:%d}\n",$2);
 endsnippet
+
+snippet printf "printf" i
+printf("$1\n",$2);
+endsnippet
+
+snippet pk "printk" i
+printk("ben %s: %d %s, %s\n", __FILE__, __LINE__, __func__, "$0");
+endsnippet
+
+snippet pke "printkerror" i
+printk(KERN_ERR"ben $1 func:%s,line:%d\n", __func__, __LINE__);
+endsnippet
+
+snippet 'dev_(err|dbg|info)' "dev_debug" ri
+dev_`!p snip.rv = match.group(1)`(${1:&pdev->dev}, "ben: %s, L:%d: ${2:%s}\n",
+	__func__, __LINE__,
+	$0);
+endsnippet
+
+

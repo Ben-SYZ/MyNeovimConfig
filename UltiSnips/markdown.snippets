@@ -20,9 +20,18 @@ from pathlib import Path
 def get_title():
     fn=snip.basename
     if fn == "index":
-        return Path.cwd().name
+        fn = Path.cwd().name
+    fn = fn.replace("_", " ")
+    return fn
+
+def get_tags():
+    fn=snip.basename
+    if fn == "index":
+        fn = Path.cwd().name
+    fn = fn.replace('_', '", "')
     return fn
 endglobal
+
 
 
 snippet meta "hugo meta data" b
@@ -38,7 +47,7 @@ author: "Ben"
 geometry: margin=2cm
 CJKmainfont: "Noto Sans CJK SC"
 description: "${2:`!p snip.rv = get_title()`}"
-tags: ["${3:`!p snip.rv = get_title()`}"]
+tags: ["${3:`!p snip.rv = get_tags()`}"]
 ---
 
 $0

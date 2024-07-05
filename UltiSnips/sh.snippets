@@ -18,3 +18,20 @@ endsnippet
 snippet td "todo comment"
 # TODO: 
 endsnippet
+
+snippet echol "echo line" iA
+echo "===== $1 ====="
+$0
+endsnippet
+
+snippet root "root permission judge" i
+if [ "\$(id -u)" -ne 0 ];then
+    echo "root permission is required."
+    exit 1
+fi
+$0
+endsnippet
+
+snippet scd "shellcheck ignore" A
+# shellcheck disable=$0
+endsnippet

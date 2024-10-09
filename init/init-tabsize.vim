@@ -34,7 +34,7 @@ set smarttab
 set shiftwidth=4
 set expandtab
 au FileType html set shiftwidth=2
-au FileType dts,c,cpp set shiftwidth=8 | set noexpandtab | set tabstop=8
+au FileType dts,c,cpp,gitconfig set shiftwidth=8 | set noexpandtab | set tabstop=8
 au FileType sh,gitcommit set shiftwidth=4 | set expandtab
 
 func! Toggle_tab_style()

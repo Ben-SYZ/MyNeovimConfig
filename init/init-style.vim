@@ -51,6 +51,8 @@ if (!($TERM == "xterm-256color"))
     " order sensitive
     let g:SnazzyTransparent = 1
     colorscheme snazzy
+    :exe  'highlight  LineNr          guifg='.ui_5.'     guibg=NONE        guisp=NONE        gui=NONE       ctermfg=60    ctermbg=NONE  cterm=NONE'
+    :exe  'highlight  Comment         guifg='.ui_5.'     guibg=NONE        guisp=NONE        gui=italic     ctermfg=60    ctermbg=NONE  cterm=NONE'
 else
     " 设置黑色背景
     set background=dark

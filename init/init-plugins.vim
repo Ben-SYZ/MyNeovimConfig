@@ -154,6 +154,11 @@ if index(g:bundle_group, 'basic') >= 0
 	autocmd FileType man nnoremap <silent> <buffer> <cr> :Man<CR>
 	autocmd FileType man nnoremap <silent> <buffer> M :Man<CR>
 
+	" use vim to open info
+	" it use tags to index the hyperlink
+	" Tips: use ctrl+] to goto tags
+	Plug 'alx741/vinfo'
+
 endif
 
 

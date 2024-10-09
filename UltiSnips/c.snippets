@@ -1,3 +1,8 @@
+global !p
+def regex_short_to_full(list_regex, regex, list_to_string):
+    return list_to_string.split("|")[(list_regex.split("|").index(regex))]
+endglobal
+
 snippet main "main" i
 #include <stdio.h>
 int main(){
@@ -14,13 +19,9 @@ snippet printf "printf" i
 printf("$1\n",$2);
 endsnippet
 
-snippet pk "printk" i
-printk("ben %s: %d %s, %s\n", __FILE__, __LINE__, __func__, "$0");
-endsnippet
-
-snippet pke "printkerror" i
-printk(KERN_ERR"ben $1 func:%s,line:%d\n", __func__, __LINE__);
-endsnippet
+#snippet pke "printkerror" i
+#printk(KERN_ERR"ben $1 func:%s,line:%d\n", __func__, __LINE__);
+#endsnippet
 
 snippet 'dev_(err|dbg|info)' "dev_debug" ri
 dev_`!p snip.rv = match.group(1)`(${1:&pdev->dev}, "ben: %s, L:%d: ${2:%s}\n",
@@ -28,4 +29,29 @@ dev_`!p snip.rv = match.group(1)`(${1:&pdev->dev}, "ben: %s, L:%d: ${2:%s}\n",
 	$0);
 endsnippet
 
+snippet pk "printk" i
+printk("ben: %s, L:%d: ${2:%s}\n",
+	__func__, __LINE__,
+	$0);
+endsnippet
 
+snippet 'pk(e|w|i|d)' "printk" ri
+printk(KERN_`!p snip.rv = regex_short_to_full("e|w|i|d", match.group(1), "ERR|WARNING|INFO|DEBUG")` "ben: %s, L:%d: ${2:%s}\n",
+	__func__, __LINE__,
+	$0);
+endsnippet
+
+
+snippet 'pr(e|w|i|d|dd)' "printk" ri
+pr_`!p snip.rv = regex_short_to_full("e|w|i|d", match.group(1), "err|warn|info|debug|devel")`("ben: %s, L:%d: ${2:%s}\n",
+	__func__, __LINE__,
+	$0);
+endsnippet
+
+snippet bn "ben note:" i
+Ben Notes: $0
+endsnippet
+
+snippet '(0x|%x)' "print hex" ri
+0x%0${1:4}x$0
+endsnippet
